@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>↪️ goAPPs-Transfer &amp; Adashe</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
+<style>
+:root{
+  --green:#00d28d;--purple:#4b44e0;
+  --grad:linear-gradient(135deg,#00d28d 0%,#4b44e0 100%);
+  --bg:#0f0f0f;--surface:#1a1a1a;--card:#222;--card2:#2a2a2a;
+  --border:#2e2e2e;--text:#f0f0f0;--sub:#888;--danger:#ff4d4d;
+  --amber:#f59e0b;--glow:0 4px 24px rgba(0,210,141,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none}
+
+/* PAGE LOADER */
+#page-loader{position:fixed;inset:0;background:rgba(15,15,15,.92);backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);z-index:9999;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:18px;transition:opacity .5s ease,visibility .5s ease}
+#page-loader.gone{opacity:0;visibility:hidden;pointer-events:none}
+.loader-lock{font-size:3.2rem;animation:lockBounce 1.2s ease-in-out infinite}
+@keyframes lockBounce{0%,100%{transform:scale(1) rotate(0deg)}25%{transform:scale(1.15) rotate(-8deg)}75%{transform:scale(1.15) rotate(8deg)}}
+.loader-ring{width:54px;height:54px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--green);animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-txt{font-size:.78rem;font-weight:700;color:var(--sub);letter-spacing:.8px;text-transform:uppercase}
+
+/* DRAWER */
+.drw-ov{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:800;display:none;backdrop-filter:blur(4px)}
+.drw-ov.open{display:block}
+.drw{position:fixed;left:-295px;top:0;bottom:0;width:295px;background:var(--surface);z-index:900;transition:.28s cubic-bezier(.4,0,.2,1);overflow-y:auto;border-right:1px solid var(--border)}
+.drw.open{left:0;box-shadow:8px 0 36px rgba(0,0,0,.6)}
+.drw-head{padding:28px 18px 20px;background:var(--grad);display:flex;align-items:center;gap:14px;position:relative}
+.drw-x{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.18);color:#fff;width:28px;height:28px;border-radius:50%;font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;line-height:1}
+.drw-av{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.22);border:2.5px solid rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;font-size:1.35rem;overflow:hidden;flex-shrink:0}
+.drw-av img{width:100%;height:100%;object-fit:cover}
+.drw-name{font-size:.98rem;font-weight:800;color:#fff}
+.drw-sub{font-size:.63rem;color:rgba(255,255,255,.74);margin-top:2px}
+
+/* MODIFIED MERCHANT WALLET */
+.drw-wallet{margin:14px 15px;padding:14px 16px;background:var(--grad);border-radius:15px;color:#fff}
+.dw-lbl{font-size:.58rem;letter-spacing:.6px;text-transform:uppercase;opacity:.82;font-weight:700;margin-bottom:3px}
+.dw-bal{font-size:1.35rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.dw-row{display:flex;justify-content:space-between;font-size:.67rem;opacity:.85;margin-top:5px}
+
+.drw-nav{padding:8px 0}
+.dn{display:flex;align-items:center;gap:13px;padding:13px 18px;font-size:.82rem;font-weight:600;color:var(--sub);cursor:pointer;border-bottom:1px solid var(--border);transition:.15s}
+.dn:hover,.dn.cur{color:var(--green);background:rgba(0,210,141,.05)}
+.dn-ico{font-size:1rem;width:22px;text-align:center;flex-shrink:0}
+
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:400;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.hdr-l{display:flex;align-items:center;gap:10px}
+.ham{display:flex;flex-direction:column;gap:5px;padding:4px;cursor:pointer}
+.ham span{display:block;height:2px;border-radius:2px;background:var(--green);transition:.28s}
+.ham span:nth-child(1){width:22px}.ham span:nth-child(2){width:15px}.ham span:nth-child(3){width:22px}
+.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg);width:22px}
+.ham.open span:nth-child(2){opacity:0;width:22px}
+.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.hdr-logo{font-size:.96rem;font-weight:800;letter-spacing:-.2px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* MAIN CONTENT */
+.main{padding:15px 15px 84px}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* SECTION HEADER */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:0 0 13px}
+.sec-ttl{font-size:.88rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
+.sec-ttl::before{content:'';width:3px;height:16px;background:var(--green);border-radius:2px;display:block}
+
+/* GRID STYLES */
+.tr-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.tr-card{background:var(--card);padding:17px 15px;border-radius:16px;border:1px solid var(--border);cursor:pointer;transition:.18s;text-decoration:none;display:block}
+.tr-card:hover{border-color:rgba(0,210,141,.3);background:rgba(0,210,141,.04);transform:translateY(-2px)}
+.tr-ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;margin-bottom:11px}
+.tr-card b{font-size:.82rem;color:var(--text);display:block;margin-bottom:3px}
+.tr-card small{font-size:.62rem;color:var(--sub)}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;height:64px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:stretch;z-index:300;padding-bottom:env(safe-area-inset-bottom,0)}
+.bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--sub);font-size:.58rem;font-weight:700;transition:.15s;text-decoration:none;background:none;border:none;padding:0}
+.bn.on,.bn:hover{color:var(--green)}
+.bn-ico{font-size:1.1rem;display:block}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--card2);border:1px solid var(--green);color:var(--green);padding:10px 20px;border-radius:20px;font-size:.74rem;font-weight:700;z-index:9999;opacity:0;transition:.28s;white-space:nowrap;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* HELPER CLASSES */
+.hpill{padding:5px 11px;border-radius:16px;font-size:.62rem;font-weight:700}
+.hp-str{background:rgba(0,210,141,.1);border:1px solid rgba(0,210,141,.25);color:var(--green)}
+
+/* LIST ITEM */
+.tx-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:13px;margin-bottom:8px}
+.tx-ico{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.tx-body{flex:1;min-width:0}
+.tx-name{font-size:.8rem;font-weight:700;color:var(--text)}
+.tx-date{font-size:.62rem;color:var(--sub);margin-top:2px}
+.aq-btn{padding:6px 13px;background:rgba(0,210,141,.08);border:1px solid rgba(0,210,141,.18);color:var(--green);border-radius:8px;font-size:.68rem;font-weight:800;cursor:pointer;transition:.15s}
+</style>
+</head>
+<body>
+
+<div id="page-loader">
+  <div class="loader-lock">🔒</div>
+  <div class="loader-ring"></div>
+  <div class="loader-txt">Securing Session...</div>
+</div>
+
+<div class="drw-ov" id="drw-ov" onclick="toggleDrw()"></div>
+<div class="drw" id="drw">
+  <div class="drw-head">
+    <button class="drw-x" onclick="toggleDrw()">×</button>
+    <div class="drw-av">CE</div>
+    <div>
+      <div class="drw-name">Confidence Edward</div>
+      <div class="drw-sub">Director, DigitalSolution360®</div>
+    </div>
+  </div>
+
+  <div class="drw-wallet">
+    <div class="dw-lbl">Available Balance</div>
+    <div class="dw-bal">₦245,500.00</div>
+    <div class="dw-row">
+      <span>Escrow (Pending)</span>
+      <b style="color: #ffca28;">₦12,000.00</b>
+    </div>
+    <div class="dw-row" style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 8px;">
+      <span>Merchant ID: <b>DS360-01</b></span>
+    </div>
+  </div>
+
+  <nav class="drw-nav">
+    <div class="dn cur" onclick="showTab('transfer')"><span class="dn-ico">💸</span>Transfer Funds</div>
+    <div class="dn" onclick="showTab('market')"><span class="dn-ico">🛒</span>*5050# Marketplace</div>
+    <div class="dn" onclick="showTab('adashe')"><span class="dn-ico">🤝</span>Adashe Groups</div>
+  </nav>
+</div>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <div class="ham" id="ham" onclick="toggleDrw()">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="hdr-logo">goAPPs</div>
+  </div>
+  <div class="hdr-r">
+    <div class="hpill hp-str">Pro Account</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div id="transfer-pane" class="tab-pane active">
+    <div class="sec-hdr">
+      <h2 class="sec-ttl">Quick Transfer</h2>
+    </div>
+    <div class="tr-grid">
+      <div class="tr-card">
+        <div class="tr-ico" style="background:rgba(0,210,141,.1);color:var(--green)">📱</div>
+        <b>To Wallet</b>
+        <small>Instant & Free</small>
+      </div>
+      <div class="tr-card">
+        <div class="tr-ico" style="background:rgba(75,68,224,.1);color:#a5b4fc">🏦</div>
+        <b>To Bank</b>
+        <small>All Nigerian Banks</small>
+      </div>
+    </div>
+  </div>
+
+  <div id="market-pane" class="tab-pane">
+    <div class="sec-hdr">
+      <h2 class="sec-ttl">Verified Marketplace</h2>
+      <div class="hpill hp-str">Escrow Protected</div>
+    </div>
+
+    <div class="limit-card" style="background: var(--grad); border: none;">
+      <div class="limit-top">
+        <span class="limit-lbl" style="color: #fff;">Your Business Extension</span>
+        <span class="limit-val" style="color: #fff; font-size: 1.1rem;">*5050*102#</span>
+      </div>
+      <p style="font-size: 0.65rem; color: rgba(255,255,255,0.8);">Customers can dial this code to visit your shop instantly.</p>
+    </div>
+
+    <div class="tr-grid">
+      <div class="tr-card">
+        <div class="tr-ico" style="background: rgba(255,255,255,0.1);">🛒</div>
+        <b>Order History</b>
+        <small>Manage your *5050# sales</small>
+      </div>
+      <div class="tr-card">
+        <div class="tr-ico" style="background: rgba(255,255,255,0.1);">📦</div>
+        <b>Inventory</b>
+        <small>Edit chatbot products</small>
+      </div>
+    </div>
+
+    <h3 class="sec-ttl" style="margin-top: 20px;">Featured Vendors</h3>
+    <div class="tx-item">
+      <div class="tx-ico" style="background:#25d366; color:#fff;">WA</div>
+      <div class="tx-body">
+        <div class="tx-name">Digital Solution Store</div>
+        <div class="tx-date">Verified Merchant • *5050*001#</div>
+      </div>
+      <button class="aq-btn">Shop</button>
+    </div>
+  </div>
+
+  <div id="adashe-pane" class="tab-pane">
+    <div class="sec-hdr">
+      <h2 class="sec-ttl">Community Savings</h2>
+    </div>
+    <div class="tr-card" style="width: 100%;">
+       <div class="tr-ico" style="background:rgba(245,158,11,.1);color:var(--amber)">🤝</div>
+       <b>My Active Groups</b>
+       <small>You are currently in 2 Adashe circles</small>
+    </div>
+  </div>
+
+</main>
+
+<nav class="bnav">
+  <button class="bn on" onclick="showTab('transfer')">
+    <span class="bn-ico">💸</span>Transfer
+  </button>
+  <button class="bn" onclick="showTab('market')">
+    <span class="bn-ico">🛍️</span>Market
+  </button>
+  <button class="bn" onclick="showTab('adashe')">
+    <span class="bn-ico">🤝</span>Adashe
+  </button>
+</nav>
+
+<div id="toast" class="toast">Action Successful</div>
+
+<script>
+// UI HANDLING
+function toggleDrw() {
+  document.getElementById('drw').classList.toggle('open');
+  document.getElementById('drw-ov').classList.toggle('open');
+  document.getElementById('ham').classList.toggle('open');
+}
+
+function showTab(tabId) {
+  // Hide all panes
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  // Update nav buttons
+  document.querySelectorAll('.bn').forEach(b => b.classList.remove('on'));
+  
+  // Show target
+  document.getElementById(tabId + '-pane').classList.add('active');
+  
+  // Highlight active button
+  const buttons = document.querySelectorAll('.bn');
+  buttons.forEach(btn => {
+    if(btn.innerText.toLowerCase().includes(tabId)) btn.classList.add('on');
+  });
+
+  // Auto-close drawer if open
+  if(document.getElementById('drw').classList.contains('open')) toggleDrw();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// SIMULATED PAGE LOAD
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    document.getElementById('page-loader').classList.add('gone');
+  }, 1200);
+});
+</script>
+
+</body>
+  </html>
