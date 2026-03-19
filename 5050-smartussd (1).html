@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>*5050# SmartUSSD Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#00d28d;--purple:#4b44e0;
+  --grad:linear-gradient(135deg,#00d28d 0%,#4b44e0 100%);
+  --bg:#0f0f0f;--surface:#1a1a1a;--card:#222;--card2:#2a2a2a;
+  --border:#2e2e2e;--text:#f0f0f0;--sub:#888;--danger:#ff4d4d;
+  --amber:#f59e0b;--glow:0 4px 24px rgba(0,210,141,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px}
+button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none}
+input,select,textarea{font-family:'Inter',sans-serif}
+
+/* PAGE LOADER */
+#page-loader{position:fixed;inset:0;background:rgba(15,15,15,.96);backdrop-filter:blur(18px);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s ease,visibility .5s ease}
+#page-loader.gone{opacity:0;visibility:hidden;pointer-events:none}
+.loader-ring{width:54px;height:54px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--green);animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-badge{font-size:1.6rem;font-weight:800;font-family:'JetBrains Mono',monospace;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px}
+.loader-txt{font-size:.72rem;font-weight:700;color:var(--sub);letter-spacing:.8px;text-transform:uppercase}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:10px 20px;font-size:.76rem;font-weight:700;color:var(--text);z-index:8000;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:400;background:var(--bg);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.nav-logo{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-badge{background:var(--grad);color:#fff;font-weight:800;font-family:'JetBrains Mono',monospace;font-size:13px;padding:4px 10px;border-radius:8px;letter-spacing:1px;white-space:nowrap}
+.nav-name{font-size:.9rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.nav-tabs{display:flex;gap:3px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{padding:6px 12px;border-radius:8px;font-size:.7rem;font-weight:700;color:var(--sub);white-space:nowrap;transition:.15s;flex-shrink:0}
+.nav-tab:hover{background:var(--card);color:var(--text)}
+.nav-tab.active{background:linear-gradient(135deg,rgba(0,210,141,.15),rgba(75,68,224,.15));color:var(--green);border:1px solid rgba(0,210,141,.2)}
+.nav-cta{background:var(--grad);color:#fff;padding:8px 14px;border-radius:8px;font-weight:800;font-size:.72rem;white-space:nowrap;flex-shrink:0;transition:.15s}
+.nav-cta:hover{opacity:.9;transform:translateY(-1px)}
+
+/* VIEWS */
+.view{display:none;min-height:calc(100vh - 56px)}
+.view.active{display:block}
+
+/* ════════════ HOME ════════════ */
+.hero{padding:28px 16px 20px;max-width:700px;margin:0 auto}
+.hero-label{display:inline-flex;align-items:center;gap:7px;background:rgba(0,210,141,.1);border:1px solid rgba(0,210,141,.25);border-radius:20px;padding:4px 12px;font-size:.62rem;font-weight:700;color:var(--green);letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px}
+.dot-pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+h1{font-size:clamp(1.8rem,6vw,2.8rem);font-weight:800;line-height:1.15;margin-bottom:12px}
+h1 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-desc{font-size:.84rem;color:var(--sub);line-height:1.7;margin-bottom:20px}
+.hero-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.btn-g{background:var(--grad);color:#fff;padding:13px 16px;border-radius:12px;font-weight:800;font-size:.8rem;text-align:center;transition:.15s;border:none;width:100%}
+.btn-g:hover{opacity:.9;transform:translateY(-2px)}
+.btn-g:active{transform:scale(.97)}
+.btn-o{background:transparent;color:var(--text);border:1px solid var(--border);padding:13px 16px;border-radius:12px;font-weight:700;font-size:.8rem;text-align:center;transition:.15s;width:100%}
+.btn-o:hover{border-color:rgba(0,210,141,.4);color:var(--green)}
+
+/* PHONE MOCKUP */
+.phone-wrap{display:flex;justify-content:center;padding:0 16px 20px;max-width:360px;margin:0 auto}
+.phone{width:100%;max-width:260px;background:#141414;border-radius:32px;border:2px solid var(--border);box-shadow:0 32px 64px rgba(0,0,0,.7),var(--glow),inset 0 1px 0 rgba(255,255,255,.04);overflow:hidden}
+.phone-top{background:#0f0f0f;padding:10px 18px 6px;text-align:center}
+.phone-notch{width:70px;height:16px;background:#0f0f0f;border-radius:10px;margin:0 auto 6px;border:2px solid rgba(255,255,255,.05)}
+.phone-status{display:flex;justify-content:space-between;font-size:10px;color:var(--sub);font-family:'JetBrains Mono',monospace}
+.phone-hdr{background:linear-gradient(135deg,#00d28d,#4b44e0);padding:10px 14px;display:flex;align-items:center;gap:8px}
+.phone-av{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:.8rem;flex-shrink:0}
+.phone-info{flex:1;min-width:0}
+.phone-name{font-weight:800;font-size:.78rem;color:#fff}
+.phone-status-txt{font-size:.58rem;color:rgba(255,255,255,.8)}
+.phone-body{padding:10px;min-height:320px;background:#141414;overflow-y:auto;max-height:320px}
+.cb{margin:6px 0;font-size:.66rem;line-height:1.5;padding:8px 10px;border-radius:10px;animation:fadeUp .3s ease}
+.cb-bot{background:var(--card2);border-radius:0 10px 10px 10px;color:var(--text);max-width:88%}
+.cb-user{background:linear-gradient(135deg,rgba(0,210,141,.25),rgba(75,68,224,.2));border-radius:10px 0 10px 10px;margin-left:auto;max-width:80%;border:1px solid rgba(0,210,141,.2)}
+.cm{font-family:'JetBrains Mono',monospace;color:var(--green);cursor:pointer;padding:2px 0;display:block}
+.ph-inp{display:flex;align-items:center;gap:6px;padding:8px 10px;border-top:1px solid var(--border);background:#0f0f0f}
+.ph-inp input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:6px 10px;font-size:.65rem;color:var(--text);outline:none}
+.ph-inp button{width:26px;height:26px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0}
+
+/* FEATURES */
+.feat-strip{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin:0 16px 20px;max-width:700px;margin-left:auto;margin-right:auto}
+@media(min-width:560px){.feat-strip{grid-template-columns:repeat(4,1fr)}}
+.feat-cell{background:var(--surface);padding:16px 12px;display:flex;flex-direction:column;gap:6px}
+.feat-ico{font-size:1.2rem}
+.feat-t{font-size:.76rem;font-weight:800;color:var(--text)}
+.feat-d{font-size:.62rem;color:var(--sub);line-height:1.5}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 16px 20px;max-width:700px;margin:0 auto}
+@media(min-width:480px){.stats-row{grid-template-columns:repeat(4,1fr)}}
+.stat-c{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.stat-n{font-size:1.3rem;font-weight:800;color:var(--green);font-family:'JetBrains Mono',monospace}
+.stat-l{font-size:.6rem;color:var(--sub);margin-top:3px}
+
+/* SERVICE CARDS */
+.services{padding:0 16px 20px;max-width:700px;margin:0 auto}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sec-ttl{font-size:.88rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:7px}
+.sec-ttl::before{content:'';width:3px;height:14px;background:var(--green);border-radius:2px;display:block}
+.svc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:480px){.svc-grid{grid-template-columns:repeat(3,1fr)}}
+.svc-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 12px;cursor:pointer;transition:.18s;animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.svc-card:hover{border-color:rgba(0,210,141,.3);background:rgba(0,210,141,.03);transform:translateY(-2px)}
+.svc-card:active{transform:scale(.97)}
+.svc-ico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:9px}
+.svc-card b{font-size:.78rem;color:var(--text);display:block;margin-bottom:3px}
+.svc-card small{font-size:.6rem;color:var(--sub)}
+.svc-badge{display:inline-block;margin-top:7px;padding:2px 8px;border-radius:5px;font-size:.55rem;font-weight:800;background:rgba(0,210,141,.1);color:var(--green);border:1px solid rgba(0,210,141,.2)}
+
+/* ════════════ USER CHAT VIEW ════════════ */
+.chat-wrap{display:flex;max-width:900px;margin:0 auto;height:calc(100vh - 57px)}
+.chat-side{width:260px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column}
+@media(max-width:600px){.chat-side{display:none}}
+.cs-head{padding:14px;border-bottom:1px solid var(--border)}
+.cs-title{font-size:.84rem;font-weight:800}
+.cs-sub{font-size:.6rem;color:var(--sub);margin-top:2px}
+.cs-srch{padding:8px 14px;border-bottom:1px solid var(--border)}
+.cs-srch input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-size:.7rem;outline:none}
+.chat-list{overflow-y:auto;flex:1}
+.ci{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(46,46,46,.5);transition:.15s}
+.ci:hover,.ci.active{background:rgba(0,210,141,.05)}
+.ci-av{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.ci-info{flex:1;min-width:0}
+.ci-name{font-size:.76rem;font-weight:700}
+.ci-prev{font-size:.6rem;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.ci-meta{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.ci-time{font-size:.55rem;color:var(--sub)}
+.ci-badge{background:var(--green);color:#000;border-radius:8px;font-size:.55rem;font-weight:800;padding:1px 5px}
+
+/* CHAT MAIN */
+.chat-main{flex:1;display:flex;flex-direction:column;background:var(--bg);min-width:0}
+.chat-topbar{padding:12px 14px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ct-info{display:flex;align-items:center;gap:10px}
+.ct-av{width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:.8rem;flex-shrink:0}
+.ct-name{font-weight:700;font-size:.84rem}
+.ct-status{font-size:.6rem;color:var(--green);display:flex;align-items:center;gap:4px;margin-top:1px}
+.ct-actions{display:flex;gap:6px}
+.ct-btn{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:5px 10px;color:var(--sub);font-size:.62rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:.15s}
+.ct-btn:hover{border-color:rgba(0,210,141,.3);color:var(--green)}
+.msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:7px}
+.msg{display:flex;gap:8px;max-width:82%}
+.msg.u{align-self:flex-end;flex-direction:row-reverse}
+.msg-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800}
+.msg-bub{padding:9px 12px;border-radius:10px;font-size:.72rem;line-height:1.6}
+.msg.b .msg-bub{background:var(--card);border:1px solid var(--border);border-radius:0 10px 10px 10px;color:var(--text)}
+.msg.u .msg-bub{background:linear-gradient(135deg,rgba(0,210,141,.2),rgba(75,68,224,.2));border-radius:10px 0 10px 10px;border:1px solid rgba(0,210,141,.2)}
+.msg-t{font-size:.55rem;color:var(--sub);margin-top:2px}
+.msg.u .msg-t{text-align:right}
+.menu-opts{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.mopt{background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:5px 10px;font-size:.66rem;color:var(--green);cursor:pointer;font-weight:700;transition:.15s}
+.mopt:hover{background:rgba(75,68,224,.15);border-color:rgba(75,68,224,.4)}
+/* TX card in chat */
+.tx-mini{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-top:7px}
+.txm-row{display:flex;justify-content:space-between;margin-bottom:6px}
+.txm-l{font-size:.62rem;color:var(--sub)}
+.txm-v{font-size:.62rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.txm-div{border:none;border-top:1px solid var(--border);margin:8px 0}
+.txm-total{font-size:.74rem;font-weight:800;color:var(--green)}
+.txm-btn{width:100%;background:var(--grad);color:#fff;border:none;border-radius:7px;padding:8px;font-weight:800;font-size:.72rem;cursor:pointer;margin-top:8px;transition:.15s}
+.txm-btn:hover{opacity:.9}
+/* chat input */
+.chat-inp-area{padding:10px 14px;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:8px;align-items:center;flex-shrink:0}
+.chat-inp{flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:9px 12px;color:var(--text);font-size:.76rem;outline:none;transition:border-color .2s}
+.chat-inp:focus{border-color:rgba(0,210,141,.4)}
+.send-btn{width:38px;height:38px;border-radius:10px;background:var(--grad);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;transition:.15s}
+.send-btn:hover{opacity:.9;transform:scale(1.05)}
+
+/* ════════════ BUSINESS VIEW ════════════ */
+.biz-wrap{max-width:800px;margin:0 auto;padding:16px 14px 80px}
+.biz-hdr{margin-bottom:16px}
+.biz-tabs{display:flex;gap:3px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none}
+.biz-tabs::-webkit-scrollbar{display:none}
+.biz-tab{padding:7px 14px;border-radius:8px;font-size:.68rem;font-weight:700;color:var(--sub);white-space:nowrap;cursor:pointer;transition:.15s;flex-shrink:0}
+.biz-tab.active{background:var(--grad);color:#fff}
+.biz-panel{display:none}
+.biz-panel.active{display:block}
+/* dash */
+.dash-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+@media(min-width:500px){.dash-grid{grid-template-columns:repeat(4,1fr)}}
+.dc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+.dc-lbl{font-size:.6rem;color:var(--sub);margin-bottom:5px}
+.dc-val{font-size:1.3rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.dc-chg{font-size:.6rem;margin-top:4px}
+.up{color:var(--green)}.down{color:var(--danger)}
+.dash-2col{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:560px){.dash-2col{grid-template-columns:2fr 1fr}}
+.tbl-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:12px}
+.tbl-hdr{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.tbl-ttl{font-size:.8rem;font-weight:800}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:9px 14px;font-size:.58rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.6px;background:rgba(255,255,255,.02)}
+td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
+.sbadge{display:inline-block;padding:2px 8px;border-radius:5px;font-size:.55rem;font-weight:800}
+.sb-ok{background:rgba(0,210,141,.1);color:var(--green);border:1px solid rgba(0,210,141,.2)}
+.sb-pend{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.sb-fail{background:rgba(255,77,77,.1);color:var(--danger);border:1px solid rgba(255,77,77,.2)}
+/* ussd code cards */
+.code-grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:480px){.code-grid{grid-template-columns:repeat(3,1fr)}}
+.code-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;text-align:center;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
+.code-card:hover{transform:translateY(-3px);box-shadow:var(--glow)}
+.code-card.feat{border-color:rgba(0,210,141,.4)}
+.code-card.feat::before{content:'POPULAR';position:absolute;top:12px;right:-14px;background:var(--green);color:#000;font-size:.55rem;font-weight:800;padding:2px 22px;transform:rotate(30deg);letter-spacing:.5px}
+.code-plan{font-size:.62rem;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+.code-price{font-size:2rem;font-weight:800;font-family:'JetBrains Mono',monospace;margin-bottom:3px}
+.code-price span{font-size:.8rem;color:var(--sub);font-weight:400}
+.code-feats{list-style:none;text-align:left;margin:14px 0;display:flex;flex-direction:column;gap:6px}
+.code-feats li{font-size:.66rem;color:var(--sub);display:flex;align-items:center;gap:6px}
+.code-feats li::before{content:'✓';color:var(--green);font-weight:800}
+.code-btn{width:100%;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:10px;font-weight:800;font-size:.72rem;cursor:pointer;transition:.15s}
+.code-card.feat .code-btn{background:var(--grad);border:none;color:#fff}
+.code-btn:hover{opacity:.85}
+/* catalog */
+.prod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:480px){.prod-grid{grid-template-columns:repeat(3,1fr)}}
+.prod-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:.18s}
+.prod-card:hover{border-color:rgba(0,210,141,.3);transform:translateY(-2px)}
+.prod-img{height:80px;display:flex;align-items:center;justify-content:center;font-size:2rem}
+.prod-info{padding:10px}
+.prod-name{font-weight:800;font-size:.74rem;margin-bottom:2px}
+.prod-cat{font-size:.58rem;color:var(--sub);margin-bottom:5px}
+.prod-price{font-size:.82rem;font-weight:800;color:var(--green);font-family:'JetBrains Mono',monospace;margin-bottom:6px}
+.prod-btn{width:100%;background:var(--grad);color:#fff;border:none;border-radius:7px;padding:6px;font-weight:800;font-size:.62rem;cursor:pointer;transition:.15s}
+.prod-btn:hover{opacity:.85}
+/* wallet card */
+.wallet-hero{background:var(--grad);border-radius:16px;padding:18px;position:relative;overflow:hidden;margin-bottom:14px}
+.wallet-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.06)}
+.wh-lbl{font-size:.58rem;opacity:.8;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;color:#fff}
+.wh-bal{font-size:2rem;font-weight:800;font-family:'JetBrains Mono',monospace;color:#fff;margin-bottom:14px}
+.wh-acts{display:flex;gap:8px;flex-wrap:wrap}
+.wh-btn{padding:9px 16px;border-radius:9px;font-weight:800;font-size:.7rem;cursor:pointer;transition:.15s;border:none}
+.wh-btn-p{background:#fff;color:#047857}
+.wh-btn-s{background:rgba(255,255,255,.18);color:#fff}
+.wh-btn:hover{opacity:.9;transform:translateY(-1px)}
+
+/* ════════════ MODALS ════════════ */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:2000;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.modal-ov.open{display:flex}
+@media(min-width:500px){.modal-ov{align-items:center}}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:20px 18px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease}
+@media(min-width:500px){.modal{border-radius:20px;margin:0 16px}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.modal-title{font-size:1rem;font-weight:800}
+.modal-x{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:.7rem;font-weight:700;color:var(--sub);cursor:pointer;transition:.15s}
+.modal-x:hover{color:var(--text)}
+.fg{margin-bottom:12px}
+.fl{display:block;font-size:.66rem;font-weight:700;color:var(--sub);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.fi{width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-size:.8rem;outline:none;transition:border-color .2s}
+.fi:focus{border-color:rgba(0,210,141,.4)}
+.fi::placeholder{color:var(--sub)}
+.fs{width:100%;background:var(--grad);color:#fff;border:none;border-radius:11px;padding:12px;font-weight:800;font-size:.82rem;cursor:pointer;margin-top:6px;transition:.15s}
+.fs:hover{opacity:.9}
+.fs:active{transform:scale(.98)}
+/* plan select inside modal */
+.plan-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.plan-opt{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;cursor:pointer;transition:.18s;display:flex;align-items:center;justify-content:space-between}
+.plan-opt:hover{border-color:rgba(0,210,141,.35)}
+.plan-opt.sel{border-color:var(--green);background:rgba(0,210,141,.05)}
+.plan-opt-name{font-weight:800;font-size:.8rem}
+.plan-opt-desc{font-size:.62rem;color:var(--sub);margin-top:2px}
+.plan-opt-price{font-weight:800;font-size:.84rem;color:var(--green);font-family:'JetBrains Mono',monospace}
+/* transfer type tabs */
+.type-tabs{display:flex;gap:5px;background:var(--card);border-radius:10px;padding:4px;margin-bottom:14px}
+.type-tab{flex:1;padding:8px;border-radius:7px;font-size:.66rem;font-weight:700;color:var(--sub);text-align:center;cursor:pointer;transition:.15s}
+.type-tab.on{background:var(--grad);color:#fff}
+.type-pane{display:none}
+.type-pane.on{display:block}
+/* captcha */
+.captcha-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.captcha-q{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700;color:var(--green)}
+.captcha-inp{flex:1;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:.8rem;outline:none;text-align:center;max-width:80px}
+.captcha-ref{font-size:.6rem;cursor:pointer;color:var(--sub);padding:5px;transition:.15s}
+.captcha-ref:hover{color:var(--green)}
+/* verification popup */
+.verif-ico{text-align:center;font-size:3rem;margin-bottom:8px}
+.verif-ttl{text-align:center;font-size:1rem;font-weight:800;margin-bottom:6px}
+.verif-sub{text-align:center;font-size:.72rem;color:var(--sub);margin-bottom:18px;line-height:1.5}
+.wa-btn{width:100%;background:#25d366;color:#fff;border:none;border-radius:11px;padding:12px;font-weight:800;font-size:.82rem;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.wa-btn:hover{opacity:.9;transform:translateY(-1px)}
+/* bal hidden */
+.bal-hidden{letter-spacing:3px;font-size:1rem}
+
+/* ════════════ BOTTOM NAV ════════════ */
+.bnav{position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:stretch;z-index:300;padding-bottom:env(safe-area-inset-bottom,0)}
+.bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;transition:.15s;color:var(--sub)}
+.bn:hover,.bn.active{color:var(--green)}
+.bn-ico{font-size:1.1rem;line-height:1}
+.bn-lbl{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.bn.active .bn-lbl{color:var(--green)}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="page-loader">
+  <div class="loader-badge">*5050#</div>
+  <div class="loader-ring"></div>
+  <div class="loader-txt">Initialising SmartUSSD</div>
+</div>
+
+<div id="toast-el" class="toast"></div>
+
+<!-- MODAL OVERLAY -->
+<div class="modal-ov" id="modal-ov" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-body"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-badge">*5050#</div>
+    <span class="nav-name">SmartUSSD</span>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showView('home',this)">Home</button>
+    <button class="nav-tab" onclick="showView('user',this)">User Wallet</button>
+    <button class="nav-tab" onclick="showView('business',this)">Business</button>
+  </div>
+  <button class="nav-cta" onclick="openModal('register')">Get Started</button>
+</nav>
+
+<!-- ══════════ HOME VIEW ══════════ -->
+<div id="home-view" class="view active">
+
+  <div class="hero">
+    <div class="hero-label"><div class="dot-pulse"></div> Live on WhatsApp</div>
+    <h1>One Code.<br><span>Infinite</span> Services.</h1>
+    <p class="hero-desc">Dial <strong>*5050#</strong> to unlock an intelligent chatbot — send money, shop, pay bills and connect with thousands of registered businesses, all through WhatsApp.</p>
+    <div class="hero-btns">
+      <button class="btn-g" onclick="openModal('find-ussd')">🔍 Find a SmartUSSD</button>
+      <button class="btn-o" onclick="openModal('activate-ussd')">⚡ Activate My USSD</button>
+    </div>
+  </div>
+
+  <!-- phone mockup -->
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-top">
+        <div class="phone-notch"></div>
+        <div class="phone-status"><span>9:41</span><span>●●●</span></div>
+      </div>
+      <div class="phone-hdr">
+        <div class="phone-av">5K</div>
+        <div class="phone-info">
+          <div class="phone-name">*5050# SmartUSSD</div>
+          <div class="phone-status-txt">● Online</div>
+        </div>
+      </div>
+      <div class="phone-body" id="demo-chat">
+        <div class="cb cb-bot">
+          👋 Welcome to <strong>*5050# SmartUSSD</strong>!<br>
+          <span class="cm" onclick="demoType('1')">1. 💸 Send Money</span>
+          <span class="cm" onclick="demoType('2')">2. 🛒 Shop Now</span>
+          <span class="cm" onclick="demoType('3')">3. 📱 Buy Airtime</span>
+          <span class="cm" onclick="demoType('4')">4. 💡 Pay Bills</span>
+          <span class="cm" onclick="demoType('5')">5. 🏪 Find Business</span>
+        </div>
+      </div>
+      <div class="ph-inp">
+        <input id="demo-inp" placeholder="Reply with option…" onkeypress="if(event.key==='Enter')demoSend()">
+        <button onclick="demoSend()">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="feat-strip">
+    <div class="feat-cell"><div class="feat-ico">💳</div><div class="feat-t">WhatsApp Wallet</div><div class="feat-d">Fund, send, receive & manage money</div></div>
+    <div class="feat-cell"><div class="feat-ico">🏪</div><div class="feat-t">Business Hub</div><div class="feat-d">1,000+ vendors with instant checkout</div></div>
+    <div class="feat-cell"><div class="feat-ico">⚡</div><div class="feat-t">Instant Transfers</div><div class="feat-d">Send to any bank or wallet in seconds</div></div>
+    <div class="feat-cell"><div class="feat-ico">🤖</div><div class="feat-t">AI-Powered Bot</div><div class="feat-d">Natural language, no menus to memorise</div></div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-c"><div class="stat-n">₦2.4B+</div><div class="stat-l">Volume Processed</div></div>
+    <div class="stat-c"><div class="stat-n">340K</div><div class="stat-l">Active Users</div></div>
+    <div class="stat-c"><div class="stat-n">5,200</div><div class="stat-l">Businesses</div></div>
+    <div class="stat-c"><div class="stat-n">99.8%</div><div class="stat-l">Uptime</div></div>
+  </div>
+
+  <div class="services">
+    <div class="sec-hdr"><span class="sec-ttl">What you can do</span></div>
+    <div class="svc-grid">
+      <div class="svc-card" onclick="showView('user',null);loadChat('main')" style="animation-delay:.05s"><div class="svc-ico" style="background:rgba(0,210,141,.1)">💸</div><b>Send Money</b><small>P2P transfers, split bills</small><div class="svc-badge">Fintech</div></div>
+      <div class="svc-card" onclick="showView('user',null);loadChat('main')" style="animation-delay:.1s"><div class="svc-ico" style="background:rgba(75,68,224,.15)">🛒</div><b>Shop Vendors</b><small>Browse, order & pay in chat</small><div class="svc-badge">eCommerce</div></div>
+      <div class="svc-card" onclick="showView('user',null);loadChat('mtn')" style="animation-delay:.15s"><div class="svc-ico" style="background:rgba(245,158,11,.1)">📱</div><b>Airtime & Data</b><small>Recharge any network</small><div class="svc-badge">Utility</div></div>
+      <div class="svc-card" onclick="showView('user',null);loadChat('nepa')" style="animation-delay:.2s"><div class="svc-ico" style="background:rgba(59,130,246,.1)">💡</div><b>Pay Bills</b><small>Electricity, cable, school fees</small><div class="svc-badge">Utility</div></div>
+      <div class="svc-card" onclick="openModal('activate-ussd')" style="animation-delay:.25s"><div class="svc-ico" style="background:rgba(236,72,153,.1)">🏪</div><b>Virtual Store</b><small>Open your business chatbot</small><div class="svc-badge">Business</div></div>
+      <div class="svc-card" onclick="showView('business',null)" style="animation-delay:.3s"><div class="svc-ico" style="background:rgba(239,68,68,.1)">📊</div><b>Analytics</b><small>Track revenue & customers</small><div class="svc-badge">Business</div></div>
+    </div>
+  </div>
+  <div style="height:70px"></div>
+</div>
+
+<!-- ══════════ USER VIEW ══════════ -->
+<div id="user-view" class="view">
+  <div class="chat-wrap">
+    <div class="chat-side">
+      <div class="cs-head"><div class="cs-title">*5050# SmartUSSD</div><div class="cs-sub">Your financial assistant</div></div>
+      <div class="cs-srch"><input placeholder="Search services…"></div>
+      <div class="chat-list">
+        <div class="ci active" onclick="loadChat('main',this)"><div class="ci-av" style="background:rgba(0,210,141,.1)">🤖</div><div class="ci-info"><div class="ci-name">SmartUSSD Bot</div><div class="ci-prev">Welcome! How can I help?</div></div><div class="ci-meta"><div class="ci-time">Now</div><div class="ci-badge">3</div></div></div>
+        <div class="ci" onclick="loadChat('konga',this)"><div class="ci-av" style="background:rgba(245,158,11,.1)">🛍️</div><div class="ci-info"><div class="ci-name">Konga Store</div><div class="ci-prev">Your order is ready...</div></div><div class="ci-meta"><div class="ci-time">2m</div></div></div>
+        <div class="ci" onclick="loadChat('nepa',this)"><div class="ci-av" style="background:rgba(59,130,246,.1)">💡</div><div class="ci-info"><div class="ci-name">EKEDC Bills</div><div class="ci-prev">Token generated</div></div><div class="ci-meta"><div class="ci-time">1hr</div></div></div>
+        <div class="ci" onclick="loadChat('mtn',this)"><div class="ci-av" style="background:rgba(234,179,8,.1)">📱</div><div class="ci-info"><div class="ci-name">Airtime & Data</div><div class="ci-prev">₦1,000 recharged</div></div><div class="ci-meta"><div class="ci-time">5hr</div></div></div>
+      </div>
+    </div>
+    <div class="chat-main">
+      <div class="chat-topbar">
+        <div class="ct-info"><div class="ct-av">AK</div><div><div class="ct-name">*5050# SmartUSSD</div><div class="ct-status"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block"></span> Active Now</div></div></div>
+        <div class="ct-actions">
+          <button class="ct-btn" onclick="openModal('wallet-view')">💳 ••••••</button>
+          <button class="ct-btn" onclick="openModal('wa-verify')">👤 Profile</button>
+        </div>
+      </div>
+      <div class="msgs" id="msgs"></div>
+      <div class="chat-inp-area">
+        <input class="chat-inp" id="chat-inp" placeholder="Type or select an option…" onkeypress="if(event.key==='Enter')sendMsg()">
+        <button class="send-btn" onclick="sendMsg()">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ BUSINESS VIEW ══════════ -->
+<div id="business-view" class="view">
+  <div class="biz-wrap">
+    <div class="biz-hdr">
+      <div style="font-size:.62rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Business Portal</div>
+      <div style="font-size:1.3rem;font-weight:800">Grow with *5050#</div>
+    </div>
+    <div class="biz-tabs">
+      <button class="biz-tab active" onclick="showBizPanel('dashboard',this)">Dashboard</button>
+      <button class="biz-tab" onclick="showBizPanel('ussd-codes',this)">Get USSD Code</button>
+      <button class="biz-tab" onclick="showBizPanel('catalog',this)">Catalog</button>
+      <button class="biz-tab" onclick="showBizPanel('transactions',this)">Transactions</button>
+      <button class="biz-tab" onclick="showBizPanel('settings',this)">Bot Settings</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="biz-panel active" id="panel-dashboard">
+      <div class="dash-grid">
+        <div class="dc"><div class="dc-lbl">Today's Revenue</div><div class="dc-val" style="color:var(--green)">₦284,500</div><div class="dc-chg up">↑ 12.4%</div></div>
+        <div class="dc"><div class="dc-lbl">Total Orders</div><div class="dc-val">147</div><div class="dc-chg up">↑ 8 new</div></div>
+        <div class="dc"><div class="dc-lbl">Active Chats</div><div class="dc-val" style="color:#60a5fa">23</div><div class="dc-chg" style="color:var(--sub)">live</div></div>
+        <div class="dc"><div class="dc-lbl">Pending Payout</div><div class="dc-val" style="color:var(--amber)">₦1.2M</div><div class="dc-chg down">Tomorrow</div></div>
+      </div>
+      <div class="dash-2col">
+        <div class="tbl-card">
+          <div class="tbl-hdr"><span class="tbl-ttl">Recent Orders</span><button class="ct-btn">View All</button></div>
+          <table><thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead><tbody>
+            <tr><td>#ORD-8821</td><td>Aisha M.</td><td style="font-family:'JetBrains Mono',monospace">₦12,400</td><td><span class="sbadge sb-ok">Paid</span></td></tr>
+            <tr><td>#ORD-8820</td><td>Emeka O.</td><td style="font-family:'JetBrains Mono',monospace">₦8,750</td><td><span class="sbadge sb-pend">Pending</span></td></tr>
+            <tr><td>#ORD-8819</td><td>Fatima A.</td><td style="font-family:'JetBrains Mono',monospace">₦34,000</td><td><span class="sbadge sb-ok">Paid</span></td></tr>
+            <tr><td>#ORD-8818</td><td>Chidi N.</td><td style="font-family:'JetBrains Mono',monospace">₦5,200</td><td><span class="sbadge sb-fail">Failed</span></td></tr>
+          </tbody></table>
+        </div>
+        <div class="tbl-card">
+          <div class="tbl-hdr"><span class="tbl-ttl">Your Code</span></div>
+          <div style="padding:14px;text-align:center">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:800;color:var(--green);margin-bottom:6px">*5050*882#</div>
+            <div style="font-size:.62rem;color:var(--sub);margin-bottom:12px">Share with customers</div>
+            <div style="background:var(--card2);border-radius:10px;padding:10px;text-align:left;font-size:.62rem;line-height:1.9;color:var(--sub)">
+              <div>Plan: <span style="color:var(--text)">Business Pro</span></div>
+              <div>Expires: <span style="color:var(--text)">Dec 31, 2025</span></div>
+              <div>Chats: <span style="color:var(--green)">2,481/5,000</span></div>
+              <div>Status: <span style="color:var(--green)">● Active</span></div>
+            </div>
+            <button class="fs" style="margin-top:10px;font-size:.72rem" onclick="openModal('activate-ussd')">Renew / Upgrade</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- USSD CODES -->
+    <div class="biz-panel" id="panel-ussd-codes">
+      <div style="margin-bottom:14px"><div style="font-size:.62rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Plans</div><div style="font-size:1rem;font-weight:800">Choose Your Business Plan</div></div>
+      <div class="code-grid">
+        <div class="code-card" onclick="openActivateWithPlan('Starter','₦15,000')"><div class="code-plan">Starter</div><div class="code-price">₦15,000 <span>/yr</span></div><ul class="code-feats"><li>1 USSD code</li><li>500 chats/mo</li><li>50-item catalog</li><li>Basic payments</li><li>WhatsApp support</li></ul><button class="code-btn">Get Starter</button></div>
+        <div class="code-card feat" onclick="openActivateWithPlan('Business Pro','₦45,000')"><div class="code-plan">Business Pro</div><div class="code-price">₦45,000 <span>/yr</span></div><ul class="code-feats"><li>1 premium code</li><li>5,000 chats/mo</li><li>Unlimited catalog</li><li>Multi-gateway pay</li><li>Analytics</li><li>Custom bot</li><li>Priority support</li></ul><button class="code-btn">Get Pro</button></div>
+        <div class="code-card" onclick="openActivateWithPlan('Enterprise','₦120,000')"><div class="code-plan">Enterprise</div><div class="code-price">₦120,000 <span>/yr</span></div><ul class="code-feats"><li>3 USSD codes</li><li>Unlimited chats</li><li>White-label bot</li><li>API & webhooks</li><li>Dedicated manager</li><li>Multi-branch</li></ul><button class="code-btn">Contact Sales</button></div>
+      </div>
+    </div>
+
+    <!-- CATALOG -->
+    <div class="biz-panel" id="panel-catalog">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div style="font-size:1rem;font-weight:800">Your Store</div><button class="fs" style="width:auto;padding:8px 16px;font-size:.7rem" onclick="openModal('add-product')">+ Add Product</button></div>
+      <div class="prod-grid">
+        <div class="prod-card"><div class="prod-img" style="background:rgba(0,210,141,.05)">👟</div><div class="prod-info"><div class="prod-name">Nike Air Max</div><div class="prod-cat">Footwear</div><div class="prod-price">₦45,000</div><button class="prod-btn" onclick="showToast('✏️ Item editor opened')">Edit Item</button></div></div>
+        <div class="prod-card"><div class="prod-img" style="background:rgba(75,68,224,.05)">👔</div><div class="prod-info"><div class="prod-name">Oxford Shirt</div><div class="prod-cat">Clothing</div><div class="prod-price">₦12,500</div><button class="prod-btn" onclick="showToast('✏️ Item editor opened')">Edit Item</button></div></div>
+        <div class="prod-card"><div class="prod-img" style="background:rgba(245,158,11,.05)">📱</div><div class="prod-info"><div class="prod-name">iPhone Case</div><div class="prod-cat">Accessories</div><div class="prod-price">₦3,800</div><button class="prod-btn" onclick="showToast('✏️ Item editor opened')">Edit Item</button></div></div>
+        <div class="prod-card"><div class="prod-img" style="background:rgba(59,130,246,.05)">🎧</div><div class="prod-info"><div class="prod-name">Wireless Earbuds</div><div class="prod-cat">Electronics</div><div class="prod-price">₦28,000</div><button class="prod-btn" onclick="showToast('✏️ Item editor opened')">Edit Item</button></div></div>
+        <div class="prod-card"><div class="prod-img" style="background:rgba(16,185,129,.05)">🌿</div><div class="prod-info"><div class="prod-name">Shea Butter</div><div class="prod-cat">Beauty</div><div class="prod-price">₦4,200</div><button class="prod-btn" onclick="showToast('✏️ Item editor opened')">Edit Item</button></div></div>
+        <div class="prod-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:140px;cursor:pointer" onclick="openModal('add-product')"><div style="text-align:center;color:var(--sub)"><div style="font-size:1.5rem">＋</div><div style="font-size:.62rem;margin-top:4px">Add Product</div></div></div>
+      </div>
+    </div>
+
+    <!-- TRANSACTIONS -->
+    <div class="biz-panel" id="panel-transactions">
+      <div class="wallet-hero">
+        <div class="wh-lbl">Total Balance</div>
+        <div class="wh-bal">₦1,284,500.00</div>
+        <div class="wh-acts">
+          <button class="wh-btn wh-btn-p" onclick="openModal('withdraw')">Withdraw Funds</button>
+          <button class="wh-btn wh-btn-s" onclick="showToast('📄 Statement downloading…')">Statement</button>
+        </div>
+      </div>
+      <div class="tbl-card">
+        <div class="tbl-hdr"><span class="tbl-ttl">Transaction History</span><button class="ct-btn">Filter</button></div>
+        <table><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead><tbody>
+          <tr><td style="color:var(--sub)">Mar 19</td><td>Product Sale</td><td style="font-family:'JetBrains Mono',monospace;color:var(--green)">+₦12,400</td><td><span class="sbadge sb-ok">Done</span></td></tr>
+          <tr><td style="color:var(--sub)">Mar 19</td><td>Product Sale</td><td style="font-family:'JetBrains Mono',monospace;color:var(--amber)">₦8,750</td><td><span class="sbadge sb-pend">Pending</span></td></tr>
+          <tr><td style="color:var(--sub)">Mar 18</td><td>Payout</td><td style="font-family:'JetBrains Mono',monospace;color:var(--danger)">-₦200,000</td><td><span class="sbadge sb-ok">Done</span></td></tr>
+          <tr><td style="color:var(--sub)">Mar 18</td><td>Product Sale</td><td style="font-family:'JetBrains Mono',monospace;color:var(--green)">+₦34,000</td><td><span class="sbadge sb-ok">Done</span></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="biz-panel" id="panel-settings">
+      <div style="max-width:480px">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px">
+          <div style="font-weight:800;font-size:.82rem;margin-bottom:10px">Greeting Message</div>
+          <textarea class="fi" rows="3" style="resize:vertical;margin-bottom:8px">👋 Welcome to Chidi's Fashion Store! Browse our catalogue, place orders and pay securely via *5050*882#. Type 'MENU' to start.</textarea>
+          <button class="fs" style="font-size:.7rem" onclick="showToast('✅ Greeting saved')">Save Greeting</button>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px">
+          <div style="font-weight:800;font-size:.82rem;margin-bottom:10px">Payment Options</div>
+          <div style="display:flex;flex-direction:column;gap:9px;font-size:.72rem">
+            <label style="display:flex;align-items:center;gap:9px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--green)"> SmartUSSD Wallet</label>
+            <label style="display:flex;align-items:center;gap:9px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--green)"> Bank Transfer</label>
+            <label style="display:flex;align-items:center;gap:9px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--green)"> Card (Paystack)</label>
+            <label style="display:flex;align-items:center;gap:9px;cursor:pointer"><input type="checkbox" style="accent-color:var(--green)"> Crypto (USDT)</label>
+          </div>
+          <button class="fs" style="font-size:.7rem;margin-top:10px" onclick="showToast('✅ Payment settings saved')">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bnav">
+  <div class="bn active" onclick="showView('home',null);setBN(this)"><div class="bn-ico">🏠</div><div class="bn-lbl">Home</div></div>
+  <div class="bn" onclick="showView('user',null);setBN(this);loadChat('main')"><div class="bn-ico">💬</div><div class="bn-lbl">Wallet</div></div>
+  <div class="bn" onclick="openModal('find-ussd')"><div class="bn-ico">🔍</div><div class="bn-lbl">Find</div></div>
+  <div class="bn" onclick="showView('business',null);setBN(this)"><div class="bn-ico">🏪</div><div class="bn-lbl">Business</div></div>
+  <div class="bn" onclick="openModal('register')"><div class="bn-ico">👤</div><div class="bn-lbl">Account</div></div>
+</div>
+
+<script>
+const WA = 'https://wa.me/2348157505037?text=';
+
+/* ───────────── UTILITY ───────────── */
+function showToast(m){const t=document.getElementById('toast-el');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+function goWA(msg){window.open(WA+encodeURIComponent(msg),'_blank')}
+
+/* loader */
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('page-loader').classList.add('gone'),1200));
+
+/* nav views */
+function showView(v,btn){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.getElementById(v+'-view').classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  else{const map={home:0,user:1,business:2};document.querySelectorAll('.nav-tab')[map[v]]?.classList.add('active');}
+}
+function setBN(el){document.querySelectorAll('.bn').forEach(b=>b.classList.remove('active'));el.classList.add('active')}
+
+/* biz panels */
+function showBizPanel(id,btn){
+  document.querySelectorAll('.biz-panel').forEach(el=>el.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelectorAll('.biz-tab').forEach(el=>el.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+
+/* ───────────── MODAL ENGINE ───────────── */
+let captchaAns=0;
+function genCaptcha(){
+  const a=Math.floor(Math.random()*9)+1,b=Math.floor(Math.random()*9)+1;
+  captchaAns=a+b;
+  return `${a} + ${b} = ?`;
+}
+function refreshCaptcha(){
+  const q=genCaptcha();
+  document.getElementById('cap-q').textContent=q;
+  document.getElementById('cap-inp').value='';
+}
+function checkCaptcha(){
+  const v=parseInt(document.getElementById('cap-inp').value,10);
+  if(isNaN(v)||v!==captchaAns){showToast('❌ Wrong answer. Try again.');return false;}
+  return true;
+}
+
+function openModal(id){
+  const b=document.getElementById('modal-body');
+  b.innerHTML=MODALS[id]||'<p>Not found</p>';
+  document.getElementById('modal-ov').classList.add('open');
+  if(id==='send-money'){initTypeTabs();}
+}
+function closeModal(){document.getElementById('modal-ov').classList.remove('open')}
+
+function openActivateWithPlan(plan,price){
+  openModal('activate-ussd');
+  setTimeout(()=>{
+    document.querySelectorAll('.plan-opt').forEach(el=>{
+      if(el.dataset.plan===plan){el.classList.add('sel');el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+    });
+  },100);
+}
+
+/* ───────────── CAPTCHA WIDGET HTML ───────────── */
+function captchaHtml(){
+  const q=genCaptcha();
+  return `<div class="captcha-box"><div class="captcha-q" id="cap-q">${q}</div><input class="captcha-inp" id="cap-inp" type="number" placeholder="?"><span class="captcha-ref" onclick="refreshCaptcha()" title="Refresh">🔄</span></div>`;
+}
+
+/* ───────────── MODAL CONTENT ───────────── */
+const MODALS={
+  /* FIND USSD */
+  'find-ussd':`<div class="modal-head"><div class="modal-title">🔍 Find a SmartUSSD</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <p style="font-size:.72rem;color:var(--sub);margin-bottom:14px;line-height:1.5">Enter the *5050# SmartUSSD code of the business you want to connect to.</p>
+    <div class="fg"><label class="fl">SmartUSSD Code</label><input class="fi" id="find-code" placeholder="e.g. *5050*882#"></div>
+    <div class="fg"><label class="fl">Or Business Name</label><input class="fi" id="find-name" placeholder="e.g. Chidi's Fashion Store"></div>
+    <button class="fs" onclick="submitFindUSSD()">🔍 Connect via WhatsApp</button>`,
+
+  /* ACTIVATE USSD */
+  'activate-ussd':`<div class="modal-head"><div class="modal-title">⚡ Activate My SmartUSSD</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <p style="font-size:.72rem;color:var(--sub);margin-bottom:14px;line-height:1.5">Choose a plan and get your business's unique *5050# code activated on WhatsApp.</p>
+    <div class="plan-opts">
+      <div class="plan-opt" data-plan="Starter" onclick="selPlan(this)"><div><div class="plan-opt-name">🌱 Starter</div><div class="plan-opt-desc">500 chats/mo · 50 products</div></div><div class="plan-opt-price">₦15,000/yr</div></div>
+      <div class="plan-opt" data-plan="Business Pro" onclick="selPlan(this)"><div><div class="plan-opt-name">🚀 Business Pro</div><div class="plan-opt-desc">5,000 chats/mo · Unlimited products</div></div><div class="plan-opt-price">₦45,000/yr</div></div>
+      <div class="plan-opt" data-plan="Enterprise" onclick="selPlan(this)"><div><div class="plan-opt-name">🏢 Enterprise</div><div class="plan-opt-desc">Unlimited · 3 codes · White-label</div></div><div class="plan-opt-price">₦120,000/yr</div></div>
+    </div>
+    <div class="fg"><label class="fl">Business Name</label><input class="fi" id="act-biz-name" placeholder="Your Business Name"></div>
+    <div class="fg"><label class="fl">Phone Number</label><input class="fi" id="act-phone" placeholder="+234 800 000 0000"></div>
+    <button class="fs" onclick="submitActivate()">⚡ Activate via WhatsApp</button>`,
+
+  /* REGISTER */
+  'register':`<div class="modal-head"><div class="modal-title">👤 Create Account</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <div class="fg"><label class="fl">Full Name</label><input class="fi" id="reg-name" placeholder="Aisha Mohammed"></div>
+    <div class="fg"><label class="fl">Phone Number</label><input class="fi" id="reg-phone" placeholder="+234 800 000 0000"></div>
+    <div class="fg"><label class="fl">Email</label><input class="fi" id="reg-email" placeholder="you@example.com"></div>
+    <div class="fg"><label class="fl">4-Digit PIN</label><input class="fi" id="reg-pin" type="password" maxlength="4" placeholder="••••"></div>
+    <button class="fs" onclick="submitRegister()">Create Account via WhatsApp</button>`,
+
+  /* WALLET VIEW — balance hidden */
+  'wallet-view':`<div class="modal-head"><div class="modal-title">💳 Your Wallet</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <div style="background:var(--grad);border-radius:14px;padding:16px;margin-bottom:14px;position:relative;overflow:hidden">
+      <div style="font-size:.6rem;opacity:.8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;color:#fff">Available Balance</div>
+      <div style="font-size:1.8rem;font-weight:800;font-family:'JetBrains Mono',monospace;color:#fff" id="bal-display">₦ ••••••••</div>
+      <button onclick="openModal('wa-verify')" style="margin-top:10px;background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 14px;border-radius:8px;font-size:.66rem;font-weight:700;cursor:pointer">👁 Reveal via WhatsApp</button>
+    </div>
+    <div class="fg"><label class="fl">Fund Wallet — Enter Amount (₦)</label><input class="fi" id="fund-amt" placeholder="5,000"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <button class="fs" onclick="goWA('Fund my *5050# wallet with ₦'+document.getElementById('fund-amt').value+' via card');closeModal()">Fund via Card</button>
+      <button class="fs" style="background:var(--card2);color:var(--text);border:1px solid var(--border)" onclick="goWA('Fund my *5050# wallet via bank transfer');closeModal()">Bank Transfer</button>
+    </div>`,
+
+  /* WA VERIFY */
+  'wa-verify':`<div class="modal-head"><div class="modal-title"></div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <div class="verif-ico">🔐</div>
+    <div class="verif-ttl">WhatsApp Verification Required</div>
+    <div class="verif-sub">To protect your account, this action requires verification via WhatsApp. Tap the button below to continue securely.</div>
+    <button class="wa-btn" onclick="goWA('I need to verify my *5050# account to view my wallet balance');closeModal()"><span>📲</span> Verify on WhatsApp</button>`,
+
+  /* SEND MONEY */
+  'send-money':`<div class="modal-head"><div class="modal-title">💸 Send Money</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <div class="type-tabs">
+      <div class="type-tab on" onclick="switchType('bank',this)">🏦 To Bank</div>
+      <div class="type-tab" onclick="switchType('smartussd',this)">📟 SmartUSSD</div>
+      <div class="type-tab" onclick="switchType('self',this)">🔄 To Self</div>
+    </div>
+    <div class="type-pane on" id="tp-bank">
+      <div class="fg"><label class="fl">Recipient Name / Account</label><input class="fi" placeholder="Account Number or Name"></div>
+      <div class="fg"><label class="fl">Bank</label><select class="fi"><option>Access Bank</option><option>GTBank</option><option>Zenith Bank</option><option>First Bank</option><option>UBA</option><option>Kuda</option></select></div>
+      <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="sm-amt-bank" type="number" placeholder="0.00"></div>
+      <div class="fg"><label class="fl">Narration</label><input class="fi" placeholder="Optional note…"></div>
+    </div>
+    <div class="type-pane" id="tp-smartussd">
+      <div class="fg"><label class="fl">SmartUSSD ID / Phone</label><input class="fi" placeholder="@username or 0802XXXXXXX"></div>
+      <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="sm-amt-ussd" type="number" placeholder="0.00"></div>
+    </div>
+    <div class="type-pane" id="tp-self">
+      <div class="fg"><label class="fl">Transfer to My Account</label><input class="fi" value="Aisha Kabiru — 0802 345 6789" readonly style="color:var(--sub)"></div>
+      <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="sm-amt-self" type="number" placeholder="0.00"></div>
+    </div>
+    ${captchaHtml()}
+    <button class="fs" onclick="submitSendMoney()">📤 Send via WhatsApp</button>`,
+
+  /* SHOP */
+  'shop':`<div class="modal-head"><div class="modal-title">🛒 Shop</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <p style="font-size:.72rem;color:var(--sub);margin-bottom:14px;line-height:1.5">Enter the merchant's SmartUSSD code or business name to open their store on WhatsApp.</p>
+    <div class="fg"><label class="fl">Merchant USSD Code</label><input class="fi" id="shop-code" placeholder="e.g. *5050*882#"></div>
+    <div class="fg"><label class="fl">Or Business Name</label><input class="fi" id="shop-name" placeholder="e.g. Chidi's Fashion Store"></div>
+    <div class="fg"><label class="fl">Merchant WhatsApp Number</label><input class="fi" id="shop-wa" placeholder="+234 800 000 0000"></div>
+    <button class="fs" onclick="submitShop()">🛒 Open Store on WhatsApp</button>`,
+
+  /* AIRTIME */
+  'airtime':`<div class="modal-head"><div class="modal-title">📱 Airtime & Data</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <div class="fg"><label class="fl">Phone Number</label><input class="fi" id="air-phone" placeholder="+234 800 000 0000"></div>
+    <div class="fg"><label class="fl">Network</label><select class="fi" id="air-net"><option>MTN</option><option>Airtel</option><option>Glo</option><option>9mobile</option></select></div>
+    <div class="fg"><label class="fl">Type</label><select class="fi" id="air-type"><option>Airtime</option><option>Data Bundle</option></select></div>
+    <div class="fg"><label class="fl">Amount / Plan (₦)</label><input class="fi" id="air-amt" placeholder="1,000"></div>
+    ${captchaHtml()}
+    <button class="fs" onclick="submitAirtime()">📱 Buy via WhatsApp</button>`,
+
+  /* PAY BILLS */
+  'paybills':`<div class="modal-head"><div class="modal-title">💡 Pay Bills</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <div class="fg"><label class="fl">Service</label><select class="fi" id="bill-svc"><option>⚡ Electricity (EKEDC)</option><option>📺 DSTV</option><option>📺 GOtv</option><option>🏫 School Fees</option><option>💧 Water Bill</option><option>📡 Internet</option></select></div>
+    <div class="fg"><label class="fl">Account / Meter Number</label><input class="fi" id="bill-acct" placeholder="Account or Meter Number"></div>
+    <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="bill-amt" type="number" placeholder="5,000"></div>
+    ${captchaHtml()}
+    <button class="fs" onclick="submitBills()">💡 Pay via WhatsApp</button>`,
+
+  /* ADD PRODUCT */
+  'add-product':`<div class="modal-head"><div class="modal-title">➕ Add Product</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <div class="fg"><label class="fl">Product Name</label><input class="fi" placeholder="e.g. Ankara Print Dress"></div>
+    <div class="fg"><label class="fl">Category</label><select class="fi"><option>Clothing & Fashion</option><option>Electronics</option><option>Food & Beverages</option><option>Beauty & Health</option><option>Home & Living</option></select></div>
+    <div class="fg"><label class="fl">Price (₦)</label><input class="fi" type="number" placeholder="0.00"></div>
+    <div class="fg"><label class="fl">Stock Quantity</label><input class="fi" type="number" placeholder="0"></div>
+    <button class="fs" onclick="showToast('✅ Product added to catalog');closeModal()">Add to Catalog</button>`,
+
+  /* WITHDRAW */
+  'withdraw':`<div class="modal-head"><div class="modal-title">💰 Withdraw Funds</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="wd-amt" placeholder="Min ₦5,000"></div>
+    <div class="fg"><label class="fl">Bank Account</label><select class="fi"><option>Access Bank — 0123456789</option><option>GTBank — 0987654321</option><option>Add New Account</option></select></div>
+    <button class="fs" onclick="goWA('I want to withdraw ₦'+document.getElementById('wd-amt').value+' from my *5050# business wallet');closeModal()">Confirm Withdrawal via WhatsApp</button>`,
+
+  /* PURCHASE */
+  'purchase':`<div class="modal-head"><div class="modal-title">💳 Purchase Plan</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <div class="fg"><label class="fl">Business Name</label><input class="fi" id="pur-biz" placeholder="Your Business Name"></div>
+    <div class="fg"><label class="fl">Phone Number</label><input class="fi" id="pur-ph" placeholder="+234 800 000 0000"></div>
+    <button class="fs" onclick="goWA('I want to purchase a SmartUSSD code for my business: '+document.getElementById('pur-biz').value);closeModal()">Pay via WhatsApp</button>`,
+};
+
+/* ───────────── SUBMIT HANDLERS ───────────── */
+function submitFindUSSD(){
+  const code=document.getElementById('find-code').value.trim();
+  const name=document.getElementById('find-name').value.trim();
+  if(!code&&!name){showToast('⚠️ Enter a code or business name');return;}
+  const msg=code?`I want to connect to SmartUSSD code ${code}`:`I want to find the SmartUSSD for "${name}"`;
+  goWA(msg);closeModal();
+}
+function selPlan(el){document.querySelectorAll('.plan-opt').forEach(e=>e.classList.remove('sel'));el.classList.add('sel')}
+function submitActivate(){
+  const sel=document.querySelector('.plan-opt.sel');
+  const biz=document.getElementById('act-biz-name')?.value.trim();
+  const ph=document.getElementById('act-phone')?.value.trim();
+  const plan=sel?sel.dataset.plan:'Business Pro';
+  if(!biz){showToast('⚠️ Enter your business name');return;}
+  goWA(`I want to activate a SmartUSSD code on the ${plan} plan. Business: ${biz}. Phone: ${ph}`);
+  closeModal();
+}
+function submitRegister(){
+  const n=document.getElementById('reg-name').value.trim();
+  const ph=document.getElementById('reg-phone').value.trim();
+  if(!n||!ph){showToast('⚠️ Please fill all fields');return;}
+  goWA(`I want to create a *5050# SmartUSSD account. Name: ${n}. Phone: ${ph}`);
+  closeModal();
+}
+function initTypeTabs(){
+  const tabs=document.querySelectorAll('.type-tab');
+  const panes=document.querySelectorAll('.type-pane');
+  if(!tabs.length) return;
+}
+function switchType(id,el){
+  document.querySelectorAll('.type-tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.type-pane').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('tp-'+id)?.classList.add('on');
+}
+function submitSendMoney(){
+  if(!checkCaptcha()) return;
+  const activePane=document.querySelector('.type-pane.on');
+  const paneId=activePane?.id;
+  let msg='';
+  if(paneId==='tp-bank') msg=`I want to send ₦${document.getElementById('sm-amt-bank')?.value||''} to a bank account via *5050#`;
+  else if(paneId==='tp-smartussd') msg=`I want to send ₦${document.getElementById('sm-amt-ussd')?.value||''} to a SmartUSSD wallet`;
+  else msg=`I want to make a self-transfer of ₦${document.getElementById('sm-amt-self')?.value||''} on *5050#`;
+  goWA(msg);closeModal();
+}
+function submitShop(){
+  const code=document.getElementById('shop-code').value.trim();
+  const name=document.getElementById('shop-name').value.trim();
+  const wa=document.getElementById('shop-wa').value.trim();
+  if(!code&&!name){showToast('⚠️ Enter a merchant code or name');return;}
+  goWA(`I want to shop from ${name||code}${wa?' (WhatsApp: '+wa+')':''} via *5050#`);closeModal();
+}
+function submitAirtime(){
+  if(!checkCaptcha()) return;
+  const ph=document.getElementById('air-phone').value.trim();
+  const net=document.getElementById('air-net').value;
+  const type=document.getElementById('air-type').value;
+  const amt=document.getElementById('air-amt').value;
+  if(!ph||!amt){showToast('⚠️ Fill in all fields');return;}
+  goWA(`I want to buy ${type} worth ₦${amt} on ${net} for ${ph} via *5050#`);closeModal();
+}
+function submitBills(){
+  if(!checkCaptcha()) return;
+  const svc=document.getElementById('bill-svc').value;
+  const acct=document.getElementById('bill-acct').value.trim();
+  const amt=document.getElementById('bill-amt').value;
+  if(!acct||!amt){showToast('⚠️ Fill in all fields');return;}
+  goWA(`I want to pay ${svc} bill. Account: ${acct}. Amount: ₦${amt} via *5050#`);closeModal();
+}
+
+/* ───────────── CHAT ENGINE ───────────── */
+const CHAT_FLOWS={
+  main:[{role:'b',text:'👋 Welcome back, <strong>Aisha</strong>!<br>Your wallet balance is <strong>₦ ••••••</strong><br><br>What would you like to do today?',opts:['💸 Send Money','🛒 Shop','📱 Airtime','💡 Pay Bills','📊 History']}],
+  konga:[{role:'b',text:'🛍️ <strong>Konga Store</strong><br><br>Order <strong>#KO-44821</strong> (Samsung 65" TV) is ready for delivery.',opts:['📦 Track Order','💳 Pay Balance','🔄 Return']}],
+  nepa:[{role:'b',text:'💡 <strong>EKEDC Bills</strong><br><br>Meter: <strong>45120398712</strong><br>Last pay: ₦10,000 (Mar 15)<br>Debt: ₦0.00',opts:['₦2,000','₦5,000','₦10,000','₦20,000']}],
+  mtn:[{role:'b',text:'📱 <strong>Airtime & Data</strong><br><br>Last: ₦1,000 on MTN 0802345XXXX',opts:['📞 Airtime','🌐 Data Bundle','📡 Auto-Recharge']}],
+};
+const BOT_REPLIES={
+  '💸 Send Money':{text:'Choose transfer type:',action:'send-money'},
+  '🛒 Shop':{text:'Enter merchant details:',action:'shop'},
+  '📱 Airtime':{text:'Purchase airtime or data:',action:'airtime'},
+  '💡 Pay Bills':{text:'Select a bill to pay:',action:'paybills'},
+  '📊 History':{text:'📊 <strong>Recent Transactions</strong><br>• ↑ Sent ₦45,000 to Emeka — Mar 19<br>• ↓ Recv ₦12,000 from Ngozi — Mar 18<br>• ⚡ Elec ₦5,000 — Mar 18<br>• 📱 Airtime ₦1,000 — Mar 17',opts:['View More','📥 Statement']},
+  '📦 Track Order':{text:'📦 Order #KO-44821 — <strong>Out for Delivery</strong> 🚚<br>Arrives today 2–5pm.',opts:['📞 Call Rider']},
+  '₦5,000':{text:'',action:'paybills'},
+  '📞 Airtime':{text:'',action:'airtime'},
+  '🌐 Data Bundle':{text:'',action:'airtime'},
+  'default':{text:'🤖 Got it! Let me help.<br>What else can I do for you?',opts:['🏠 Main Menu','💳 Wallet','🛒 Shop']},
+};
+
+function loadChat(id,listEl){
+  if(listEl){document.querySelectorAll('.ci').forEach(e=>e.classList.remove('active'));listEl.classList.add('active');}
+  const area=document.getElementById('msgs');area.innerHTML='';
+  const flow=CHAT_FLOWS[id]||CHAT_FLOWS.main;
+  flow.forEach(m=>appendMsg(m.role,m.text,m.opts,false));
+}
+function appendMsg(role,text,opts,animate=true){
+  const area=document.getElementById('msgs');
+  const div=document.createElement('div');
+  div.className='msg '+(role==='u'?'u':'b');
+  const now=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const avHtml=role==='b'
+    ?`<div class="msg-av" style="background:rgba(0,210,141,.15);font-size:1rem">🤖</div>`
+    :`<div class="msg-av" style="background:var(--grad);color:#fff">AK</div>`;
+  const bubbleHtml=`<div class="msg-bub">${text}</div>`;
+  let optsHtml='';
+  if(opts&&opts.length) optsHtml=`<div class="menu-opts">${opts.map(o=>`<button class="mopt" onclick="handleOpt('${o}')">${o}</button>`).join('')}</div>`;
+  const timeHtml=`<div class="msg-t">${now}</div>`;
+  div.innerHTML=avHtml+`<div style="display:flex;flex-direction:column;gap:3px">${bubbleHtml}${optsHtml}${timeHtml}</div>`;
+  if(animate) div.style.animation='fadeUp .3s ease';
+  area.appendChild(div);
+  area.scrollTop=area.scrollHeight;
+}
+function handleOpt(opt){
+  appendMsg('u',opt,null);
+  setTimeout(()=>{
+    const r=BOT_REPLIES[opt]||BOT_REPLIES.default;
+    if(r.action){
+      appendMsg('b','Opening secure form for you…',null);
+      setTimeout(()=>openModal(r.action),400);
+    } else {
+      appendMsg('b',r.text,r.opts);
+    }
+  },500);
+}
+function sendMsg(){
+  const inp=document.getElementById('chat-inp');
+  const txt=inp.value.trim();if(!txt) return;
+  appendMsg('u',txt,null);inp.value='';
+  setTimeout(()=>{
+    const l=txt.toLowerCase();
+    let r;
+    if(l.includes('send')||l.includes('transfer')) r=BOT_REPLIES['💸 Send Money'];
+    else if(l.includes('shop')||l.includes('buy')) r=BOT_REPLIES['🛒 Shop'];
+    else if(l.includes('airtime')||l.includes('data')) r=BOT_REPLIES['📞 Airtime'];
+    else if(l.includes('bill')||l.includes('electric')) r=BOT_REPLIES['💡 Pay Bills'];
+    else r=BOT_REPLIES.default;
+    if(r.action){appendMsg('b','Opening secure form…',null);setTimeout(()=>openModal(r.action),400);}
+    else appendMsg('b',r.text,r.opts);
+  },600);
+}
+
+/* ───────────── DEMO PHONE ───────────── */
+const demoMap={
+  '1':'💸 Send Money:\n1. To Bank\n2. To SmartUSSD\n3. To Self',
+  '2':'🛒 Shop:\nEnter *5050*XXX# or search by business name',
+  '3':'📱 Airtime:\n1. ₦100  2. ₦500\n3. ₦1,000  4. ₦2,000',
+  '4':'💡 Bill Payments:\n1. Electricity\n2. DSTV/GOtv\n3. Water',
+  '5':'🔍 Find Business:\nEnter USSD code or name',
+};
+function demoSend(){
+  const inp=document.getElementById('demo-inp');
+  const v=inp.value.trim();if(!v) return;
+  const chat=document.getElementById('demo-chat');
+  const u=document.createElement('div');u.className='cb cb-user';u.textContent=v;chat.appendChild(u);
+  inp.value='';chat.scrollTop=chat.scrollHeight;
+  setTimeout(()=>{
+    const bot=document.createElement('div');bot.className='cb cb-bot';
+    bot.textContent=demoMap[v]||'I didn\'t get that. Reply with 1-5.';
+    chat.appendChild(bot);chat.scrollTop=chat.scrollHeight;
+  },500);
+}
+document.getElementById('demo-inp').addEventListener('keypress',e=>{if(e.key==='Enter')demoSend()});
+function demoType(n){document.getElementById('demo-inp').value=n;demoSend()}
+
+/* init */
+loadChat('main');
+</script>
+</body>
+</html>
