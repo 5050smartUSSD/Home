@@ -451,6 +451,76 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
 .tx-preview-val{color:var(--text);font-family:'JetBrains Mono',monospace;font-weight:700}
 .tx-preview-total{color:var(--green);font-size:.8rem}
 
+
+/* ══════════ AIRTIME / SWAP UI ══════════ */
+.air-svc-opt{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:14px 10px;cursor:pointer;text-align:center;transition:.2s}
+.air-svc-opt:hover{border-color:rgba(0,210,141,.3);transform:translateY(-1px)}
+.air-svc-opt.sel{border-color:var(--green);background:rgba(0,210,141,.06)}
+.air-type-pill{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:9px 10px;font-size:.7rem;font-weight:700;color:var(--sub);cursor:pointer;text-align:center;transition:.2s;display:block}
+.air-type-pill.sel{background:rgba(0,210,141,.1);border-color:var(--green);color:var(--green)}
+.air-plan-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:.2s}
+.air-plan-card:hover{border-color:rgba(0,210,141,.35);background:rgba(0,210,141,.05);transform:translateY(-1px)}
+.air-plan-size{font-size:.88rem;font-weight:800;font-family:'Syne',sans-serif;color:var(--text)}
+.air-plan-dur{font-size:.54rem;color:var(--sub);margin:2px 0}
+.air-plan-price{font-size:.7rem;font-weight:800;color:var(--green);font-family:'JetBrains Mono',monospace}
+.swap-type-opt{background:var(--card);border:2px solid var(--border);border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:.2s;font-size:.74rem;font-weight:700;color:var(--sub)}
+.swap-type-opt:hover{border-color:rgba(245,158,11,.4);color:var(--amber)}
+.swap-type-opt.sel{border-color:var(--amber);background:rgba(245,158,11,.07);color:var(--amber)}
+.amt-pill{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:5px 11px;font-size:.62rem;font-weight:700;color:var(--sub);transition:.15s;cursor:pointer}
+.amt-pill:hover{border-color:rgba(0,210,141,.4);color:var(--green);background:rgba(0,210,141,.05)}
+
+/* ══════════ BILLS UI ══════════ */
+.bill-cat-tab{padding:7px 12px;border-radius:7px;font-size:.64rem;font-weight:700;color:var(--sub);white-space:nowrap;cursor:pointer;transition:.15s;flex-shrink:0}
+.bill-cat-tab:hover{background:var(--card2);color:var(--text)}
+.bill-cat-tab.active{background:var(--grad);color:#fff}
+.bill-pane{display:none}
+.bill-pane.active{display:block}
+.meter-type-opt{background:var(--card);border:2px solid var(--border);border-radius:9px;padding:9px;text-align:center;cursor:pointer;transition:.2s;font-size:.7rem;font-weight:700;color:var(--sub)}
+.meter-type-opt:hover{border-color:rgba(0,210,141,.35)}
+.meter-type-opt.sel{border-color:var(--green);background:rgba(0,210,141,.07);color:var(--green)}
+
+/* ══════════ TERMS / EULA VIEW ══════════ */
+#terms-view{display:none;min-height:calc(100vh - 130px);padding:0 0 80px}
+#terms-view.active{display:block}
+.terms-hero{background:linear-gradient(135deg,#0a0a1a,#0d1a14,#0a0a1a);border-bottom:1px solid var(--border);padding:28px 20px 24px;position:relative;overflow:hidden}
+.terms-hero::before{content:'';position:absolute;top:-60px;right:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(0,210,141,.08),transparent 70%)}
+.terms-hero::after{content:'';position:absolute;bottom:-40px;left:-20px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(75,68,224,.08),transparent 70%)}
+.terms-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(0,210,141,.08);border:1px solid rgba(0,210,141,.2);border-radius:20px;padding:4px 12px;font-size:.6rem;font-weight:700;color:var(--green);letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px}
+.terms-title{font-size:clamp(1.4rem,4vw,2rem);font-weight:800;font-family:'Syne',sans-serif;line-height:1.2;margin-bottom:8px}
+.terms-title span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.terms-subtitle{font-size:.76rem;color:var(--sub);line-height:1.7;max-width:560px}
+.terms-meta{display:flex;gap:14px;margin-top:16px;flex-wrap:wrap}
+.terms-meta-item{font-size:.62rem;color:var(--sub);display:flex;align-items:center;gap:5px}
+.terms-meta-item strong{color:var(--text)}
+.terms-body{max-width:760px;margin:0 auto;padding:24px 20px}
+.terms-toc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:28px}
+.terms-toc-title{font-size:.72rem;font-weight:800;color:var(--text);margin-bottom:10px;font-family:'Syne',sans-serif;display:flex;align-items:center;gap:6px}
+.terms-toc-list{list-style:none;display:flex;flex-direction:column;gap:4px}
+.terms-toc-list li a{font-size:.68rem;color:var(--sub);text-decoration:none;display:flex;align-items:center;gap:6px;padding:3px 0;transition:.15s}
+.terms-toc-list li a:hover{color:var(--green)}
+.terms-toc-list li a::before{content:'';width:3px;height:3px;border-radius:50%;background:var(--green);flex-shrink:0;opacity:.6}
+.terms-section{margin-bottom:32px;scroll-margin-top:120px}
+.terms-section-num{font-size:.6rem;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px;font-family:'JetBrains Mono',monospace}
+.terms-section-title{font-size:1.05rem;font-weight:800;font-family:'Syne',sans-serif;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.terms-section p{font-size:.78rem;color:var(--sub);line-height:1.85;margin-bottom:10px}
+.terms-section p strong{color:var(--text)}
+.terms-section p a{color:var(--green);text-decoration:none}
+.terms-section p a:hover{text-decoration:underline}
+.terms-ul{list-style:none;margin:10px 0 14px;display:flex;flex-direction:column;gap:7px}
+.terms-ul li{font-size:.76rem;color:var(--sub);line-height:1.7;display:flex;gap:10px;align-items:flex-start}
+.terms-ul li::before{content:'→';color:var(--green);font-weight:800;flex-shrink:0;margin-top:1px;font-family:'JetBrains Mono',monospace}
+.terms-ul li strong{color:var(--text)}
+.terms-callout{background:linear-gradient(135deg,rgba(0,210,141,.06),rgba(75,68,224,.06));border:1px solid rgba(0,210,141,.2);border-radius:12px;padding:14px 16px;margin:14px 0}
+.terms-callout-title{font-size:.72rem;font-weight:800;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.terms-callout p{font-size:.72rem;color:var(--sub);line-height:1.7;margin:0}
+.terms-warning{background:rgba(255,77,109,.06);border:1px solid rgba(255,77,109,.2);border-radius:12px;padding:14px 16px;margin:14px 0}
+.terms-warning-title{font-size:.72rem;font-weight:800;color:var(--danger);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.terms-warning p{font-size:.72rem;color:var(--sub);line-height:1.7;margin:0}
+.terms-footer{background:var(--surface);border-top:1px solid var(--border);padding:20px;text-align:center;margin-top:20px}
+.terms-footer p{font-size:.68rem;color:var(--sub);line-height:1.7;margin-bottom:8px}
+.terms-accept-btn{display:inline-flex;align-items:center;gap:8px;background:var(--grad);color:#fff;border:none;border-radius:12px;padding:12px 28px;font-weight:800;font-size:.8rem;cursor:pointer;transition:.2s;box-shadow:0 6px 20px rgba(0,210,141,.3)}
+.terms-accept-btn:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 10px 28px rgba(0,210,141,.4)}
+
 /* ══════════ SCROLL ANIMATIONS ══════════ */
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
@@ -606,8 +676,8 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
         AK
       </div>
       <div class="profile-info">
-        <div class="profile-name">Aisha Kabiru</div>
-        <div class="profile-phone">+234 802 345 6789</div>
+        <div class="profile-name">goAPPs User</div>
+        <div class="profile-phone">+234 *** *** ****</div>
         <button class="profile-edit-btn" onclick="openModal('wa-verify');closeSideMenu()">✏️ Edit Profile</button>
       </div>
     </div>
@@ -618,6 +688,7 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
       <div class="side-nav-item" onclick="openModal('find-ussd');closeSideMenu()"><div class="side-nav-ico">🔍</div> Find SmartUSSD</div>
       <div class="side-nav-item" onclick="openModal('activate-ussd');closeSideMenu()"><div class="side-nav-ico">⚡</div> Activate My USSD</div>
       <div class="side-divider"></div>
+      <div class="side-nav-item" onclick="showView('terms',null);closeSideMenu()"><div class="side-nav-ico">📋</div> Terms & Policy</div>
       <div class="side-nav-item" onclick="openModal('register');closeSideMenu()"><div class="side-nav-ico">👤</div> Create Account</div>
       <div class="side-nav-item" onclick="showToast('📞 Calling support…');closeSideMenu()"><div class="side-nav-ico">🎧</div> Support</div>
       <div class="side-nav-item" onclick="showToast('ℹ️ Version 2.4.1');closeSideMenu()"><div class="side-nav-ico">ℹ️</div> About *5050#</div>
@@ -701,6 +772,7 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
   <button class="nav-tab active" onclick="showView('home',this)">🏠 Home</button>
   <button class="nav-tab" onclick="showView('user',this)">💬 User Wallet</button>
   <button class="nav-tab" onclick="showView('business',this)">🏪 Business</button>
+  <button class="nav-tab" onclick="showView('terms',this)">📋 Terms & Policy</button>
 </div>
 
 <!-- FLOATING GET SMARTUSSD BUTTON -->
@@ -720,15 +792,15 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
     </div>
     <h1>
       <span class="hero-line">
-        <span class="hero-word" style="animation-delay:.05s">One</span>
-        <span class="hero-word" style="animation-delay:.1s"> Code.</span>
+        <span class="hero-word" style="animation-delay:.05s">Never</span>
+        <span class="hero-word" style="animation-delay:.1s"> Loose a Customer.</span>
       </span>
       <span class="hero-line">
-        <span class="hero-word" style="animation-delay:.2s;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Infinite</span>
-        <span class="hero-word" style="animation-delay:.28s"> Services.</span>
+        <span class="hero-word" style="animation-delay:.2s;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Activate</span>
+        <span class="hero-word" style="animation-delay:.28s"> *5050# NOW.</span>
       </span>
     </h1>
-    <p class="hero-desc">Dial <strong style="color:var(--green);font-family:'JetBrains Mono',monospace">*5050#</strong> to unlock an intelligent chatbot — send token, shop, pay bills and connect with thousands of registered businesses, all through WhatsApp.</p>
+    <p class="hero-desc">When you <strong style="color:var(--green);font-family:'JetBrains Mono',monospace">WhatsApp*5050# to +2348157505037</strong> you unlock an intelligent Digital Assistant that helps your customers & clients — easily process payment, shop, pay bills and connect with thousands of registered businesses, all through WhatsApp, Telegram and more.</p>
     <div class="hero-btns">
       <button class="btn-g" onclick="openModal('find-ussd')">🔍 Find a SmartUSSD</button>
       <button class="btn-o" onclick="openModal('activate-ussd')">⚡ Activate My USSD</button>
@@ -798,13 +870,13 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
     <div class="feat-cell"><div class="feat-ico">💳</div><div class="feat-t">WhatsApp Wallet</div><div class="feat-d">Fund, send, receive & manage TokenDrops</div></div>
     <div class="feat-cell"><div class="feat-ico">🏪</div><div class="feat-t">Business Hub</div><div class="feat-d">1,000+ vendors with instant checkout</div></div>
     <div class="feat-cell"><div class="feat-ico">⚡</div><div class="feat-t">Instant Transfers</div><div class="feat-d">Send to any bank or wallet in seconds</div></div>
-    <div class="feat-cell"><div class="feat-ico">🤖</div><div class="feat-t">AI-Powered Bot</div><div class="feat-d">Natural language, no menus to memorise</div></div>
+    <div class="feat-cell"><div class="feat-ico">🤖</div><div class="feat-t">AI-Powered Bot</div><div class="feat-d">Natural language, no menus to memorise or session timeouts.</div></div>
   </div>
 
   <div class="stats-row reveal">
-    <div class="stat-c"><div class="stat-n">₦2.4B+</div><div class="stat-l">Volume Processed</div></div>
-    <div class="stat-c"><div class="stat-n">340K</div><div class="stat-l">Active Users</div></div>
-    <div class="stat-c"><div class="stat-n">5,200</div><div class="stat-l">Businesses</div></div>
+    <div class="stat-c"><div class="stat-n">₦2.1m+</div><div class="stat-l">Volume Processed</div></div>
+    <div class="stat-c"><div class="stat-n">3m+</div><div class="stat-l">Active Users</div></div>
+    <div class="stat-c"><div class="stat-n">1m+</div><div class="stat-l">Businesses</div></div>
     <div class="stat-c"><div class="stat-n">99.8%</div><div class="stat-l">Uptime</div></div>
   </div>
 
@@ -924,16 +996,16 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
             <div class="vcard-balance-val" id="vcard-bal">₦ ••••••</div>
             <button class="vcard-show-btn" onclick="event.stopPropagation();openModal('wa-verify')">👁 Show</button>
           </div>
-          <div class="vcard-number">*5050  ••••  ••••  8821</div>
+          <div class="vcard-number">*5050* ••••  ••••  ****</div>
           <div class="vcard-footer">
             <div>
-              <div class="vcard-holder">AISHA KABIRU</div>
+              <div class="vcard-holder">🇳🇬</div>
             </div>
             <div style="text-align:right">
               <div class="vcard-expiry-lbl">Valid</div>
               <div class="vcard-expiry">12/27</div>
             </div>
-            <div class="vcard-logo">*5050#</div>
+            <div class="vcard-logo">goAPPs User</div>
           </div>
           <div class="vcard-neon-line"></div>
           <div class="vcard-flip-hint">↩ flip</div>
@@ -1003,9 +1075,9 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
     <div class="biz-tabs">
       <button class="biz-tab active" onclick="showBizPanel('dashboard',this)">Dashboard</button>
       <button class="biz-tab" onclick="showBizPanel('ussd-codes',this)">Get USSD Code</button>
-      <button class="biz-tab" onclick="showBizPanel('catalog',this)">Catalog</button>
+      <button class="biz-tab" onclick="showBizPanel('catalog',this)">Merchants</button>
       <button class="biz-tab" onclick="showBizPanel('transactions',this)">Transactions</button>
-      <button class="biz-tab" onclick="showBizPanel('settings',this)">Bot Settings</button>
+      <button class="biz-tab" onclick="showBizPanel('settings',this)">*5050# Settings</button>
     </div>
     <div class="biz-panel active" id="panel-dashboard">
       <div class="dash-grid">
@@ -1027,7 +1099,7 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
         <div class="tbl-card">
           <div class="tbl-hdr"><span class="tbl-ttl">Your Code</span></div>
           <div style="padding:14px;text-align:center">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:800;color:var(--green);margin-bottom:6px">*5050*882#</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:800;color:var(--green);margin-bottom:6px">*5050*---#</div>
             <div style="font-size:.62rem;color:var(--sub);margin-bottom:12px">Share with customers</div>
             <div style="background:var(--card2);border-radius:10px;padding:10px;text-align:left;font-size:.62rem;line-height:1.9;color:var(--sub)">
               <div>Plan: <span style="color:var(--text)">Business Pro</span></div>
@@ -1043,9 +1115,9 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
     <div class="biz-panel" id="panel-ussd-codes">
       <div style="margin-bottom:14px"><div style="font-size:.62rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Plans</div><div style="font-size:1rem;font-weight:800;font-family:'Syne',sans-serif">Choose Your Business Plan</div></div>
       <div class="code-grid">
-        <div class="code-card" onclick="openActivateWithPlan('Starter','₦15,000')"><div class="code-plan">Starter</div><div class="code-price">₦15,000 <span>/yr</span></div><ul class="code-feats"><li>1 USSD code</li><li>500 chats/mo</li><li>50-item catalog</li><li>Basic payments</li><li>WhatsApp support</li></ul><button class="code-btn">Get Starter</button></div>
-        <div class="code-card feat" onclick="openActivateWithPlan('Business Pro','₦45,000')"><div class="code-plan">Business Pro</div><div class="code-price">₦45,000 <span>/yr</span></div><ul class="code-feats"><li>1 premium code</li><li>5,000 chats/mo</li><li>Unlimited catalog</li><li>Multi-gateway pay</li><li>Analytics</li><li>Custom bot</li><li>Priority support</li></ul><button class="code-btn">Get Pro</button></div>
-        <div class="code-card" onclick="openActivateWithPlan('Enterprise','₦120,000')"><div class="code-plan">Enterprise</div><div class="code-price">₦120,000 <span>/yr</span></div><ul class="code-feats"><li>3 USSD codes</li><li>Unlimited chats</li><li>White-label bot</li><li>API & webhooks</li><li>Dedicated manager</li><li>Multi-branch</li></ul><button class="code-btn">Contact Sales</button></div>
+        <div class="code-card" onclick="openActivateWithPlan('Starter','₦1,739,999')"><div class="code-plan">Starter</div><div class="code-price">₦1,739,999 <span>/yr</span></div><ul class="code-feats"><li>1 USSD code</li><li>upto 500 chats/mo + Basic Tier</li><li>50-item catalog</li><li>Basic payments</li><li>WhatsApp support</li></ul><button class="code-btn">Get Starter</button></div>
+        <div class="code-card feat" onclick="openActivateWithPlan('Business Pro','₦3,715,600')"><div class="code-plan">Business Pro</div><div class="code-price">₦3,715,600 <span>/yr</span></div><ul class="code-feats"><li>1 premium code</li><li>upto 5,000 chats/mo + Tier 2</li><li>Unlimited catalog</li><li>Multi-gateway pay</li><li>Analytics</li><li>Custom Assistant</li><li>Priority support</li></ul><button class="code-btn">Get Pro</button></div>
+        <div class="code-card" onclick="openActivateWithPlan('Enterprise','₦5,999,000')"><div class="code-plan">Enterprise</div><div class="code-price">₦5,999,000 <span>/yr</span></div><ul class="code-feats"><li>3 USSD codes</li><li>Unlimited chats</li><li>Personal Assistant Branding</li><li>API & webhooks</li><li>Dedicated manager</li><li>Multi-branch</li></ul><button class="code-btn">Contact Sales</button></div>
       </div>
     </div>
     <div class="biz-panel" id="panel-catalog">
@@ -1054,7 +1126,7 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
           <div style="font-size:.6rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Marketplace</div>
           <div style="font-size:1rem;font-weight:800;font-family:'Syne',sans-serif">Featured Merchants</div>
         </div>
-        <button class="fs" style="width:auto;padding:8px 16px;font-size:.7rem" onclick="openModal('biz-verify')">+ Add Product</button>
+        <button class="fs" style="width:auto;padding:8px 16px;font-size:.7rem" onclick="openModal('biz-verify')">+ Join Merchants</button>
       </div>
       <!-- BIZ AD BANNER -->
       <div id="biz-ad-banner" style="overflow:hidden;background:linear-gradient(90deg,#0f0f1a,#13132a,#0f0f1a);border:1px solid rgba(75,68,224,.2);border-radius:10px;height:34px;display:flex;align-items:center;margin-bottom:10px">
@@ -1098,25 +1170,25 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
         </div>
       </div>
       <div class="prod-grid">
-        <div class="prod-card"><div class="prod-img" style="background:rgba(0,210,141,.05)">👟</div><div class="prod-info"><div class="prod-name">Nike Air Max</div><div class="prod-cat">Footwear</div><div class="prod-price">₦45,000</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
-        <div class="prod-card"><div class="prod-img" style="background:rgba(75,68,224,.05)">👔</div><div class="prod-info"><div class="prod-name">Oxford Shirt</div><div class="prod-cat">Clothing</div><div class="prod-price">₦12,500</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
-        <div class="prod-card"><div class="prod-img" style="background:rgba(245,158,11,.05)">📱</div><div class="prod-info"><div class="prod-name">iPhone Case</div><div class="prod-cat">Accessories</div><div class="prod-price">₦3,800</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
-        <div class="prod-card"><div class="prod-img" style="background:rgba(59,130,246,.05)">🎧</div><div class="prod-info"><div class="prod-name">Wireless Earbuds</div><div class="prod-cat">Electronics</div><div class="prod-price">₦28,000</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
-        <div class="prod-card"><div class="prod-img" style="background:rgba(16,185,129,.05)">🌿</div><div class="prod-info"><div class="prod-name">Shea Butter</div><div class="prod-cat">Beauty</div><div class="prod-price">₦4,200</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
-        <div class="prod-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:140px;cursor:pointer" onclick="openModal('biz-verify')"><div style="text-align:center;color:var(--sub)"><div style="font-size:1.5rem">＋</div><div style="font-size:.62rem;margin-top:4px">Add Product</div></div></div>
+        <div class="prod-card"><div class="prod-img" style="background:rgba(0,210,141,.05)">👟</div><div class="prod-info"><div class="prod-name">ChiefDaddy Appeals</div><div class="prod-cat">Footwear</div><div class="prod-price">Abuja</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
+        <div class="prod-card"><div class="prod-img" style="background:rgba(75,68,224,.05)">👔</div><div class="prod-info"><div class="prod-name">AFA Ventures</div><div class="prod-cat">Clothing</div><div class="prod-price">Abuja</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
+        <div class="prod-card"><div class="prod-img" style="background:rgba(245,158,11,.05)">📱</div><div class="prod-info"><div class="prod-name">DigitalSolution Gadgets</div><div class="prod-cat">Accessories</div><div class="prod-price">Lagos</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
+        <div class="prod-card"><div class="prod-img" style="background:rgba(59,130,246,.05)">👗</div><div class="prod-info"><div class="prod-name">Catch24</div><div class="prod-cat">Clothing</div><div class="prod-price">Bauchi</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
+        <div class="prod-card"><div class="prod-img" style="background:rgba(16,185,129,.05)">🌿</div><div class="prod-info"><div class="prod-name">ArewaBelle</div><div class="prod-cat">Beauty</div><div class="prod-price">Ibadan</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
+        <div class="prod-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:140px;cursor:pointer" onclick="openModal('biz-verify')"><div style="text-align:center;color:var(--sub)"><div style="font-size:1.5rem">＋</div><div style="font-size:.62rem;margin-top:4px">Join Merchants</div></div></div>
       </div>
     </div>
     <div class="biz-panel" id="panel-transactions">
       <div class="wallet-hero">
         <div class="wh-lbl">Total Balance</div>
-        <div class="wh-bal">₦1,284,500.00</div>
+        <div class="wh-bal">₦***.00</div>
         <div class="wh-acts">
           <button class="wh-btn wh-btn-p" onclick="openModal('withdraw')">Withdraw Funds</button>
           <button class="wh-btn wh-btn-s" onclick="showToast('📄 Statement downloading…')">Statement</button>
         </div>
       </div>
       <div class="tbl-card">
-        <div class="tbl-hdr"><span class="tbl-ttl">Transaction History</span><button class="ct-btn">Filter</button></div>
+        <div class="tbl-hdr"><span class="tbl-ttl">Transaction Chart</span><button class="ct-btn">Filter</button></div>
         <table><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead><tbody>
           <tr><td style="color:var(--sub)">Mar 19</td><td>Product Sale</td><td style="font-family:'JetBrains Mono',monospace;color:var(--green)">+₦12,400</td><td><span class="sbadge sb-ok">Done</span></td></tr>
           <tr><td style="color:var(--sub)">Mar 19</td><td>Product Sale</td><td style="font-family:'JetBrains Mono',monospace;color:var(--amber)">₦8,750</td><td><span class="sbadge sb-pend">Pending</span></td></tr>
@@ -1185,10 +1257,12 @@ function closeSideMenu(){
 /* ─── NAV VIEWS ─── */
 function showView(v,btn){
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
-  document.getElementById(v+'-view').classList.add('active');
+  // handle terms view separately (uses id="terms-view" but class="view" conditionally)
+  const target = document.getElementById(v+'-view');
+  if(target) target.classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
   if(btn) btn.classList.add('active');
-  else{const map={home:0,user:1,business:2};document.querySelectorAll('.nav-tab')[map[v]]?.classList.add('active');}
+  else{const map={home:0,user:1,business:2,terms:3};document.querySelectorAll('.nav-tab')[map[v]]?.classList.add('active');}
   // show/hide float btn only on home
   document.getElementById('float-btn').style.display=v==='home'?'flex':'none';
 }
@@ -1349,26 +1423,26 @@ const MODALS={
   'find-ussd':`<div class="modal-head"><div class="modal-title">🔍 Find a SmartUSSD</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
     <p style="font-size:.72rem;color:var(--sub);margin-bottom:14px;line-height:1.5">Enter the *5050# SmartUSSD code of the business you want to connect to.</p>
     <div class="fg"><label class="fl">SmartUSSD Code</label><input class="fi" id="find-code" placeholder="e.g. *5050*882#"></div>
-    <div class="fg"><label class="fl">Or Business Name</label><input class="fi" id="find-name" placeholder="e.g. Chidi's Fashion Store"></div>
+    <div class="fg"><label class="fl">and Business Registered Name</label><input class="fi" id="find-name" placeholder="e.g. Chidi's Fashion Store"></div>
     <button class="fs" onclick="submitFindUSSD()">🔍 Connect via WhatsApp</button>`,
 
   'activate-ussd':`<div class="modal-head"><div class="modal-title">⚡ Activate My SmartUSSD</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
     <p style="font-size:.72rem;color:var(--sub);margin-bottom:14px;line-height:1.5">Choose a plan and get your business's unique *5050# code activated on WhatsApp.</p>
     <div class="plan-opts">
-      <div class="plan-opt" data-plan="Starter" onclick="selPlan(this)"><div><div class="plan-opt-name">🌱 Starter</div><div class="plan-opt-desc">500 chats/mo · 50 products</div></div><div class="plan-opt-price">₦15,000/yr</div></div>
-      <div class="plan-opt" data-plan="Business Pro" onclick="selPlan(this)"><div><div class="plan-opt-name">🚀 Business Pro</div><div class="plan-opt-desc">5,000 chats/mo · Unlimited products</div></div><div class="plan-opt-price">₦45,000/yr</div></div>
-      <div class="plan-opt" data-plan="Enterprise" onclick="selPlan(this)"><div><div class="plan-opt-name">🏢 Enterprise</div><div class="plan-opt-desc">Unlimited · 3 codes · White-label</div></div><div class="plan-opt-price">₦120,000/yr</div></div>
+      <div class="plan-opt" data-plan="Starter" onclick="selPlan(this)"><div><div class="plan-opt-name">🌱 Starter</div><div class="plan-opt-desc">upto 500 chats/month · 50 products</div></div><div class="plan-opt-price">₦1,739,999/yr</div></div>
+      <div class="plan-opt" data-plan="Business Pro" onclick="selPlan(this)"><div><div class="plan-opt-name">🚀 Business Pro</div><div class="plan-opt-desc">upto 5,000 chats/month · Unlimited products</div></div><div class="plan-opt-price">₦3,715,600/yr</div></div>
+      <div class="plan-opt" data-plan="Enterprise" onclick="selPlan(this)"><div><div class="plan-opt-name">🏢 Enterprise</div><div class="plan-opt-desc">Unlimited · 3 customized codes · Branding</div></div><div class="plan-opt-price">₦5,999,000/yr</div></div>
     </div>
     <div class="fg"><label class="fl">Business Name</label><input class="fi" id="act-biz-name" placeholder="Your Business Name"></div>
-    <div class="fg"><label class="fl">Phone Number</label><input class="fi" id="act-phone" placeholder="+234 800 000 0000"></div>
-    <button class="fs" onclick="submitActivate()">⚡ Activate via WhatsApp</button>`,
+    <div class="fg"><label class="fl">WhatsApp Phone Number</label><input class="fi" id="act-phone" placeholder="+234 800 000 0000"></div>
+    <button class="fs" onclick="submitActivate()">⚡ Submit & Activate</button>`,
 
   'register':`<div class="modal-head"><div class="modal-title">👤 Create Account</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
-    <div class="fg"><label class="fl">Full Name</label><input class="fi" id="reg-name" placeholder="Aisha Mohammed"></div>
+    <div class="fg"><label class="fl">Full Name</label><input class="fi" id="reg-name" placeholder="John Doe"></div>
     <div class="fg"><label class="fl">Phone Number</label><input class="fi" id="reg-phone" placeholder="+234 800 000 0000"></div>
     <div class="fg"><label class="fl">Email</label><input class="fi" id="reg-email" placeholder="you@example.com"></div>
     <div class="fg"><label class="fl">4-Digit PIN</label><input class="fi" id="reg-pin" type="password" maxlength="4" placeholder="••••"></div>
-    <button class="fs" onclick="submitRegister()">Create Account via WhatsApp</button>`,
+    <button class="fs" onclick="submitRegister()">Submit & Create Account</button>`,
 
   'wallet-view':`<div class="modal-head"><div class="modal-title">💳 Your Wallet</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
     <div style="background:var(--grad);border-radius:14px;padding:16px;margin-bottom:14px;position:relative;overflow:hidden">
@@ -1518,30 +1592,220 @@ const MODALS={
     <button class="fs" onclick="submitShop()">🛒 Open Store on WhatsApp</button>`,
 
   'airtime':`<div class="modal-head"><div class="modal-title">📱 Airtime & Data</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
-    <div class="fg"><label class="fl">Phone Number</label><input class="fi" id="air-phone" placeholder="+234 800 000 0000"></div>
-    <div class="fg"><label class="fl">Network</label><select class="fi" id="air-net"><option>MTN</option><option>Airtel</option><option>Glo</option><option>9mobile</option></select></div>
-    <div class="fg"><label class="fl">Type</label><select class="fi" id="air-type"><option>Airtime</option><option>Data Bundle</option></select></div>
-    <div class="fg"><label class="fl">Amount / Plan (₦)</label><input class="fi" id="air-amt" placeholder="1,000"></div>
-    ${captchaHtml()}
-    <button class="fs" onclick="submitAirtime()">📱 Buy via WhatsApp</button>`,
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px">
+      <div id="air-svc-buy" class="air-svc-opt sel" onclick="switchAirSvc('buy')"><div style="font-size:1.2rem;margin-bottom:4px">📲</div><div style="font-size:.72rem;font-weight:800">Buy Airtime/Data</div><div style="font-size:.58rem;color:var(--sub);margin-top:2px">Top up any number</div></div>
+      <div id="air-svc-swap" class="air-svc-opt" onclick="switchAirSvc('swap')"><div style="font-size:1.2rem;margin-bottom:4px">🔄</div><div style="font-size:.72rem;font-weight:800">Swap for Cash</div><div style="font-size:.58rem;color:var(--sub);margin-top:2px">Convert airtime/data to ₦</div></div>
+    </div>
+    <div id="air-pane-buy">
+      <div class="fg"><label class="fl">Receiver's Phone Number</label><input class="fi" id="air-phone" placeholder="+234 800 000 0000"></div>
+      <div class="fg"><label class="fl">Network</label><select class="fi" id="air-net"><option>MTN</option><option>Airtel</option><option>Glo</option><option>9mobile</option></select></div>
+      <div class="fg"><label class="fl">Service Type</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+          <label id="pill-airtime" class="air-type-pill sel" onclick="updateAirType('Airtime',this)"><input type="radio" name="air-type" value="Airtime" checked style="display:none">📞 Airtime</label>
+          <label id="pill-data" class="air-type-pill" onclick="updateAirType('Data Bundle',this)"><input type="radio" name="air-type" value="Data Bundle" style="display:none">🌐 Data Bundle</label>
+        </div>
+      </div>
+      <div id="air-data-plans" style="display:none;margin-bottom:12px">
+        <div style="font-size:.62rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Popular Plans</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+          <div class="air-plan-card" onclick="setAirtimePlan('1GB','350')"><div class="air-plan-size">1 GB</div><div class="air-plan-dur">30 days</div><div class="air-plan-price">₦350</div></div>
+          <div class="air-plan-card" onclick="setAirtimePlan('3GB','1000')"><div class="air-plan-size">3 GB</div><div class="air-plan-dur">30 days</div><div class="air-plan-price">₦1,000</div></div>
+          <div class="air-plan-card" onclick="setAirtimePlan('10GB','3000')"><div class="air-plan-size">10 GB</div><div class="air-plan-dur">30 days</div><div class="air-plan-price">₦3,000</div></div>
+          <div class="air-plan-card" onclick="setAirtimePlan('20GB','5000')"><div class="air-plan-size">20 GB</div><div class="air-plan-dur">30 days</div><div class="air-plan-price">₦5,000</div></div>
+          <div class="air-plan-card" onclick="setAirtimePlan('50GB','10000')"><div class="air-plan-size">50 GB</div><div class="air-plan-dur">30 days</div><div class="air-plan-price">₦10,000</div></div>
+          <div class="air-plan-card" onclick="setAirtimePlan('100GB','18000')"><div class="air-plan-size">100 GB</div><div class="air-plan-dur">30 days</div><div class="air-plan-price">₦18,000</div></div>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Amount (₦)</label>
+        <input class="fi" id="air-amt" placeholder="e.g. 1,000">
+        <div style="display:flex;gap:6px;margin-top:7px;flex-wrap:wrap">
+          <button onclick="setAmt('air-amt',100)" class="amt-pill">₦100</button>
+          <button onclick="setAmt('air-amt',200)" class="amt-pill">₦200</button>
+          <button onclick="setAmt('air-amt',500)" class="amt-pill">₦500</button>
+          <button onclick="setAmt('air-amt',1000)" class="amt-pill">₦1,000</button>
+          <button onclick="setAmt('air-amt',2000)" class="amt-pill">₦2,000</button>
+          <button onclick="setAmt('air-amt',5000)" class="amt-pill">₦5,000</button>
+        </div>
+      </div>
+      ${captchaHtml()}
+      <button class="fs" onclick="submitAirtime()">📱 Buy via WhatsApp</button>
+    </div>
+    <div id="air-pane-swap" style="display:none">
+      <div style="background:linear-gradient(135deg,rgba(0,210,141,.07),rgba(245,158,11,.06));border:1px solid rgba(0,210,141,.2);border-radius:12px;padding:12px 14px;margin-bottom:14px">
+        <div style="font-size:.72rem;font-weight:800;margin-bottom:4px">💡 How it works</div>
+        <div style="font-size:.62rem;color:var(--sub);line-height:1.6">Transfer your airtime or data to our collection number, receive cash directly into your *5050# wallet. Rate: <strong style="color:var(--green)">₦0.80 per ₦1 airtime</strong> · <strong style="color:var(--amber)">₦0.85 per ₦1 data</strong>.</div>
+      </div>
+      <div class="fg"><label class="fl">What are you swapping?</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+          <div id="swap-type-airtime" class="swap-type-opt sel" onclick="selectSwapType('airtime')">📞 Airtime</div>
+          <div id="swap-type-data" class="swap-type-opt" onclick="selectSwapType('data')">🌐 Data</div>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Network</label><select class="fi" id="swap-net"><option>MTN</option><option>Airtel</option><option>Glo</option><option>9mobile</option></select></div>
+      <div class="fg"><label class="fl">Amount to Swap (₦)</label>
+        <input class="fi" id="swap-amt" type="number" placeholder="500" oninput="calcSwapPayout()">
+        <div style="display:flex;gap:6px;margin-top:7px;flex-wrap:wrap">
+          <button onclick="setAmt('swap-amt',500);calcSwapPayout()" class="amt-pill">₦500</button>
+          <button onclick="setAmt('swap-amt',1000);calcSwapPayout()" class="amt-pill">₦1,000</button>
+          <button onclick="setAmt('swap-amt',2000);calcSwapPayout()" class="amt-pill">₦2,000</button>
+          <button onclick="setAmt('swap-amt',5000);calcSwapPayout()" class="amt-pill">₦5,000</button>
+          <button onclick="setAmt('swap-amt',10000);calcSwapPayout()" class="amt-pill">₦10,000</button>
+        </div>
+      </div>
+      <div id="swap-payout-preview" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;font-size:.68rem;margin-bottom:5px"><span style="color:var(--sub)">You swap</span><span id="sp-swap" style="font-family:JetBrains Mono,monospace;font-weight:700">—</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:.68rem;margin-bottom:5px"><span style="color:var(--sub)">Exchange rate</span><span id="sp-rate" style="font-family:JetBrains Mono,monospace;color:var(--amber);font-weight:700">—</span></div>
+        <div style="border-top:1px solid var(--border);margin:8px 0"></div>
+        <div style="display:flex;justify-content:space-between;font-size:.78rem"><span style="color:var(--sub);font-weight:700">You receive</span><span id="sp-receive" style="font-family:JetBrains Mono,monospace;font-weight:800;color:var(--green)">—</span></div>
+      </div>
+      <div class="fg"><label class="fl">Wallet / Phone to Credit</label><input class="fi" id="swap-phone" placeholder="+234 802 345 6789"></div>
+      <button class="fs" style="background:linear-gradient(135deg,#f59e0b,#ef4444)" onclick="submitSwap()">🔄 Swap via WhatsApp</button>
+    </div>`,
 
   'paybills':`<div class="modal-head"><div class="modal-title">💡 Pay Bills</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
-    <div class="fg"><label class="fl">Service</label><select class="fi" id="bill-svc"><option>⚡ Electricity (EKEDC)</option><option>📺 DSTV</option><option>📺 GOtv</option><option>🏫 School Fees</option><option>💧 Water Bill</option><option>📡 Internet</option></select></div>
-    <div class="fg"><label class="fl">Account / Meter Number</label><input class="fi" id="bill-acct" placeholder="Account or Meter Number"></div>
-    <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="bill-amt" type="number" placeholder="5,000"></div>
-    ${captchaHtml()}
-    <button class="fs" onclick="submitBills()">💡 Pay via WhatsApp</button>`,
 
-  'add-product':`<div class="modal-head"><div class="modal-title">➕ Add Product</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
-    <div class="fg"><label class="fl">Product Name</label><input class="fi" placeholder="e.g. Ankara Print Dress"></div>
+    <!-- Bill category tabs -->
+    <div style="display:flex;gap:3px;background:var(--card);border-radius:10px;padding:3px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none">
+      <div class="bill-cat-tab active" onclick="switchBillCat('electricity',this)">⚡ Electricity</div>
+      <div class="bill-cat-tab" onclick="switchBillCat('cable',this)">📺 Cable TV</div>
+      <div class="bill-cat-tab" onclick="switchBillCat('water',this)">💧 Water</div>
+      <div class="bill-cat-tab" onclick="switchBillCat('school',this)">🏫 Education</div>
+      <div class="bill-cat-tab" onclick="switchBillCat('internet',this)">📡 Internet</div>
+      <div class="bill-cat-tab" onclick="switchBillCat('other',this)">⋯ Other</div>
+    </div>
+
+    <!-- ELECTRICITY PANE -->
+    <div class="bill-pane active" id="bill-pane-electricity">
+      <div style="font-size:.6rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Select your Distribution Company</div>
+      <div class="fg"><label class="fl">Electricity DISCO</label>
+        <select class="fi" id="bill-disco">
+          <optgroup label="North West">
+            <option value="KAEDCO">⚡ Kaduna Electric (KAEDCO) — Kaduna, Sokoto, Kebbi, Zamfara</option>
+            <option value="KEDCO">⚡ Kano Electricity Distribution (KEDCO) — Kano, Jigawa, Katsina</option>
+          </optgroup>
+          <optgroup label="North East">
+            <option value="YEDC">⚡ Yola Electricity Distribution (YEDC) — Adamawa, Gombe, Taraba, Borno, Yobe, Bauchi</option>
+          </optgroup>
+          <optgroup label="North Central">
+            <option value="AEDC">⚡ Abuja Electricity Distribution (AEDC) — FCT, Niger, Kogi, Nasarawa</option>
+            <option value="JED">⚡ Jos Electricity Distribution (JED) — Plateau, Bauchi, Gombe, Benue</option>
+          </optgroup>
+          <optgroup label="South West">
+            <option value="IKEDC">⚡ Ikeja Electric (IKEDC) — Lagos Mainland, Ogun</option>
+            <option value="EKEDC">⚡ Eko Electricity Distribution (EKEDC) — Lagos Island & environs</option>
+            <option value="IBEDC">⚡ Ibadan Electricity Distribution (IBEDC) — Oyo, Osun, Ogun, Kwara</option>
+          </optgroup>
+          <optgroup label="South East">
+            <option value="EEDC">⚡ Enugu Electricity Distribution (EEDC) — Enugu, Anambra, Imo, Abia, Ebonyi</option>
+          </optgroup>
+          <optgroup label="South South">
+            <option value="BEDC">⚡ Benin Electricity Distribution (BEDC) — Edo, Delta, Ekiti, Ondo</option>
+            <option value="PHED">⚡ Port Harcourt Electricity Distribution (PHED) — Rivers, Bayelsa, Akwa Ibom, Cross River</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">Meter Type</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px">
+          <div id="meter-prepaid" class="meter-type-opt sel" onclick="selectMeterType('prepaid')">🔋 Prepaid</div>
+          <div id="meter-postpaid" class="meter-type-opt" onclick="selectMeterType('postpaid')">📋 Postpaid</div>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Meter Number</label><input class="fi" id="bill-meter" placeholder="e.g. 45120398712" oninput="lookupMeter(this.value)">
+        <div id="meter-name-display" style="margin-top:6px;font-size:.68rem;color:var(--green);font-weight:700;min-height:18px"></div>
+      </div>
+      <div class="fg"><label class="fl">Amount (₦)</label>
+        <input class="fi" id="bill-elec-amt" type="number" placeholder="2,000">
+        <div style="display:flex;gap:6px;margin-top:7px;flex-wrap:wrap">
+          <button onclick="setAmt('bill-elec-amt',1000)" class="amt-pill">₦1,000</button>
+          <button onclick="setAmt('bill-elec-amt',2000)" class="amt-pill">₦2,000</button>
+          <button onclick="setAmt('bill-elec-amt',5000)" class="amt-pill">₦5,000</button>
+          <button onclick="setAmt('bill-elec-amt',10000)" class="amt-pill">₦10,000</button>
+          <button onclick="setAmt('bill-elec-amt',20000)" class="amt-pill">₦20,000</button>
+        </div>
+      </div>
+      ${captchaHtml()}
+      <button class="fs" onclick="submitElectricity()">⚡ Pay Electricity via WhatsApp</button>
+    </div>
+
+    <!-- CABLE TV PANE -->
+    <div class="bill-pane" id="bill-pane-cable">
+      <div class="fg"><label class="fl">Provider</label><select class="fi" id="bill-cable-svc">
+        <option>📺 DSTV</option><option>📺 GOtv</option><option>📡 Startimes</option><option>📡 Showmax</option>
+      </select></div>
+      <div class="fg"><label class="fl">Smart Card / IUC Number</label><input class="fi" id="bill-cable-acct" placeholder="Your decoder card number"></div>
+      <div class="fg"><label class="fl">Subscription Plan</label><select class="fi" id="bill-cable-plan">
+        <option>DStv Compact — ₦15,700/mo</option><option>DStv Compact Plus — ₦22,500/mo</option>
+        <option>DStv Premium — ₦37,000/mo</option><option>GOtv Max — ₦5,500/mo</option>
+        <option>GOtv Jolli — ₦3,600/mo</option><option>Startimes Smart — ₦1,500/mo</option>
+      </select></div>
+      ${captchaHtml()}
+      <button class="fs" onclick="submitCableBill()">📺 Pay Cable TV via WhatsApp</button>
+    </div>
+
+    <!-- WATER PANE -->
+    <div class="bill-pane" id="bill-pane-water">
+      <div class="fg"><label class="fl">Water Authority</label><select class="fi" id="bill-water-svc">
+        <option>Lagos Water Corporation</option><option>FCT Water Board</option><option>Kano State Water</option>
+        <option>Rivers State Water</option><option>Ogun State Water</option><option>Other State Water Board</option>
+      </select></div>
+      <div class="fg"><label class="fl">Account Number</label><input class="fi" id="bill-water-acct" placeholder="Water account number"></div>
+      <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="bill-water-amt" type="number" placeholder="3,000"></div>
+      ${captchaHtml()}
+      <button class="fs" onclick="submitBillsGeneric('water')">💧 Pay Water Bill via WhatsApp</button>
+    </div>
+
+    <!-- EDUCATION PANE -->
+    <div class="bill-pane" id="bill-pane-school">
+      <div class="fg"><label class="fl">Institution Type</label><select class="fi" id="bill-school-type">
+        <option>University / Polytechnic</option><option>Secondary School</option>
+        <option>Primary School</option><option>Nursery School</option><option>Professional Exam (JAMB, WAEC, NECO)</option>
+      </select></div>
+      <div class="fg"><label class="fl">School Name / Code</label><input class="fi" id="bill-school-name" placeholder="e.g. University of Lagos"></div>
+      <div class="fg"><label class="fl">Student ID / Registration No.</label><input class="fi" id="bill-school-id" placeholder="Your student number"></div>
+      <div class="fg"><label class="fl">Fee Type</label><select class="fi" id="bill-school-fee">
+        <option>School Fees / Tuition</option><option>Acceptance Fee</option><option>Hostel Fee</option>
+        <option>Examination Fee</option><option>Registration Fee</option>
+      </select></div>
+      <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="bill-school-amt" type="number" placeholder="50,000"></div>
+      ${captchaHtml()}
+      <button class="fs" onclick="submitBillsGeneric('school')">🏫 Pay School Fees via WhatsApp</button>
+    </div>
+
+    <!-- INTERNET PANE -->
+    <div class="bill-pane" id="bill-pane-internet">
+      <div class="fg"><label class="fl">Internet Provider</label><select class="fi" id="bill-isp">
+        <option>Spectranet</option><option>Swift Networks</option><option>Smile Telecom</option>
+        <option>Ipnx</option><option>Cobranet</option><option>Layer3</option><option>Other ISP</option>
+      </select></div>
+      <div class="fg"><label class="fl">Account / Customer ID</label><input class="fi" id="bill-isp-acct" placeholder="Your subscriber ID"></div>
+      <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="bill-isp-amt" type="number" placeholder="10,000"></div>
+      ${captchaHtml()}
+      <button class="fs" onclick="submitBillsGeneric('internet')">📡 Pay Internet Bill via WhatsApp</button>
+    </div>
+
+    <!-- OTHER PANE -->
+    <div class="bill-pane" id="bill-pane-other">
+      <div class="fg"><label class="fl">Service</label><select class="fi" id="bill-other-svc">
+        <option>🏛️ LGA / State Tax</option><option>🚗 Vehicle License Renewal</option>
+        <option>🏥 Hospital / Medical Bill</option><option>🏢 House Rent Payment</option>
+        <option>⛽ Gas / LPG Subscription</option><option>🧹 Waste Management Levy</option>
+      </select></div>
+      <div class="fg"><label class="fl">Account / Reference Number</label><input class="fi" id="bill-other-acct" placeholder="Reference or account number"></div>
+      <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="bill-other-amt" type="number" placeholder="5,000"></div>
+      ${captchaHtml()}
+      <button class="fs" onclick="submitBillsGeneric('other')">💡 Pay Bill via WhatsApp</button>
+    </div>`,
+
+  'add-product':`<div class="modal-head"><div class="modal-title">➕ Join Merchants</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <div class="fg"><label class="fl">Merchant Name</label><input class="fi" placeholder="e.g. DigitalSolution360"></div>
     <div class="fg"><label class="fl">Category</label><select class="fi"><option>Clothing & Fashion</option><option>Electronics</option><option>Food & Beverages</option><option>Beauty & Health</option><option>Home & Living</option></select></div>
     <div class="fg"><label class="fl">Price (₦)</label><input class="fi" type="number" placeholder="0.00"></div>
     <div class="fg"><label class="fl">Stock Quantity</label><input class="fi" type="number" placeholder="0"></div>
-    <button class="fs" onclick="showToast('✅ Product added to catalog');closeModal()">Add to Catalog</button>`,
+    <button class="fs" onclick="showToast('✅ Merchant added to catalog');closeModal()">Add to Merchants</button>`,
 
-  'withdraw':`<div class="modal-head"><div class="modal-title">💰 Withdraw Funds</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
-    <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="wd-amt" placeholder="Min ₦5,000"></div>
-    <div class="fg"><label class="fl">Bank Account</label><select class="fi"><option>Access Bank — 0123456789</option><option>GTBank — 0987654321</option><option>Add New Account</option></select></div>
+  'withdraw':`<div class="modal-head"><div class="modal-title">💰 Withdraw Token</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <div class="fg"><label class="fl">Amount (GC)</label><input class="fi" id="wd-amt" placeholder="Min 5,000 Tokens"></div>
+    <div class="fg"><label class="fl">Bank Account</label><select class="fi"><option>Access Bank</option><option>GTBank</option><option>Opay</option><option>PalmPay</option><option>Moniepoint</option></select></div>
     <button class="fs" onclick="goWA('I want to withdraw ₦'+document.getElementById('wd-amt').value+' from my *5050# business wallet');closeModal()">Confirm Withdrawal via WhatsApp</button>`,
 
   'purchase':`<div class="modal-head"><div class="modal-title">💳 Purchase Plan</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
@@ -1552,7 +1816,7 @@ const MODALS={
   'biz-verify':`<div class="modal-head"><div class="modal-title">🔐 Business Verification</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
     <div class="verif-ico">🏪</div>
     <div class="verif-ttl">Connect Your SmartUSSD</div>
-    <div class="verif-sub">To add products to the Featured Merchants marketplace, your business must be verified via a *5050# SmartUSSD code.</div>
+    <div class="verif-sub">To add your business to the Featured Merchants marketplace, your business must be verified via a *5050# SmartUSSD code.</div>
     <div class="bv-choice">
       <div class="bv-opt" id="bv-existing" onclick="selectBVOpt('existing')">
         <div class="bv-opt-ico">🔗</div>
@@ -1562,7 +1826,7 @@ const MODALS={
       <div class="bv-opt" id="bv-new" onclick="selectBVOpt('new')">
         <div class="bv-opt-ico">✨</div>
         <div class="bv-opt-lbl">Get a new code</div>
-        <div class="bv-opt-sub">Activate a new SmartUSSD for my business</div>
+        <div class="bv-opt-sub">Activate new *5050# SmartUSSD for my business</div>
       </div>
     </div>
     <div id="bv-existing-form" style="display:none">
@@ -2000,9 +2264,396 @@ const goAppDetails = {
     </div>`,
 };
 
+/* ─── AIRTIME MODAL HELPERS ─── */
+function switchAirSvc(type){
+  document.getElementById('air-svc-buy').classList.toggle('sel', type==='buy');
+  document.getElementById('air-svc-swap').classList.toggle('sel', type==='swap');
+  document.getElementById('air-pane-buy').style.display = type==='buy' ? 'block' : 'none';
+  document.getElementById('air-pane-swap').style.display = type==='swap' ? 'block' : 'none';
+}
+function updateAirType(type, el){
+  document.querySelectorAll('.air-type-pill').forEach(p=>p.classList.remove('sel'));
+  if(el) el.classList.add('sel');
+  const plans = document.getElementById('air-data-plans');
+  if(plans) plans.style.display = type==='Data Bundle' ? 'block' : 'none';
+}
+function setAirtimePlan(plan, amt){
+  const amtEl = document.getElementById('air-amt');
+  if(amtEl){ amtEl.value = amt; amtEl.placeholder = plan; }
+}
+function selectSwapType(type){
+  document.getElementById('swap-type-airtime').classList.toggle('sel', type==='airtime');
+  document.getElementById('swap-type-data').classList.toggle('sel', type==='data');
+}
+function calcSwapPayout(){
+  const amt = parseFloat(document.getElementById('swap-amt')?.value)||0;
+  const isData = document.getElementById('swap-type-data')?.classList.contains('sel');
+  const rate = isData ? 0.85 : 0.80;
+  const preview = document.getElementById('swap-payout-preview');
+  if(!preview) return;
+  if(amt >= 100){
+    preview.style.display='block';
+    document.getElementById('sp-swap').textContent = '₦' + amt.toLocaleString();
+    document.getElementById('sp-rate').textContent = '₦' + rate.toFixed(2) + ' per ₦1';
+    document.getElementById('sp-receive').textContent = '₦' + (amt*rate).toLocaleString('en-NG',{minimumFractionDigits:2});
+  } else {
+    preview.style.display='none';
+  }
+}
+function submitSwap(){
+  const amt = document.getElementById('swap-amt')?.value;
+  const net = document.getElementById('swap-net')?.value;
+  const phone = document.getElementById('swap-phone')?.value.trim();
+  const isData = document.getElementById('swap-type-data')?.classList.contains('sel');
+  const type = isData ? 'data' : 'airtime';
+  if(!amt||!phone){showToast('⚠️ Please fill all fields');return;}
+  const rate = isData ? 0.85 : 0.80;
+  const payout = (parseFloat(amt)*rate).toFixed(2);
+  goWA('I want to swap ₦' + amt + ' worth of ' + net + ' ' + type + ' for cash. Expected payout: ₦' + payout + '. Credit to: ' + phone + ' via *5050#');
+  closeModal();
+}
+
+/* ─── BILLS MODAL HELPERS ─── */
+function switchBillCat(cat, el){
+  document.querySelectorAll('.bill-cat-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.bill-pane').forEach(p=>p.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const pane = document.getElementById('bill-pane-'+cat);
+  if(pane) pane.classList.add('active');
+}
+function selectMeterType(type){
+  document.getElementById('meter-prepaid').classList.toggle('sel', type==='prepaid');
+  document.getElementById('meter-postpaid').classList.toggle('sel', type==='postpaid');
+}
+let meterTimer=null;
+function lookupMeter(val){
+  const d=document.getElementById('meter-name-display');
+  if(!d) return;
+  clearTimeout(meterTimer);
+  if(!val||val.length<8){d.textContent='';return;}
+  d.innerHTML='<span style="color:var(--sub)">🔍 Looking up meter…</span>';
+  meterTimer=setTimeout(()=>{
+    const names=['Emeka Okafor — Flat 4B, Surulere','Fatima Bello — No. 12 Musa Kano St','Aisha Mohammed — Block C, GRA'];
+    d.innerHTML='<span>✅ ' + names[Math.floor(Math.random()*names.length)] + '</span>';
+  },1000);
+}
+function submitElectricity(){
+  if(!checkCaptcha()) return;
+  const disco = document.getElementById('bill-disco')?.value||'';
+  const meter = document.getElementById('bill-meter')?.value.trim()||'';
+  const amt = document.getElementById('bill-elec-amt')?.value||'';
+  const mtype = document.getElementById('meter-prepaid')?.classList.contains('sel') ? 'prepaid' : 'postpaid';
+  if(!meter||!amt){showToast('⚠️ Enter meter number and amount');return;}
+  goWA('I want to pay ₦' + amt + ' electricity bill. DISCO: ' + disco.split('—')[0].trim() + '. Meter: ' + meter + ' (' + mtype + ') via *5050#');
+  closeModal();
+}
+function submitCableBill(){
+  if(!checkCaptcha()) return;
+  const svc = document.getElementById('bill-cable-svc')?.value||'';
+  const acct = document.getElementById('bill-cable-acct')?.value.trim()||'';
+  const plan = document.getElementById('bill-cable-plan')?.value||'';
+  if(!acct){showToast('⚠️ Enter your smart card number');return;}
+  goWA('I want to pay ' + svc + ' subscription. Card: ' + acct + '. Plan: ' + plan + ' via *5050#');
+  closeModal();
+}
+function submitBillsGeneric(type){
+  if(!checkCaptcha()) return;
+  const idMap = {water:['bill-water-svc','bill-water-acct','bill-water-amt'], internet:['bill-isp','bill-isp-acct','bill-isp-amt'], school:['bill-school-type','bill-school-id','bill-school-amt'], other:['bill-other-svc','bill-other-acct','bill-other-amt']};
+  const ids = idMap[type]||[];
+  const svc = document.getElementById(ids[0])?.value||type;
+  const acct = document.getElementById(ids[1])?.value.trim()||'';
+  const amt = document.getElementById(ids[2])?.value||'';
+  if(!acct||!amt){showToast('⚠️ Please fill all required fields');return;}
+  goWA('I want to pay ' + svc + ' bill. Account/Ref: ' + acct + '. Amount: ₦' + amt + ' via *5050#');
+  closeModal();
+}
+
+/* ─── SIDE MENU TERMS LINK ─── */
+
 /* ─── INIT ─── */
 loadChat('main');
 startAutoSlide();
 </script>
+
+<!-- ══════════ TERMS & POLICY VIEW ══════════ -->
+<div id="terms-view" class="view">
+
+  <!-- HERO -->
+  <div class="terms-hero">
+    <div class="terms-badge"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.8s infinite"></span> Official Document</div>
+    <div class="terms-title">*5050# SmartUSSD<br><span>User Policy & Agreement</span></div>
+    <div class="terms-subtitle">These Terms of Service govern your access to and use of the *5050# SmartUSSD platform, including all services, features, APIs, and content. By using *5050#, you agree to these terms in full.</div>
+    <div class="terms-meta">
+      <div class="terms-meta-item">📅 <strong>Effective Date:</strong> January 1, 2025</div>
+      <div class="terms-meta-item">🔄 <strong>Last Updated:</strong> March 2025</div>
+      <div class="terms-meta-item">🌍 <strong>Jurisdiction:</strong> Federal Republic of Nigeria</div>
+      <div class="terms-meta-item">📞 <strong>Support:</strong> wa.me/2348157505037</div>
+    </div>
+  </div>
+
+  <div class="terms-body">
+
+    <!-- TABLE OF CONTENTS -->
+    <div class="terms-toc">
+      <div class="terms-toc-title">📋 Table of Contents</div>
+      <ul class="terms-toc-list">
+        <li><a href="#ts-1">1. Acceptance of Terms</a></li>
+        <li><a href="#ts-2">2. Eligibility & Account Requirements</a></li>
+        <li><a href="#ts-3">3. Description of Services</a></li>
+        <li><a href="#ts-4">4. User Responsibilities & Conduct</a></li>
+        <li><a href="#ts-5">5. Permitted & Prohibited Uses</a></li>
+        <li><a href="#ts-6">6. Financial Services & Transactions</a></li>
+        <li><a href="#ts-7">7. Business Accounts & SmartUSSD Codes</a></li>
+        <li><a href="#ts-8">8. Privacy & Data Protection</a></li>
+        <li><a href="#ts-9">9. Intellectual Property</a></li>
+        <li><a href="#ts-10">10. Disclaimers & Limitation of Liability</a></li>
+        <li><a href="#ts-11">11. Termination & Suspension</a></li>
+        <li><a href="#ts-12">12. Dispute Resolution & Governing Law</a></li>
+        <li><a href="#ts-13">13. Amendments to These Terms</a></li>
+        <li><a href="#ts-14">14. Contact & Grievance</a></li>
+      </ul>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="terms-section" id="ts-1">
+      <div class="terms-section-num">Section 01</div>
+      <div class="terms-section-title">Acceptance of Terms</div>
+      <p>Welcome to <strong>*5050# SmartUSSD</strong>, a WhatsApp-native financial and commerce platform operated by SmartUSSD Technologies Limited ("SmartUSSD", "we", "our", or "the Company"), a company incorporated under the laws of the Federal Republic of Nigeria. By accessing or using any part of the *5050# platform — including dialling the USSD code, visiting our web interface, interacting with our WhatsApp chatbot, or using any API integrations — you ("User", "you") agree to be legally bound by these Terms of Service ("Terms").</p>
+      <p>If you do not agree to these Terms in their entirety, you must immediately discontinue use of all *5050# services. These Terms apply to all visitors, users, merchants, developers, and business account holders.</p>
+      <div class="terms-callout">
+        <div class="terms-callout-title">⚡ Quick Summary</div>
+        <p>Using *5050# means you accept these rules. If you are under 18, you may only use the service under the supervision of a parent or guardian who accepts these Terms on your behalf.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="terms-section" id="ts-2">
+      <div class="terms-section-num">Section 02</div>
+      <div class="terms-section-title">Eligibility & Account Requirements</div>
+      <p>To create and use a *5050# account, you must meet the following requirements at all times:</p>
+      <ul class="terms-ul">
+        <li><strong>Age:</strong> You must be at least 18 years of age. Users between 13 and 17 may access limited features only with verified parental consent.</li>
+        <li><strong>Legal capacity:</strong> You must be legally capable of entering a binding contract under Nigerian law.</li>
+        <li><strong>Valid phone number:</strong> You must provide a valid Nigerian mobile number registered in your legal name, consistent with NCC SIM registration requirements.</li>
+        <li><strong>Identity verification:</strong> Certain features (especially financial transactions) require BVN, NIN, or government-issued ID verification as mandated by the CBN and FINTRAC guidelines.</li>
+        <li><strong>One account per person:</strong> You may only hold one personal *5050# wallet account. Attempting to create duplicate accounts is a violation of these Terms.</li>
+        <li><strong>Accurate information:</strong> All information you provide must be truthful, current, and accurate. Providing false information is grounds for immediate account suspension.</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="terms-section" id="ts-3">
+      <div class="terms-section-num">Section 03</div>
+      <div class="terms-section-title">Description of Services</div>
+      <p>*5050# SmartUSSD provides a suite of technology-powered financial and commerce services delivered primarily via WhatsApp and USSD (*5050#). Our core services include:</p>
+      <ul class="terms-ul">
+        <li><strong>SmartUSSD Wallet:</strong> A digital wallet for storing, sending, and receiving funds via WhatsApp.</li>
+        <li><strong>Token Transfers:</strong> Peer-to-peer money transfers to bank accounts, mobile wallets, and other *5050# users.</li>
+        <li><strong>Bill Payments:</strong> Electricity (all 11 DISCO zones), cable TV, water, internet, and school fees.</li>
+        <li><strong>Airtime & Data:</strong> Purchase of airtime and data bundles for all Nigerian networks, including airtime-to-cash swap services.</li>
+        <li><strong>Business SmartUSSD Codes:</strong> Unique USSD codes (e.g., *5050*882#) assigned to businesses for customer engagement and commerce.</li>
+        <li><strong>goAPPs:</strong> Specialised mini-applications (goFood, goRide, goHealth, goSchool, etc.) built on the *5050# infrastructure.</li>
+        <li><strong>Virtual Cards:</strong> Digital payment cards linked to your SmartUSSD wallet for online and in-person payments.</li>
+        <li><strong>QR Payments:</strong> Scan-to-pay functionality enabling contactless merchant transactions.</li>
+      </ul>
+      <p>SmartUSSD reserves the right to add, modify, or discontinue any service at any time with reasonable notice where practicable.</p>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="terms-section" id="ts-4">
+      <div class="terms-section-num">Section 04</div>
+      <div class="terms-section-title">User Responsibilities & Conduct</div>
+      <p>As a user of the *5050# platform, you take full responsibility for all activities conducted under your account. You agree to:</p>
+      <ul class="terms-ul">
+        <li>Maintain the confidentiality of your PIN, password, and account credentials at all times.</li>
+        <li>Notify us immediately at <strong>wa.me/2348157505037</strong> if you suspect any unauthorised use of your account.</li>
+        <li>Use the service only for lawful purposes and in compliance with all applicable Nigerian laws and regulations.</li>
+        <li>Keep your registered phone number active and accessible for security verifications.</li>
+        <li>Not share your account, transfer your USSD code to another party, or allow third parties to operate your account on your behalf without authorisation.</li>
+        <li>Ensure all payment details, merchant information, and beneficiary data you enter are accurate before confirming transactions.</li>
+      </ul>
+      <div class="terms-warning">
+        <div class="terms-warning-title">⚠️ Account Security</div>
+        <p>SmartUSSD will <strong>never</strong> call or message you requesting your PIN, OTP, or password. If you receive such a request claiming to be from us, it is a scam. Report it immediately via our official WhatsApp support line.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="terms-section" id="ts-5">
+      <div class="terms-section-num">Section 05</div>
+      <div class="terms-section-title">Permitted & Prohibited Uses</div>
+      <p><strong>You may use *5050# to:</strong></p>
+      <ul class="terms-ul">
+        <li>Send and receive money for personal, family, or legitimate business purposes.</li>
+        <li>Purchase airtime, data, and utility services for yourself or others.</li>
+        <li>Operate a registered business storefront and receive customer payments.</li>
+        <li>Access goAPPs and third-party service integrations available on the platform.</li>
+        <li>Swap airtime and data credits for wallet cash within stated platform limits.</li>
+      </ul>
+      <p><strong>You may NOT use *5050# to:</strong></p>
+      <ul class="terms-ul">
+        <li>Engage in money laundering, terrorist financing, or any activity prohibited under the Money Laundering (Prevention & Prohibition) Act 2022.</li>
+        <li>Process payments for illegal goods or services, including narcotics, counterfeit goods, or unlicensed firearms.</li>
+        <li>Conduct fraudulent chargebacks, falsely dispute legitimate transactions, or deceive merchants or other users.</li>
+        <li>Use automated bots, scripts, or any form of programmatic access to the platform without express written authorisation from SmartUSSD.</li>
+        <li>Reverse-engineer, decompile, or tamper with any component of the *5050# platform or its underlying systems.</li>
+        <li>Impersonate SmartUSSD, our staff, or any other person or entity.</li>
+        <li>Transmit unsolicited promotional messages (spam) to other users via the platform.</li>
+        <li>Use the platform in any manner that could damage, disable, or impair the service infrastructure.</li>
+        <li>Register or operate a SmartUSSD business code on behalf of a fictitious or unregistered entity.</li>
+      </ul>
+      <p>Violations of these prohibitions will result in immediate account suspension, forfeiture of any wallet balance pending investigation, and may result in referral to law enforcement agencies.</p>
+    </div>
+
+    <!-- SECTION 6 -->
+    <div class="terms-section" id="ts-6">
+      <div class="terms-section-num">Section 06</div>
+      <div class="terms-section-title">Financial Services & Transactions</div>
+      <p>*5050# wallet and payment services are operated in partnership with licensed financial institutions and payment processors regulated by the Central Bank of Nigeria (CBN). The following terms apply to all financial transactions:</p>
+      <ul class="terms-ul">
+        <li><strong>Transaction limits:</strong> Daily and single-transaction limits apply based on your verification tier (Basic, Standard, or Premium KYC). Limits may be adjusted by SmartUSSD or our banking partners at any time.</li>
+        <li><strong>Fees:</strong> Transaction fees are displayed clearly before you confirm any payment. By confirming a transaction, you authorise the deduction of the stated amount plus applicable fees.</li>
+        <li><strong>Reversals:</strong> Completed transactions generally cannot be reversed. Disputes must be reported within 48 hours via our WhatsApp support channel. We will investigate and, where appropriate, initiate a reversal within 5–10 working days.</li>
+        <li><strong>Wallet funding:</strong> Funds deposited into your SmartUSSD wallet are held in a pooled trust account maintained by our licensed banking partner. These funds are not investments and do not earn interest.</li>
+        <li><strong>Airtime swap rates:</strong> Airtime-to-cash exchange rates are dynamic and subject to change without prior notice. The rate displayed at the time of your swap request is the rate that applies to that transaction.</li>
+        <li><strong>Unclaimed balances:</strong> Wallet balances that remain inactive for 12 consecutive months may be subject to an inactivity fee or, where required by law, remitted to the appropriate government authority.</li>
+      </ul>
+      <div class="terms-callout">
+        <div class="terms-callout-title">🔐 Fund Safety</div>
+        <p>All *5050# wallet funds are held in a CBN-regulated escrow account separate from SmartUSSD's operational funds. Your money is protected even in the event of company insolvency, subject to applicable guarantees.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 7 -->
+    <div class="terms-section" id="ts-7">
+      <div class="terms-section-num">Section 07</div>
+      <div class="terms-section-title">Business Accounts & SmartUSSD Codes</div>
+      <p>Businesses that subscribe to a *5050# SmartUSSD code agree to the following additional terms:</p>
+      <ul class="terms-ul">
+        <li><strong>Ownership:</strong> A SmartUSSD code is licensed to your business, not sold. It remains the intellectual property of SmartUSSD Technologies Limited.</li>
+        <li><strong>Business legitimacy:</strong> You warrant that your business is duly registered with the CAC (Corporate Affairs Commission) or, for sole traders, that you are operating a legitimate enterprise.</li>
+        <li><strong>Catalog accuracy:</strong> All products, services, and prices listed in your SmartUSSD catalog must be accurate and legally available for sale in Nigeria.</li>
+        <li><strong>Customer data:</strong> As a business operator, you may receive customer contact and order information through our platform. You agree to use such data only for fulfilling orders and not for unsolicited marketing or third-party sharing.</li>
+        <li><strong>Payout schedule:</strong> Business wallet payouts are processed on the schedule agreed at signup (daily, weekly, or on-demand), subject to a minimum payout threshold.</li>
+        <li><strong>Code transfer:</strong> SmartUSSD codes are non-transferable without written consent from SmartUSSD. Attempting to sell or transfer a code to another party is a material breach of these Terms.</li>
+        <li><strong>Plan renewal:</strong> Failure to renew your subscription plan before its expiry will result in deactivation of the USSD code. A 30-day grace period applies after which the code may be reallocated.</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 8 -->
+    <div class="terms-section" id="ts-8">
+      <div class="terms-section-num">Section 08</div>
+      <div class="terms-section-title">Privacy & Data Protection</div>
+      <p>SmartUSSD is committed to protecting your personal data in accordance with the Nigeria Data Protection Act (NDPA) 2023 and the Nigeria Data Protection Regulation (NDPR). Our full Privacy Policy governs how we collect, use, store, and share your data.</p>
+      <ul class="terms-ul">
+        <li><strong>Data collected:</strong> Name, phone number, BVN/NIN, transaction history, device information, and usage patterns.</li>
+        <li><strong>Purpose of collection:</strong> Identity verification, fraud prevention, service delivery, regulatory compliance, and platform improvement.</li>
+        <li><strong>Data sharing:</strong> We share your data only with licensed financial partners, regulatory authorities where required by law, and service providers under strict data processing agreements.</li>
+        <li><strong>Your rights:</strong> You have the right to access, correct, or request deletion of your personal data, subject to legal retention requirements.</li>
+        <li><strong>WhatsApp data:</strong> When you interact with *5050# via WhatsApp, your messages are subject to WhatsApp's own Privacy Policy in addition to ours.</li>
+        <li><strong>Retention:</strong> Transaction records are retained for a minimum of 7 years as required by Nigerian financial regulations.</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 9 -->
+    <div class="terms-section" id="ts-9">
+      <div class="terms-section-num">Section 09</div>
+      <div class="terms-section-title">Intellectual Property</div>
+      <p>All intellectual property rights in and to the *5050# platform — including the *5050# trademark, logo, USSD code system, software, goAPPs, designs, and content — are the exclusive property of SmartUSSD Technologies Limited or its licensors.</p>
+      <ul class="terms-ul">
+        <li>You are granted a limited, non-exclusive, non-transferable licence to use the *5050# platform solely for your personal or authorised business purposes.</li>
+        <li>You may not copy, reproduce, distribute, modify, or create derivative works of any SmartUSSD content without prior written consent.</li>
+        <li>Business operators may use the *5050# logo and branding only as expressly permitted by SmartUSSD's Brand Usage Guidelines.</li>
+        <li>User-generated content (e.g., product listings, business descriptions) remains your property but you grant SmartUSSD a worldwide, royalty-free licence to display and use such content on the platform.</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 10 -->
+    <div class="terms-section" id="ts-10">
+      <div class="terms-section-num">Section 10</div>
+      <div class="terms-section-title">Disclaimers & Limitation of Liability</div>
+      <p>The *5050# platform is provided on an "as is" and "as available" basis. To the fullest extent permitted by law:</p>
+      <ul class="terms-ul">
+        <li>SmartUSSD does not warrant that the service will be uninterrupted, error-free, or completely secure at all times.</li>
+        <li>We are not liable for losses arising from network outages, third-party service failures, force majeure events, or actions beyond our reasonable control.</li>
+        <li>SmartUSSD's total liability to you for any claim arising out of these Terms or your use of the platform shall not exceed the total fees paid by you to SmartUSSD in the 3 months preceding the claim.</li>
+        <li>We are not responsible for the quality, legality, or delivery of goods and services transacted between users and merchants on the platform.</li>
+      </ul>
+      <div class="terms-warning">
+        <div class="terms-warning-title">⚠️ Merchant Transactions</div>
+        <p>SmartUSSD acts as a technology intermediary, not a party to transactions between users and merchants. Disputes regarding product quality or delivery must be resolved directly with the merchant, with SmartUSSD's support available as a mediation channel where applicable.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 11 -->
+    <div class="terms-section" id="ts-11">
+      <div class="terms-section-num">Section 11</div>
+      <div class="terms-section-title">Termination & Suspension</div>
+      <p>SmartUSSD may, at our sole discretion and without prior notice, suspend, restrict, or permanently terminate your account if we determine that:</p>
+      <ul class="terms-ul">
+        <li>You have violated any provision of these Terms.</li>
+        <li>Your account shows evidence of fraudulent, criminal, or otherwise harmful activity.</li>
+        <li>You have provided false or misleading identity information.</li>
+        <li>We are required to do so by a regulatory authority, court order, or law enforcement directive.</li>
+        <li>Continued operation of your account poses an unacceptable risk to other users, the platform, or third parties.</li>
+      </ul>
+      <p>Upon termination, your access to the platform will cease immediately. Any outstanding wallet balance will be held pending investigation and, if cleared, returned to a verified bank account within 30 working days. Business SmartUSSD codes will be deactivated and cannot be transferred.</p>
+      <p>You may voluntarily close your account at any time by contacting SmartUSSD support via WhatsApp, subject to settlement of any outstanding obligations.</p>
+    </div>
+
+    <!-- SECTION 12 -->
+    <div class="terms-section" id="ts-12">
+      <div class="terms-section-num">Section 12</div>
+      <div class="terms-section-title">Dispute Resolution & Governing Law</div>
+      <p>These Terms shall be governed by and construed in accordance with the laws of the Federal Republic of Nigeria. Any dispute arising from these Terms or the use of *5050# services shall be resolved as follows:</p>
+      <ul class="terms-ul">
+        <li><strong>Step 1 — Informal resolution:</strong> Contact SmartUSSD via WhatsApp at wa.me/2348157505037. We will attempt to resolve your complaint within 5 business days.</li>
+        <li><strong>Step 2 — Escalation:</strong> If informal resolution fails, you may escalate to our dedicated dispute resolution team by email. We will provide a final determination within 20 working days.</li>
+        <li><strong>Step 3 — Regulatory escalation:</strong> Unresolved financial disputes may be escalated to the Central Bank of Nigeria Consumer Protection Department or the Financial Ombudsman.</li>
+        <li><strong>Step 4 — Arbitration:</strong> Disputes not resolved by the above steps shall be submitted to binding arbitration under the Arbitration and Conciliation Act (ACA), conducted in Lagos, Nigeria.</li>
+      </ul>
+      <p>Nothing in this section prevents either party from seeking emergency injunctive or other equitable relief from a court of competent jurisdiction.</p>
+    </div>
+
+    <!-- SECTION 13 -->
+    <div class="terms-section" id="ts-13">
+      <div class="terms-section-num">Section 13</div>
+      <div class="terms-section-title">Amendments to These Terms</div>
+      <p>SmartUSSD may update or amend these Terms at any time. When we do:</p>
+      <ul class="terms-ul">
+        <li>We will notify you via WhatsApp message and/or a notice on the platform at least <strong>14 days</strong> before material changes take effect.</li>
+        <li>Your continued use of the *5050# platform after the effective date of any changes constitutes acceptance of the updated Terms.</li>
+        <li>If you do not agree with the amended Terms, you must stop using the service and request account closure before the effective date.</li>
+        <li>Minor, non-material updates (such as typographical corrections or clarifications) may be made at any time without advance notice.</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 14 -->
+    <div class="terms-section" id="ts-14">
+      <div class="terms-section-num">Section 14</div>
+      <div class="terms-section-title">Contact & Grievance</div>
+      <p>For all enquiries, complaints, or legal notices regarding these Terms or the *5050# service, contact us through the following official channels:</p>
+      <ul class="terms-ul">
+        <li><strong>WhatsApp Support:</strong> <a href="https://wa.me/2348157505037">wa.me/2348157505037</a> (Primary support channel — 8am to 10pm daily)</li>
+        <li><strong>USSD:</strong> Dial *5050# and select "Help & Support" from the menu</li>
+        <li><strong>Business Enquiries:</strong> Dial *5050# → Business Portal → Contact Us</li>
+        <li><strong>Registered Office:</strong> SmartUSSD Technologies Limited, Lagos, Nigeria</li>
+        <li><strong>Data Protection Officer:</strong> Contact via our WhatsApp support line with subject "DPO Enquiry"</li>
+      </ul>
+      <p>We are committed to resolving your concerns promptly and transparently. Our average first-response time is under 2 hours on business days.</p>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="terms-footer">
+      <p>By using *5050# SmartUSSD, you confirm that you have read, understood, and agree to be bound by these Terms of Service, our Privacy Policy, and any additional guidelines communicated to you.</p>
+      <p style="margin-bottom:16px">These Terms were last updated in <strong>March 2025</strong>. SmartUSSD Technologies Limited · Registered in Nigeria.</p>
+      <button class="terms-accept-btn" onclick="showToast('✅ Terms accepted — welcome to *5050# SmartUSSD!');showView('home',null)">
+        ✅ I Accept These Terms
+      </button>
+    </div>
+
+  </div>
+</div>
+
 </body>
 </html>
