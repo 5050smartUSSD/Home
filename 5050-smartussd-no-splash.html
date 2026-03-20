@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>*5050# SmartUSSD Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
+<style>
+:root{
+  --green:#00d28d;--purple:#4b44e0;
+  --grad:linear-gradient(135deg,#00d28d 0%,#4b44e0 100%);
+  --bg:#0f0f0f;--surface:#1a1a1a;--card:#222;--card2:#2a2a2a;
+  --border:#2e2e2e;--text:#f0f0f0;--sub:#888;--danger:#ff4d4d;
+  --amber:#f59e0b;--glow:0 4px 24px rgba(0,210,141,.18);
+  --neon-glow:0 0 20px rgba(0,210,141,.6),0 0 40px rgba(0,210,141,.3),0 0 80px rgba(0,210,141,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px}
+button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none}
+input,select,textarea{font-family:'Inter',sans-serif}
+
+
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--card2);border:1px solid rgba(0,210,141,.3);border-radius:12px;padding:10px 20px;font-size:.74rem;font-weight:700;color:var(--text);z-index:7000;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap;box-shadow:var(--glow)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ══ ADVERT BANNER ══ */
+.adv-wrap{position:relative;overflow:hidden;border-radius:14px;margin-bottom:14px;background:var(--card)}
+.adv-track{display:flex;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.adv-slide{min-width:100%;padding:16px 18px;border-radius:14px;position:relative;overflow:hidden;cursor:pointer}
+.adv-lbl{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:.8;margin-bottom:4px;color:#fff}
+.adv-title{font-size:.94rem;font-weight:800;color:#fff;margin-bottom:3px}
+.adv-sub{font-size:.66rem;color:rgba(255,255,255,.8);line-height:1.4}
+.adv-cta{display:inline-block;margin-top:8px;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 14px;font-size:.64rem;font-weight:800}
+.adv-dots{position:absolute;bottom:8px;right:12px;display:flex;gap:5px}
+.adv-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4);transition:.3s;cursor:pointer}
+.adv-dot.on{background:#fff;width:14px;border-radius:3px}
+.adv-arr{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.4);border:none;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;cursor:pointer;z-index:2;transition:.2s}
+.adv-arr:hover{background:rgba(0,0,0,.7)}
+.adv-arr.l{left:8px}.adv-arr.r{right:8px}
+
+/* ══ TICKER ══ */
+.ticker-wrap{background:rgba(0,210,141,.05);border:1px solid rgba(0,210,141,.15);border-radius:8px;padding:6px 12px;margin-bottom:14px;overflow:hidden;display:flex;align-items:center;gap:10px}
+.ticker-lbl{font-size:.58rem;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;flex-shrink:0}
+.ticker-track{display:flex;animation:ticker 28s linear infinite;white-space:nowrap}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{font-size:.62rem;color:var(--sub);padding:0 24px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.ticker-item strong{color:var(--green);font-family:'JetBrains Mono',monospace}
+
+/* ══ SIDE DRAWER ══ */
+.drw-ov{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:800;display:none;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.drw-ov.open{display:block}
+.drw{position:fixed;left:-295px;top:0;bottom:0;width:295px;background:var(--surface);z-index:900;transition:.28s cubic-bezier(.4,0,.2,1);overflow-y:auto;border-right:1px solid var(--border)}
+.drw.open{left:0;box-shadow:8px 0 40px rgba(0,0,0,.7)}
+.drw-head{padding:28px 18px 20px;background:var(--grad);display:flex;align-items:center;gap:14px;position:relative;overflow:hidden}
+.drw-head::before{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.07)}
+.drw-x{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.18);color:#fff;width:28px;height:28px;border-radius:50%;font-size:1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2}
+.drw-av{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.22);border:2.5px solid rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;font-size:1.5rem;overflow:hidden;flex-shrink:0;position:relative;cursor:pointer;transition:.2s}
+.drw-av:hover{transform:scale(1.05)}
+.drw-av img{width:100%;height:100%;object-fit:cover}
+.drw-av-edit{position:absolute;bottom:0;right:0;width:18px;height:18px;border-radius:50%;background:#fff;color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.55rem}
+.drw-name{font-size:1rem;font-weight:800;color:#fff}
+.drw-sub{font-size:.62rem;color:rgba(255,255,255,.75);margin-top:2px}
+.drw-edit-btn{margin-top:6px;display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:.62rem;font-weight:700;cursor:pointer;transition:.15s}
+.drw-edit-btn:hover{background:rgba(255,255,255,.3)}
+.drw-wallet{margin:14px 15px;padding:14px 16px;background:var(--grad);border-radius:15px;color:#fff;position:relative;overflow:hidden}
+.drw-wallet::before{content:'';position:absolute;top:-10px;right:-10px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.06)}
+.dw-lbl{font-size:.58rem;letter-spacing:.6px;text-transform:uppercase;opacity:.82;font-weight:700;margin-bottom:3px}
+.dw-bal{font-size:1.3rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.dw-row{display:flex;justify-content:space-between;font-size:.64rem;opacity:.85;margin-top:5px}
+.drw-nav{padding:6px 0}
+.dn{display:flex;align-items:center;gap:13px;padding:12px 18px;font-size:.82rem;font-weight:600;color:var(--sub);cursor:pointer;border-bottom:1px solid rgba(46,46,46,.6);transition:.15s}
+.dn:hover,.dn.cur{color:var(--green);background:rgba(0,210,141,.04)}
+.dn-ico{font-size:1rem;width:22px;text-align:center;flex-shrink:0}
+.drw-foot{padding:14px 18px;border-top:1px solid var(--border)}
+.drw-wa{display:flex;align-items:center;gap:8px;color:#25d366;font-weight:700;font-size:.74rem;margin-bottom:10px;cursor:pointer}
+.drw-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-btn{display:block;text-align:center;padding:9px;border-radius:10px;font-size:.64rem;font-weight:800;cursor:pointer;transition:.15s}
+.drw-btn-g{background:rgba(0,210,141,.08);border:1px solid rgba(0,210,141,.2);color:var(--green)}
+.drw-btn-p{background:rgba(75,68,224,.08);border:1px solid rgba(75,68,224,.2);color:#a5b4fc}
+.drw-btn:hover{transform:translateY(-1px)}
+
+/* ══ NAV ══ */
+.hdr{position:sticky;top:0;z-index:400;background:var(--bg);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.hdr-l{display:flex;align-items:center;gap:8px}
+.ham{display:flex;flex-direction:column;gap:5px;padding:5px;cursor:pointer}
+.ham span{display:block;height:2px;border-radius:2px;background:var(--green);transition:.28s}
+.ham span:nth-child(1){width:22px}.ham span:nth-child(2){width:15px}.ham span:nth-child(3){width:22px}
+.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg);width:22px}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.hdr-logo{font-size:.94rem;font-weight:800;font-family:'JetBrains Mono',monospace;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-r{display:flex;align-items:center;gap:7px}
+.hpill{padding:4px 10px;border-radius:14px;font-size:.6rem;font-weight:700}
+.hp-g{background:rgba(0,210,141,.1);border:1px solid rgba(0,210,141,.25);color:var(--green)}
+.hp-p{background:rgba(75,68,224,.1);border:1px solid rgba(75,68,224,.3);color:#a5b4fc}
+.hdr-av{width:32px;height:32px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800;color:#fff;overflow:hidden;cursor:pointer;transition:.2s;flex-shrink:0}
+.hdr-av:hover{transform:scale(1.08);box-shadow:var(--glow)}
+
+/* ══ TOP NAV TABS (below header) ══ */
+.nav-tabs-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 12px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.nav-tabs-bar::-webkit-scrollbar{display:none}
+.ntab{padding:10px 14px;font-size:.7rem;font-weight:700;color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.2s;flex-shrink:0}
+.ntab:hover{color:var(--text)}
+.ntab.active{color:var(--green);border-bottom-color:var(--green)}
+
+/* ══ VIEWS ══ */
+.view{display:none;min-height:calc(100vh - 110px);padding-bottom:80px}
+.view.active{display:block}
+
+/* ══ FLOATING GET CODE BTN ══ */
+.float-btn{position:fixed;bottom:80px;right:16px;z-index:500;background:var(--grad);color:#fff;border:none;border-radius:50px;padding:12px 20px;font-size:.74rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:var(--glow),0 8px 24px rgba(0,0,0,.4);transition:.2s;animation:floatPop 2s ease-in-out infinite}
+@keyframes floatPop{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.02)}}
+.float-btn:hover{transform:translateY(-4px) scale(1.05)!important;box-shadow:var(--neon-glow),0 12px 32px rgba(0,0,0,.5)}
+.float-btn::before{content:'';position:absolute;inset:-2px;border-radius:52px;background:var(--grad);filter:blur(8px);opacity:.5;z-index:-1;animation:floatGlow 2s ease-in-out infinite alternate}
+@keyframes floatGlow{from{opacity:.3}to{opacity:.7}}
+
+/* ══ HERO SECTION ══ */
+.hero{padding:24px 14px 16px;max-width:680px;margin:0 auto;animation:fadeInUp .6s ease both}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.hero-label{display:inline-flex;align-items:center;gap:7px;background:rgba(0,210,141,.08);border:1px solid rgba(0,210,141,.25);border-radius:20px;padding:5px 14px;font-size:.62rem;font-weight:700;color:var(--green);letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
+.hero-label:hover{box-shadow:0 0 16px rgba(0,210,141,.4),0 0 32px rgba(0,210,141,.2)}
+.hero-label::after{content:'';position:absolute;inset:0;border-radius:20px;background:rgba(0,210,141,.08);opacity:0;transition:.2s}
+.hero-label:hover::after{opacity:1}
+.dot-pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.6s ease-in-out infinite;box-shadow:0 0 8px var(--green)}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.6)}}
+/* ANIMATED H1 */
+.hero-h1{font-size:clamp(2rem,7vw,3.2rem);font-weight:900;line-height:1.1;margin-bottom:12px;overflow:hidden}
+.hero-h1 .word{display:inline-block;animation:wordIn .6s cubic-bezier(.23,1,.32,1) both}
+.hero-h1 .word:nth-child(1){animation-delay:.1s}
+.hero-h1 .word:nth-child(2){animation-delay:.2s}
+.hero-h1 .word:nth-child(3){animation-delay:.3s}
+.hero-h1 .word:nth-child(4){animation-delay:.4s}
+@keyframes wordIn{from{opacity:0;transform:translateY(30px) skewX(-5deg)}to{opacity:1;transform:translateY(0) skewX(0)}}
+.hero-h1 .grad-txt{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative}
+.hero-h1 .grad-txt::after{content:attr(data-text);position:absolute;inset:0;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:blur(8px);opacity:.4;animation:textGlow 3s ease-in-out infinite alternate}
+@keyframes textGlow{from{opacity:.2;filter:blur(6px)}to{opacity:.5;filter:blur(12px)}}
+.hero-desc{font-size:.84rem;color:var(--sub);line-height:1.7;margin-bottom:20px;animation:fadeInUp .6s ease .4s both}
+.hero-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;animation:fadeInUp .6s ease .5s both}
+.btn-g{background:var(--grad);color:#fff;padding:13px 16px;border-radius:12px;font-weight:800;font-size:.8rem;text-align:center;transition:.2s;border:none;width:100%;position:relative;overflow:hidden}
+.btn-g::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,.1);transform:translateX(-100%) skewX(-15deg);transition:.4s}
+.btn-g:hover::before{transform:translateX(100%) skewX(-15deg)}
+.btn-g:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+.btn-g:active{transform:scale(.97)}
+.btn-o{background:transparent;color:var(--text);border:1px solid var(--border);padding:13px 16px;border-radius:12px;font-weight:700;font-size:.8rem;text-align:center;transition:.2s;width:100%}
+.btn-o:hover{border-color:rgba(0,210,141,.4);color:var(--green);box-shadow:0 0 12px rgba(0,210,141,.15)}
+
+/* ══ PHONE MOCKUP ══ */
+.phone-outer{display:flex;justify-content:center;padding:0 14px 20px;animation:fadeInUp .8s ease .3s both}
+.phone{width:100%;max-width:240px;background:#141414;border-radius:32px;border:2px solid rgba(255,255,255,.08);box-shadow:0 24px 60px rgba(0,0,0,.8),var(--glow);overflow:hidden;transition:.2s}
+.phone:hover{transform:translateY(-4px);box-shadow:0 32px 80px rgba(0,0,0,.8),var(--neon-glow)}
+.ph-notch-bar{background:#0f0f0f;padding:8px 16px 5px;text-align:center}
+.ph-notch{width:60px;height:14px;background:#0f0f0f;border-radius:8px;margin:0 auto 5px;border:2px solid rgba(255,255,255,.05)}
+.ph-status{display:flex;justify-content:space-between;font-size:9px;color:var(--sub);font-family:'JetBrains Mono',monospace}
+.ph-hdr{background:var(--grad);padding:9px 12px;display:flex;align-items:center;gap:8px}
+.ph-av{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:.7rem;flex-shrink:0}
+.ph-name{font-weight:800;font-size:.72rem;color:#fff}
+.ph-sub{font-size:.55rem;color:rgba(255,255,255,.8)}
+.ph-body{padding:8px;min-height:300px;max-height:300px;background:#141414;overflow:hidden;position:relative}
+.ph-slide{position:absolute;inset:8px;transition:all .6s cubic-bezier(.4,0,.2,1);opacity:0;transform:translateX(30px)}
+.ph-slide.active{opacity:1;transform:translateX(0)}
+.ph-slide.out{opacity:0;transform:translateX(-30px)}
+.cb{margin:5px 0;font-size:.62rem;line-height:1.5;padding:7px 9px;border-radius:9px}
+.cb-b{background:var(--card2);border-radius:0 9px 9px 9px;color:var(--text);max-width:88%}
+.cb-u{background:linear-gradient(135deg,rgba(0,210,141,.2),rgba(75,68,224,.2));border-radius:9px 0 9px 9px;margin-left:auto;max-width:80%;border:1px solid rgba(0,210,141,.2)}
+.cm{font-family:'JetBrains Mono',monospace;color:var(--green);display:block;padding:1px 0}
+.ph-inp-bar{display:flex;align-items:center;gap:5px;padding:7px 9px;border-top:1px solid var(--border);background:#0f0f0f}
+.ph-inp-bar input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:5px 9px;font-size:.6rem;color:var(--text);outline:none}
+.ph-inp-bar button{width:24px;height:24px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0}
+.ph-progress{display:flex;justify-content:center;gap:5px;padding:6px;background:#0f0f0f}
+.ph-dot{width:5px;height:5px;border-radius:50%;background:var(--border);transition:.3s;cursor:pointer}
+.ph-dot.on{background:var(--green);width:14px;border-radius:3px;box-shadow:0 0 6px var(--green)}
+
+/* ══ FEATURES STRIP ══ */
+.feat-strip{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin:0 14px 16px;max-width:680px;margin-left:auto;margin-right:auto}
+@media(min-width:500px){.feat-strip{grid-template-columns:repeat(4,1fr)}}
+.feat-cell{background:var(--surface);padding:14px 10px;display:flex;flex-direction:column;gap:5px;transition:.2s;cursor:default}
+.feat-cell:hover{background:rgba(0,210,141,.04)}
+.feat-ico{font-size:1.2rem}
+.feat-t{font-size:.74rem;font-weight:800}
+.feat-d{font-size:.6rem;color:var(--sub);line-height:1.4}
+
+/* ══ STATS ══ */
+.stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 14px 16px;max-width:680px;margin:0 auto}
+@media(min-width:480px){.stats-row{grid-template-columns:repeat(4,1fr)}}
+.stat-c{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;transition:.3s;cursor:default;animation:fadeInUp .5s ease both}
+.stat-c:hover{border-color:rgba(0,210,141,.3);transform:translateY(-2px)}
+.stat-n{font-size:1.2rem;font-weight:800;color:var(--green);font-family:'JetBrains Mono',monospace}
+.stat-l{font-size:.58rem;color:var(--sub);margin-top:2px}
+
+/* ══ SERVICES ══ */
+.services{padding:0 14px 16px;max-width:680px;margin:0 auto}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sec-ttl{font-size:.86rem;font-weight:800;display:flex;align-items:center;gap:7px}
+.sec-ttl::before{content:'';width:3px;height:14px;background:var(--green);border-radius:2px;flex-shrink:0;display:block}
+.svc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:420px){.svc-grid{grid-template-columns:repeat(3,1fr)}}
+.svc-card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:12px 10px;cursor:pointer;transition:.2s;animation:fadeInUp .5s ease both;position:relative;overflow:hidden}
+.svc-card::before{content:'';position:absolute;inset:0;background:var(--grad);opacity:0;transition:.3s;border-radius:13px}
+.svc-card:hover{border-color:rgba(0,210,141,.3);transform:translateY(-2px)}
+.svc-card:hover::before{opacity:.04}
+.svc-card:active{transform:scale(.97)}
+.svc-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.05rem;margin-bottom:8px;position:relative;z-index:1}
+.svc-card b{font-size:.74rem;color:var(--text);display:block;margin-bottom:2px;position:relative;z-index:1}
+.svc-card small{font-size:.58rem;color:var(--sub);position:relative;z-index:1}
+.svc-badge{display:inline-block;margin-top:5px;padding:2px 7px;border-radius:5px;font-size:.52rem;font-weight:800;background:rgba(0,210,141,.1);color:var(--green);border:1px solid rgba(0,210,141,.2);position:relative;z-index:1}
+
+/* ══ GOAPP SECTION ══ */
+.goapp-section{padding:0 14px 16px;max-width:680px;margin:0 auto}
+.goapp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+@media(min-width:420px){.goapp-grid{grid-template-columns:repeat(3,1fr)}}
+.goapp-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 10px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:.2s}
+.goapp-card:hover{border-color:rgba(75,68,224,.4);background:rgba(75,68,224,.04);transform:translateY(-1px)}
+.goapp-card:active{transform:scale(.97)}
+.goapp-ico{width:34px;height:34px;border-radius:9px;background:rgba(75,68,224,.12);border:1px solid rgba(75,68,224,.2);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.goapp-name{font-size:.72rem;font-weight:800;color:var(--text)}
+.goapp-desc{font-size:.58rem;color:var(--sub);margin-top:1px}
+
+/* ══ BOTTOM NAV ══ */
+.bnav{position:fixed;bottom:0;left:0;right:0;height:62px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:stretch;z-index:300;padding-bottom:env(safe-area-inset-bottom,0)}
+.bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;transition:.15s;color:var(--sub);position:relative}
+.bn:hover,.bn.active{color:var(--green)}
+.bn.active::after{content:'';position:absolute;top:0;left:25%;right:25%;height:2px;background:var(--grad);border-radius:0 0 3px 3px}
+.bn-ico{font-size:1.05rem;line-height:1}
+.bn-lbl{font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+
+/* ══ MODALS ══ */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+.modal-ov.open{display:flex;animation:ovFadeIn .2s ease}
+@keyframes ovFadeIn{from{opacity:0}to{opacity:1}}
+@media(min-width:500px){.modal-ov{align-items:center}}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:18px 16px 24px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;animation:modalUp .3s cubic-bezier(.34,1.56,.64,1)}
+@media(min-width:500px){.modal{border-radius:20px;margin:0 14px}}
+@keyframes modalUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.modal-title{font-size:.98rem;font-weight:800}
+.modal-x{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:.68rem;font-weight:700;color:var(--sub);cursor:pointer;transition:.15s}
+.modal-x:hover{color:var(--text)}
+.fg{margin-bottom:10px}
+.fl{display:block;font-size:.62rem;font-weight:700;color:var(--sub);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
+.fi{width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-size:.8rem;outline:none;transition:.2s}
+.fi:focus{border-color:rgba(0,210,141,.4);box-shadow:0 0 0 3px rgba(0,210,141,.08)}
+.fi::placeholder{color:var(--sub)}
+.fs{width:100%;background:var(--grad);color:#fff;border:none;border-radius:11px;padding:12px;font-weight:800;font-size:.82rem;cursor:pointer;margin-top:6px;transition:.2s;position:relative;overflow:hidden}
+.fs::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,.12);transform:translateX(-100%) skewX(-15deg);transition:.4s}
+.fs:hover::before{transform:translateX(100%) skewX(-15deg)}
+.fs:hover{transform:translateY(-1px);box-shadow:var(--glow)}
+.fs:active{transform:scale(.98)}
+
+/* PLAN OPTS */
+.plan-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.plan-opt{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:11px 12px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:space-between}
+.plan-opt:hover{border-color:rgba(0,210,141,.35)}
+.plan-opt.sel{border-color:var(--green);background:rgba(0,210,141,.05);box-shadow:0 0 12px rgba(0,210,141,.12)}
+.plan-opt-name{font-weight:800;font-size:.78rem}
+.plan-opt-desc{font-size:.6rem;color:var(--sub);margin-top:1px}
+.plan-opt-price{font-weight:800;font-size:.82rem;color:var(--green);font-family:'JetBrains Mono',monospace;flex-shrink:0}
+
+/* TRANSFER TABS */
+.type-tabs{display:flex;gap:4px;background:var(--card);border-radius:10px;padding:4px;margin-bottom:12px;border:1px solid var(--border)}
+.type-tab{flex:1;padding:7px 4px;border-radius:7px;font-size:.62rem;font-weight:700;color:var(--sub);text-align:center;cursor:pointer;transition:.2s;white-space:nowrap}
+.type-tab.on{background:var(--grad);color:#fff;box-shadow:0 2px 8px rgba(0,210,141,.3)}
+.type-pane{display:none}
+.type-pane.on{display:block}
+
+/* CAPTCHA */
+.captcha-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.cap-q{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700;color:var(--green);min-width:80px}
+.cap-inp{flex:1;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-size:.8rem;outline:none;text-align:center;max-width:70px}
+.cap-ref{font-size:.7rem;cursor:pointer;color:var(--sub);padding:4px;transition:.15s}
+.cap-ref:hover{color:var(--green)}
+
+/* SCAN / QR */
+.scan-btn{width:100%;background:transparent;border:2px solid var(--green);color:var(--green);border-radius:11px;padding:13px;font-weight:800;font-size:.84rem;cursor:pointer;margin-bottom:10px;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden}
+.scan-btn::before{content:'';position:absolute;inset:0;background:rgba(0,210,141,.06);transform:scaleX(0);transition:.3s;transform-origin:left}
+.scan-btn:hover::before{transform:scaleX(1)}
+.scan-btn:hover{box-shadow:0 0 16px rgba(0,210,141,.4),0 0 32px rgba(0,210,141,.2);transform:translateY(-1px)}
+.scan-area{display:none;margin-bottom:10px}
+.scan-area.show{display:block}
+#cam-video{width:100%;border-radius:10px;background:#000;display:block;max-height:180px;object-fit:cover}
+.upload-zone{border:2px dashed var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:.2s;margin-top:6px}
+.upload-zone:hover{border-color:rgba(0,210,141,.4)}
+.upload-zone input{display:none}
+
+/* WA VERIFY MODAL */
+.verif-ico{text-align:center;font-size:3rem;margin-bottom:6px;animation:bounceIco .6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes bounceIco{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.verif-ttl{text-align:center;font-size:.98rem;font-weight:800;margin-bottom:5px}
+.verif-sub{text-align:center;font-size:.7rem;color:var(--sub);margin-bottom:16px;line-height:1.6}
+.wa-btn{width:100%;background:#25d366;color:#fff;border:none;border-radius:11px;padding:12px;font-weight:800;font-size:.82rem;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.wa-btn:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 8px 24px rgba(37,211,102,.3)}
+
+/* ══ VIRTUAL CARD ══ */
+.vcard-scene{width:100%;height:180px;perspective:1000px;margin-bottom:16px;cursor:pointer}
+.vcard-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.4,0,.2,1)}
+.vcard-scene.flipped .vcard-inner{transform:rotateY(180deg)}
+.vcard-face{position:absolute;inset:0;border-radius:18px;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+.vcard-front{background:linear-gradient(135deg,#0a1a12 0%,#0d0d2b 40%,#0a1a12 100%);border:1px solid rgba(0,210,141,.3);box-shadow:0 0 30px rgba(0,210,141,.15),0 0 60px rgba(75,68,224,.1),0 20px 40px rgba(0,0,0,.6)}
+.vcard-back{background:linear-gradient(135deg,#0d0d2b 0%,#0a1a12 100%);border:1px solid rgba(75,68,224,.4);box-shadow:0 0 30px rgba(75,68,224,.2),0 20px 40px rgba(0,0,0,.6);transform:rotateY(180deg)}
+/* neon grid on card */
+.vcard-front::before,.vcard-back::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,210,141,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,210,141,.04) 1px,transparent 1px);background-size:24px 24px}
+.vcard-glow{position:absolute;top:-30px;left:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(0,210,141,.2),transparent 70%);animation:cardGlow 3s ease-in-out infinite alternate;pointer-events:none}
+@keyframes cardGlow{from{opacity:.4;transform:scale(1)}to{opacity:.8;transform:scale(1.2)}}
+.vcard-front-content{position:relative;z-index:1;padding:16px;height:100%;display:flex;flex-direction:column;justify-content:space-between}
+.vcf-top{display:flex;justify-content:space-between;align-items:flex-start}
+.vcf-logo{font-family:'JetBrains Mono',monospace;font-size:.78rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.vcf-chip{width:32px;height:24px;border-radius:5px;background:linear-gradient(135deg,rgba(0,210,141,.3),rgba(75,68,224,.3));border:1px solid rgba(0,210,141,.3)}
+.vcf-bal-lbl{font-size:.55rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.vcf-bal{font-size:1.4rem;font-weight:800;font-family:'JetBrains Mono',monospace;color:#fff;letter-spacing:2px}
+.vcf-reveal{background:rgba(0,210,141,.15);border:1px solid rgba(0,210,141,.3);color:var(--green);border-radius:7px;padding:4px 10px;font-size:.6rem;font-weight:800;cursor:pointer;margin-top:4px;transition:.2s;display:inline-block}
+.vcf-reveal:hover{background:rgba(0,210,141,.25)}
+.vcf-bottom{display:flex;justify-content:space-between;align-items:flex-end}
+.vcf-name{font-size:.7rem;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.5px}
+.vcf-acts{display:flex;gap:6px}
+.vcf-btn{padding:5px 12px;border-radius:8px;font-size:.62rem;font-weight:800;cursor:pointer;transition:.2s;border:none}
+.vcf-topup{background:var(--green);color:#000}
+.vcf-send{background:var(--purple);color:#fff}
+.vcf-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.4)}
+/* back */
+.vcb-content{position:relative;z-index:1;padding:16px;height:100%;display:flex;flex-direction:column}
+.vcb-stripe{height:36px;background:rgba(255,255,255,.06);border-radius:6px;margin-bottom:14px;display:flex;align-items:center;padding:0 12px;font-size:.62rem;color:var(--sub)}
+.vcb-info{flex:1;display:flex;flex-direction:column;gap:6px}
+.vcb-row{display:flex;justify-content:space-between;font-size:.62rem}
+.vcb-lbl{color:var(--sub)}
+.vcb-val{font-family:'JetBrains Mono',monospace;color:var(--text)}
+.vcb-acts{display:flex;gap:8px;margin-top:10px}
+.vcb-btn{flex:1;padding:8px;border-radius:9px;font-size:.7rem;font-weight:800;cursor:pointer;transition:.2s;border:none;text-align:center}
+.vcb-freeze{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+.vcb-upgrade{background:var(--grad);color:#fff}
+.vcb-btn:hover{transform:translateY(-1px)}
+.card-flip-hint{text-align:center;font-size:.6rem;color:var(--sub);margin-top:6px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:5px}
+
+/* ══ SEND MONEY VIEW ══ */
+.send-wrap{padding:14px;max-width:480px;margin:0 auto}
+
+/* ══ BUSINESS PANELS ══ */
+.biz-wrap{max-width:720px;margin:0 auto;padding:14px 14px 80px}
+.biz-hdr{margin-bottom:12px}
+.biz-tabs{display:flex;gap:3px;background:var(--card);border:1px solid var(--border);border-radius:11px;padding:4px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none}
+.biz-tabs::-webkit-scrollbar{display:none}
+.biz-tab{padding:7px 13px;border-radius:7px;font-size:.66rem;font-weight:700;color:var(--sub);white-space:nowrap;cursor:pointer;transition:.2s;flex-shrink:0}
+.biz-tab.active{background:var(--grad);color:#fff}
+.biz-panel{display:none}
+.biz-panel.active{display:block}
+.dash-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+@media(min-width:500px){.dash-grid{grid-template-columns:repeat(4,1fr)}}
+.dc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;transition:.2s}
+.dc:hover{border-color:rgba(0,210,141,.25);transform:translateY(-1px)}
+.dc-lbl{font-size:.58rem;color:var(--sub);margin-bottom:4px}
+.dc-val{font-size:1.2rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.dc-chg{font-size:.58rem;margin-top:3px}
+.up{color:var(--green)}.down{color:var(--danger)}
+.dash-2col{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:520px){.dash-2col{grid-template-columns:3fr 2fr}}
+.tbl-card{background:var(--card);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:10px}
+.tbl-hdr{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.tbl-ttl{font-size:.78rem;font-weight:800}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:8px 12px;font-size:.56rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;background:rgba(255,255,255,.02)}
+td{padding:8px 12px;font-size:.7rem;border-top:1px solid var(--border)}
+.sbadge{display:inline-block;padding:2px 7px;border-radius:5px;font-size:.54rem;font-weight:800}
+.sb-ok{background:rgba(0,210,141,.1);color:var(--green);border:1px solid rgba(0,210,141,.2)}
+.sb-pend{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.sb-fail{background:rgba(255,77,77,.1);color:var(--danger);border:1px solid rgba(255,77,77,.2)}
+.code-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:480px){.code-grid{grid-template-columns:repeat(3,1fr)}}
+.code-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
+.code-card:hover{transform:translateY(-3px);box-shadow:var(--glow)}
+.code-card.feat{border-color:rgba(0,210,141,.4)}
+.code-card.feat::before{content:'POPULAR';position:absolute;top:11px;right:-12px;background:var(--green);color:#000;font-size:.52rem;font-weight:800;padding:2px 20px;transform:rotate(30deg);letter-spacing:.5px}
+.code-plan{font-size:.6rem;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px}
+.code-price{font-size:1.7rem;font-weight:800;font-family:'JetBrains Mono',monospace;margin-bottom:2px}
+.code-price span{font-size:.72rem;color:var(--sub);font-weight:400}
+.code-feats{list-style:none;text-align:left;margin:10px 0;display:flex;flex-direction:column;gap:5px}
+.code-feats li{font-size:.62rem;color:var(--sub);display:flex;align-items:center;gap:5px}
+.code-feats li::before{content:'✓';color:var(--green);font-weight:800}
+.code-btn{width:100%;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:9px;font-weight:800;font-size:.7rem;cursor:pointer;transition:.2s}
+.code-card.feat .code-btn{background:var(--grad);border:none;color:#fff}
+.prod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:480px){.prod-grid{grid-template-columns:repeat(3,1fr)}}
+.prod-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:.2s}
+.prod-card:hover{border-color:rgba(0,210,141,.3);transform:translateY(-2px)}
+.prod-img{height:70px;display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+.prod-info{padding:9px}
+.prod-name{font-weight:800;font-size:.72rem;margin-bottom:1px}
+.prod-cat{font-size:.56rem;color:var(--sub);margin-bottom:4px}
+.prod-price{font-size:.78rem;font-weight:800;color:var(--green);font-family:'JetBrains Mono',monospace;margin-bottom:5px}
+.prod-btn{width:100%;background:var(--grad);color:#fff;border:none;border-radius:7px;padding:6px;font-weight:800;font-size:.6rem;cursor:pointer;transition:.15s}
+.prod-btn:hover{opacity:.85}
+.wallet-hero{background:var(--grad);border-radius:14px;padding:16px;position:relative;overflow:hidden;margin-bottom:12px}
+.wallet-hero::before{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.06)}
+.wh-lbl{font-size:.56rem;opacity:.8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;color:#fff}
+.wh-bal{font-size:1.8rem;font-weight:800;font-family:'JetBrains Mono',monospace;color:#fff;margin-bottom:12px}
+.wh-acts{display:flex;gap:8px;flex-wrap:wrap}
+.wh-btn{padding:8px 14px;border-radius:9px;font-weight:800;font-size:.68rem;cursor:pointer;transition:.15s;border:none}
+.wh-btn-p{background:#fff;color:#047857}
+.wh-btn-s{background:rgba(255,255,255,.15);color:#fff}
+.wh-btn:hover{opacity:.9;transform:translateY(-1px)}
+
+/* featured merchants slider */
+.merchants-slider{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;-ms-overflow-style:none;margin-bottom:14px}
+.merchants-slider::-webkit-scrollbar{display:none}
+.merch-card{min-width:140px;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:.2s;flex-shrink:0}
+.merch-card:hover{border-color:rgba(0,210,141,.3);transform:translateY(-2px)}
+.merch-img{height:60px;display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+.merch-info{padding:8px}
+.merch-name{font-size:.72rem;font-weight:800;margin-bottom:1px}
+.merch-code{font-size:.58rem;color:var(--green);font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.merch-btn{width:100%;background:transparent;border:1px solid rgba(0,210,141,.3);color:var(--green);border-radius:6px;padding:4px;font-size:.58rem;font-weight:800;cursor:pointer;transition:.15s}
+.merch-btn:hover{background:rgba(0,210,141,.1)}
+
+/* shop view */
+.shop-wrap{padding:14px;max-width:480px;margin:0 auto}
+.ecomm-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.ecomm-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;transition:.2s;text-align:center}
+.ecomm-card:hover{border-color:rgba(0,210,141,.3);transform:translateY(-2px)}
+.ecomm-ico{font-size:1.5rem;margin-bottom:5px}
+.ecomm-name{font-size:.72rem;font-weight:800;margin-bottom:2px}
+.ecomm-desc{font-size:.58rem;color:var(--sub)}
+
+/* airtime view */
+.airtime-wrap{padding:14px;max-width:480px;margin:0 auto}
+.network-tabs{display:flex;gap:5px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.network-tabs::-webkit-scrollbar{display:none}
+.net-tab{padding:7px 14px;border-radius:8px;font-size:.66rem;font-weight:700;background:var(--card);border:1px solid var(--border);color:var(--sub);cursor:pointer;transition:.15s;white-space:nowrap;flex-shrink:0}
+.net-tab.on{background:rgba(0,210,141,.1);border-color:rgba(0,210,141,.4);color:var(--green)}
+.swap-row{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;margin-bottom:10px}
+.swap-mid{width:28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.7rem;cursor:pointer;transition:.3s;flex-shrink:0}
+.swap-mid:hover{transform:rotate(180deg)}
+.amt-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.amt-chip{padding:5px 12px;border-radius:7px;font-size:.66rem;font-weight:700;background:var(--card);border:1px solid var(--border);color:var(--sub);cursor:pointer;transition:.15s;font-family:'JetBrains Mono',monospace}
+.amt-chip:hover,.amt-chip.on{background:rgba(0,210,141,.1);border-color:rgba(0,210,141,.3);color:var(--green)}
+
+/* bills view */
+.bills-wrap{padding:14px;max-width:480px;margin:0 auto}
+.disco-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:12px}
+.disco-btn{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:8px 10px;font-size:.62rem;font-weight:700;cursor:pointer;transition:.2s;text-align:left;color:var(--text);display:flex;align-items:center;gap:7px}
+.disco-btn:hover,.disco-btn.on{border-color:rgba(0,210,141,.4);background:rgba(0,210,141,.05);color:var(--green)}
+.disco-ico{font-size:.9rem}
+</style>
+</head>
+<body>
+
+<div id="toast-el" class="toast"></div>
+
+<!-- ══ MODAL OVERLAY ══ -->
+<div class="modal-ov" id="modal-ov" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-body"></div>
+</div>
+
+<!-- ══ SIDE DRAWER ══ -->
+<div id="drw-ov" class="drw-ov" onclick="closeDrw()"></div>
+<div id="drw" class="drw">
+  <div class="drw-head">
+    <button class="drw-x" onclick="closeDrw()">×</button>
+    <div class="drw-av" onclick="openModal('wa-verify')">
+      <img src="https://i.pravatar.cc/100?img=7" alt="" onerror="this.style.display='none';this.parentElement.innerHTML='👤'">
+      <div class="drw-av-edit">✎</div>
+    </div>
+    <div>
+      <div class="drw-name" id="drw-uname">Aisha Kabiru</div>
+      <div class="drw-sub">📟 *5050# SmartUSSD</div>
+      <button class="drw-edit-btn" onclick="openModal('wa-verify')">✎ Edit Profile</button>
+    </div>
+  </div>
+  <div class="drw-wallet">
+    <div class="dw-lbl">SmartUSSD Wallet</div>
+    <div class="dw-bal">₦ ••••••••</div>
+    <div class="dw-row"><span>Plan</span><span>⭐ Basic</span></div>
+    <div class="dw-row"><span>💳 USSD Code</span><span style="font-family:'JetBrains Mono',monospace;color:var(--green)">*5050*882#</span></div>
+  </div>
+  <div class="drw-nav">
+    <div class="dn cur" onclick="showMainView('home');closeDrw()"><span class="dn-ico">🏠</span>Home</div>
+    <div class="dn" onclick="showMainView('send');closeDrw()"><span class="dn-ico">💸</span>Send Money</div>
+    <div class="dn" onclick="showMainView('shop');closeDrw()"><span class="dn-ico">🛒</span>Shop</div>
+    <div class="dn" onclick="showMainView('airtime');closeDrw()"><span class="dn-ico">📱</span>Airtime & Data</div>
+    <div class="dn" onclick="showMainView('bills');closeDrw()"><span class="dn-ico">💡</span>Pay Bills</div>
+    <div class="dn" onclick="showMainView('business');closeDrw()"><span class="dn-ico">🏪</span>Business</div>
+    <div class="dn" onclick="openModal('find-ussd');closeDrw()"><span class="dn-ico">🔍</span>Find SmartUSSD</div>
+    <div class="dn" onclick="openModal('wa-verify');closeDrw()"><span class="dn-ico">⚙️</span>Settings</div>
+  </div>
+  <div class="drw-foot">
+    <div style="font-size:.58rem;color:var(--sub);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Admin Support</div>
+    <div class="drw-wa" onclick="goWA('Hello goSUPPORT')">📲 Contact Admin on WhatsApp</div>
+    <div class="drw-btns">
+      <button class="drw-btn drw-btn-g" onclick="openModal('activate-ussd')">⚡ GET CODE</button>
+      <button class="drw-btn drw-btn-p" onclick="goWA('Please verify my payment')">📄 VERIFY</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<header class="hdr">
+  <div class="hdr-l">
+    <div class="ham" id="ham" onclick="toggleDrw()"><span></span><span></span><span></span></div>
+    <span class="hdr-logo">*5050# SmartUSSD</span>
+  </div>
+  <div class="hdr-r">
+    <span class="hpill hp-g" id="live-pill" style="cursor:pointer" onclick="openModal('find-ussd')">● Live on WhatsApp</span>
+    <span class="hpill hp-p" style="display:none" id="xp-pill">⚡ 0 XP</span>
+    <div class="hdr-av" onclick="toggleDrw()">
+      <img src="https://i.pravatar.cc/100?img=7" alt="" onerror="this.style.display='none';this.parentElement.textContent='👤'">
+    </div>
+  </div>
+</header>
+
+<!-- ══ NAV TABS BAR ══ -->
+<div class="nav-tabs-bar">
+  <div class="ntab active" onclick="showMainView('home',this)">🏠 Home</div>
+  <div class="ntab" onclick="showMainView('send',this)">💸 Send</div>
+  <div class="ntab" onclick="showMainView('shop',this)">🛒 Shop</div>
+  <div class="ntab" onclick="showMainView('airtime',this)">📱 Airtime</div>
+  <div class="ntab" onclick="showMainView('bills',this)">💡 Bills</div>
+  <div class="ntab" onclick="showMainView('business',this)">🏪 Business</div>
+</div>
+
+<!-- ══ FLOATING GET CODE ══ -->
+<button class="float-btn" onclick="openModal('activate-ussd')">
+  ⚡ Get My Code
+</button>
+
+<!-- ════════════════════════════════
+     HOME VIEW
+════════════════════════════════ -->
+<div class="view active" id="view-home">
+  <!-- ADVERT BANNER -->
+  <div style="padding:12px 14px 0;max-width:680px;margin:0 auto">
+    <div class="adv-wrap" id="adv-home">
+      <div class="adv-track" id="adv-home-track"></div>
+      <div class="adv-dots" id="adv-home-dots"></div>
+      <button class="adv-arr l" onclick="advSlide('home',-1)">‹</button>
+      <button class="adv-arr r" onclick="advSlide('home',1)">›</button>
+    </div>
+    <!-- TICKER -->
+    <div class="ticker-wrap">
+      <div class="ticker-lbl">🔴 Live</div>
+      <div class="ticker-track" id="ticker-home"></div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-label" id="live-label"><div class="dot-pulse"></div> Live on WhatsApp & Telegram</div>
+    <h1 class="hero-h1">
+      <span class="word">One</span>&nbsp;<span class="word">Code.</span><br>
+      <span class="word grad-txt" data-text="Infinite">Infinite</span>&nbsp;<span class="word">Services.</span>
+    </h1>
+    <p class="hero-desc">Dial <strong>*5050#</strong> to unlock an intelligent chatbot — send money, shop online, pay bills and connect with thousands of registered businesses, all through WhatsApp.</p>
+    <div class="hero-btns">
+      <button class="btn-g" onclick="openModal('find-ussd')">🔍 Find a SmartUSSD</button>
+      <button class="btn-o" onclick="openModal('activate-ussd')">⚡ Activate My USSD</button>
+    </div>
+  </div>
+
+  <!-- PHONE MOCKUP -->
+  <div class="phone-outer">
+    <div>
+      <div class="phone">
+        <div class="ph-notch-bar">
+          <div class="ph-notch"></div>
+          <div class="ph-status"><span>9:41</span><span>●●●</span></div>
+        </div>
+        <div class="ph-hdr">
+          <div class="ph-av">5K</div>
+          <div><div class="ph-name">*5050# SmartUSSD</div><div class="ph-sub">● Online — End-to-end encrypted</div></div>
+        </div>
+        <div class="ph-body" id="ph-body">
+          <!-- slides injected by JS -->
+        </div>
+        <div class="ph-progress" id="ph-dots"></div>
+        <div class="ph-inp-bar">
+          <input id="ph-inp" placeholder="Reply with option…" onkeypress="if(event.key==='Enter')phSend()">
+          <button onclick="phSend()">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feat-strip">
+    <div class="feat-cell" style="animation:fadeInUp .5s ease .1s both"><div class="feat-ico">💳</div><div class="feat-t">WhatsApp Wallet</div><div class="feat-d">Fund, send & receive money</div></div>
+    <div class="feat-cell" style="animation:fadeInUp .5s ease .2s both"><div class="feat-ico">🏪</div><div class="feat-t">Business Hub</div><div class="feat-d">1,000+ vendors, instant checkout</div></div>
+    <div class="feat-cell" style="animation:fadeInUp .5s ease .3s both"><div class="feat-ico">⚡</div><div class="feat-t">Instant Transfers</div><div class="feat-d">Send to any bank in seconds</div></div>
+    <div class="feat-cell" style="animation:fadeInUp .5s ease .4s both"><div class="feat-ico">🤖</div><div class="feat-t">AI-Powered Bot</div><div class="feat-d">Natural language, no menus</div></div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-c" style="animation-delay:.1s"><div class="stat-n" id="cnt1">₦0</div><div class="stat-l">Volume Processed</div></div>
+    <div class="stat-c" style="animation-delay:.2s"><div class="stat-n" id="cnt2">0</div><div class="stat-l">Active Users</div></div>
+    <div class="stat-c" style="animation-delay:.3s"><div class="stat-n" id="cnt3">0</div><div class="stat-l">Businesses</div></div>
+    <div class="stat-c" style="animation-delay:.4s"><div class="stat-n" id="cnt4">0%</div><div class="stat-l">Uptime</div></div>
+  </div>
+
+  <div class="services">
+    <div class="sec-hdr"><span class="sec-ttl">What you can do</span></div>
+    <div class="svc-grid">
+      <div class="svc-card" onclick="showMainView('send')" style="animation-delay:.05s"><div class="svc-ico" style="background:rgba(0,210,141,.1)">💸</div><b>Send Money</b><small>P2P, bank, wallet transfers</small><div class="svc-badge">Fintech</div></div>
+      <div class="svc-card" onclick="showMainView('shop')" style="animation-delay:.1s"><div class="svc-ico" style="background:rgba(75,68,224,.12)">🛒</div><b>Shop Vendors</b><small>Browse, order & pay in chat</small><div class="svc-badge">eCommerce</div></div>
+      <div class="svc-card" onclick="showMainView('airtime')" style="animation-delay:.15s"><div class="svc-ico" style="background:rgba(245,158,11,.1)">📱</div><b>Airtime & Data</b><small>Recharge any network</small><div class="svc-badge">Utility</div></div>
+      <div class="svc-card" onclick="showMainView('bills')" style="animation-delay:.2s"><div class="svc-ico" style="background:rgba(59,130,246,.1)">💡</div><b>Pay Bills</b><small>DISCO, cable, school fees</small><div class="svc-badge">Utility</div></div>
+      <div class="svc-card" onclick="openModal('activate-ussd')" style="animation-delay:.25s"><div class="svc-ico" style="background:rgba(236,72,153,.1)">🏪</div><b>Virtual Store</b><small>Open your business chatbot</small><div class="svc-badge">Business</div></div>
+      <div class="svc-card" onclick="showMainView('business')" style="animation-delay:.3s"><div class="svc-ico" style="background:rgba(239,68,68,.1)">📊</div><b>Analytics</b><small>Track revenue & customers</small><div class="svc-badge">Business</div></div>
+      <div class="svc-card" onclick="document.getElementById('goapp-anchor').scrollIntoView({behavior:'smooth'})" style="animation-delay:.35s"><div class="svc-ico" style="background:rgba(75,68,224,.15)">📲</div><b>goAPPs</b><small>Transport, health, food & more</small><div class="svc-badge" style="background:rgba(75,68,224,.12);color:#a5b4fc;border-color:rgba(75,68,224,.3)">goAPPs</div></div>
+      <div class="svc-card" onclick="openModal('eula')" style="animation-delay:.4s"><div class="svc-ico" style="background:rgba(245,158,11,.12)">📋</div><b>Terms & EULA</b><small>User policy & agreement</small><div class="svc-badge" style="background:rgba(245,158,11,.1);color:var(--amber);border-color:rgba(245,158,11,.25)">Legal</div></div>
+    </div>
+  </div>
+
+  <!-- GOAPPS SECTION -->
+  <div class="goapp-section" id="goapp-anchor">
+    <div class="sec-hdr"><span class="sec-ttl">goAPPs Services</span></div>
+    <div class="goapp-grid">
+      <div class="goapp-card" onclick="goWA('I want to use goMETRO')"><div class="goapp-ico">🚎</div><div><div class="goapp-name">goMETRO</div><div class="goapp-desc">Transport top-up</div></div></div>
+      <div class="goapp-card" onclick="goWA('I want to use goMEDIC')"><div class="goapp-ico">🚑</div><div><div class="goapp-name">goMEDIC</div><div class="goapp-desc">Healthcare wallet</div></div></div>
+      <div class="goapp-card" onclick="goWA('I want to use goCHOPs')"><div class="goapp-ico">🍔</div><div><div class="goapp-name">goCHOPs</div><div class="goapp-desc">Food & delivery</div></div></div>
+      <div class="goapp-card" onclick="goWA('I want to use goUTILITY')"><div class="goapp-ico">⚡</div><div><div class="goapp-name">goUTILITY</div><div class="goapp-desc">Bills & utilities</div></div></div>
+      <div class="goapp-card" onclick="goWA('I want to use goREWARDS')"><div class="goapp-ico">🎁</div><div><div class="goapp-name">goREWARDS</div><div class="goapp-desc">Points & cashback</div></div></div>
+      <div class="goapp-card" onclick="goWA('I want to use goADASHE')"><div class="goapp-ico">🤝</div><div><div class="goapp-name">goADASHE</div><div class="goapp-desc">Group savings</div></div></div>
+      <div class="goapp-card" onclick="goWA('I want to use goCBT')"><div class="goapp-ico">📚</div><div><div class="goapp-name">goCBT</div><div class="goapp-desc">Exam practice</div></div></div>
+      <div class="goapp-card" onclick="goWA('I want to use goLOAN')"><div class="goapp-ico">🏦</div><div><div class="goapp-name">goLOAN</div><div class="goapp-desc">Quick micro loans</div></div></div>
+      <div class="goapp-card" onclick="goWA('I want to use goSHOP')"><div class="goapp-ico">🛍️</div><div><div class="goapp-name">goSHOP</div><div class="goapp-desc">Marketplace</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     SEND MONEY VIEW
+════════════════════════════════ -->
+<div class="view" id="view-send">
+  <div class="send-wrap">
+    <!-- ADVERT -->
+    <div class="adv-wrap" id="adv-send"><div class="adv-track" id="adv-send-track"></div><div class="adv-dots" id="adv-send-dots"></div><button class="adv-arr l" onclick="advSlide('send',-1)">‹</button><button class="adv-arr r" onclick="advSlide('send',1)">›</button></div>
+    <div class="ticker-wrap"><div class="ticker-lbl">🔴 Live</div><div class="ticker-track" id="ticker-send"></div></div>
+
+    <!-- VIRTUAL CARD -->
+    <div class="vcard-scene" id="vcard" onclick="document.getElementById('vcard').classList.toggle('flipped')">
+      <div class="vcard-inner">
+        <div class="vcard-face vcard-front">
+          <div class="vcard-glow"></div>
+          <div class="vcard-front-content">
+            <div class="vcf-top">
+              <div class="vcf-logo">*5050#</div>
+              <div class="vcf-chip"></div>
+            </div>
+            <div>
+              <div class="vcf-bal-lbl">Available Balance</div>
+              <div class="vcf-bal" id="vc-bal">₦ ••••••••</div>
+              <div class="vcf-reveal" onclick="event.stopPropagation();openModal('wa-verify')">👁 Show Balance</div>
+            </div>
+            <div class="vcf-bottom">
+              <div class="vcf-name">AISHA KABIRU</div>
+              <div class="vcf-acts">
+                <button class="vcf-btn vcf-topup" onclick="event.stopPropagation();openModal('wallet-view')">+ Top Up</button>
+                <button class="vcf-btn vcf-send" onclick="event.stopPropagation();openModal('send-money')">Send ↗</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="vcard-face vcard-back">
+          <div class="vcard-glow" style="top:auto;bottom:-30px;right:-30px;left:auto;background:radial-gradient(circle,rgba(75,68,224,.2),transparent 70%)"></div>
+          <div class="vcb-content">
+            <div class="vcb-stripe">▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬</div>
+            <div class="vcb-info">
+              <div class="vcb-row"><span class="vcb-lbl">USSD Code</span><span class="vcb-val">*5050*882#</span></div>
+              <div class="vcb-row"><span class="vcb-lbl">Plan</span><span class="vcb-val">Basic</span></div>
+              <div class="vcb-row"><span class="vcb-lbl">Status</span><span class="vcb-val" style="color:var(--green)">● Active</span></div>
+              <div class="vcb-row"><span class="vcb-lbl">Expires</span><span class="vcb-val">12/2025</span></div>
+            </div>
+            <div class="vcb-acts">
+              <button class="vcb-btn vcb-freeze" onclick="event.stopPropagation();openModal('wa-verify')">❄ Freeze Card</button>
+              <button class="vcb-btn vcb-upgrade" onclick="event.stopPropagation();openModal('activate-ussd')">⬆ Upgrade</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-flip-hint">↕ Tap card to flip</div>
+
+    <!-- SEND OPTIONS -->
+    <div class="sec-hdr"><span class="sec-ttl">💸 Send Money</span></div>
+    <div class="type-tabs">
+      <div class="type-tab on" onclick="switchType('bank',this)">🏦 To Bank</div>
+      <div class="type-tab" onclick="switchType('smartussd',this)">📟 USSD</div>
+      <div class="type-tab" onclick="switchType('self',this)">🔄 Self</div>
+      <div class="type-tab" onclick="switchType('scan',this)">📷 Scan</div>
+    </div>
+    <div class="type-pane on" id="tp-bank">
+      <div class="fg"><label class="fl">Recipient Account Number</label><input class="fi" id="sm-acct" placeholder="0123456789"></div>
+      <div class="fg"><label class="fl">Bank</label><select class="fi" id="sm-bank"><option>Access Bank</option><option>GTBank (Guaranty Trust)</option><option>Zenith Bank</option><option>First Bank of Nigeria</option><option>UBA</option><option>Kuda Bank</option><option>OPay</option><option>Palmpay</option><option>Moniepoint</option><option>Sterling Bank</option><option>Stanbic IBTC</option><option>FCMB</option></select></div>
+      <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="sm-amt" type="number" placeholder="5,000"></div>
+      <div class="fg"><label class="fl">Narration</label><input class="fi" id="sm-narr" placeholder="Optional note…"></div>
+    </div>
+    <div class="type-pane" id="tp-smartussd">
+      <div class="fg"><label class="fl">SmartUSSD ID / Phone</label><input class="fi" id="sm-uid" placeholder="@username or 0802XXXXXXX"></div>
+      <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="sm-uamt" type="number" placeholder="5,000"></div>
+    </div>
+    <div class="type-pane" id="tp-self">
+      <div class="fg"><label class="fl">My Account</label><input class="fi" value="Aisha Kabiru — *5050*882#" readonly style="color:var(--sub)"></div>
+      <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="sm-selt" type="number" placeholder="5,000"></div>
+    </div>
+    <div class="type-pane" id="tp-scan">
+      <button class="scan-btn" onclick="openCamera()">📷 Scan to Pay (QR)</button>
+      <div class="scan-area" id="scan-area">
+        <video id="cam-video" autoplay playsinline muted></video>
+        <button onclick="stopCamera()" style="width:100%;margin-top:6px;background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.3);color:var(--danger);border-radius:8px;padding:7px;font-size:.7rem;font-weight:700;cursor:pointer">✕ Stop Camera</button>
+      </div>
+      <div class="upload-zone" onclick="document.getElementById('qr-file').click()">
+        <input type="file" id="qr-file" accept="image/*" onchange="handleQRUpload(event)" style="display:none">
+        <div style="font-size:.72rem;color:var(--sub);line-height:1.6">📁 Or upload QR image<br><small style="font-size:.6rem">Camera not working? Upload instead</small></div>
+      </div>
+      <canvas id="qr-canvas" style="display:none"></canvas>
+    </div>
+
+    <div id="captcha-send"><!-- captcha injected --></div>
+    <button class="fs" id="send-submit" onclick="submitSend()">📤 Send via WhatsApp</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     SHOP VIEW
+════════════════════════════════ -->
+<div class="view" id="view-shop">
+  <div class="shop-wrap">
+    <div class="adv-wrap" id="adv-shop"><div class="adv-track" id="adv-shop-track"></div><div class="adv-dots" id="adv-shop-dots"></div><button class="adv-arr l" onclick="advSlide('shop',-1)">‹</button><button class="adv-arr r" onclick="advSlide('shop',1)">›</button></div>
+    <div class="ticker-wrap"><div class="ticker-lbl">🔴 Live</div><div class="ticker-track" id="ticker-shop"></div></div>
+    <div class="sec-hdr"><span class="sec-ttl">🛒 eCommerce</span></div>
+    <div class="ecomm-grid">
+      <div class="ecomm-card" onclick="shopAction('Browse Product Catalog')"><div class="ecomm-ico">🛍️</div><div class="ecomm-name">Product Catalog</div><div class="ecomm-desc">Browse all listed items</div></div>
+      <div class="ecomm-card" onclick="shopAction('Track my Order')"><div class="ecomm-ico">📦</div><div class="ecomm-name">Track Order</div><div class="ecomm-desc">Live delivery status</div></div>
+      <div class="ecomm-card" onclick="shopAction('Find a specific Merchant')"><div class="ecomm-ico">🏪</div><div class="ecomm-name">Find Merchant</div><div class="ecomm-desc">Search by code or name</div></div>
+      <div class="ecomm-card" onclick="shopAction('View my Wishlist')"><div class="ecomm-ico">❤️</div><div class="ecomm-name">Wishlist</div><div class="ecomm-desc">Saved items</div></div>
+      <div class="ecomm-card" onclick="shopAction('Flash Sale and Deals')"><div class="ecomm-ico">🔥</div><div class="ecomm-name">Flash Sales</div><div class="ecomm-desc">Today's deals</div></div>
+      <div class="ecomm-card" onclick="shopAction('Initiate a Return or Refund')"><div class="ecomm-ico">🔄</div><div class="ecomm-name">Returns</div><div class="ecomm-desc">Refund & exchange</div></div>
+      <div class="ecomm-card" onclick="shopAction('Pay for my Order')"><div class="ecomm-ico">💳</div><div class="ecomm-name">Checkout</div><div class="ecomm-desc">Pay for cart items</div></div>
+      <div class="ecomm-card" onclick="shopAction('Rate and Review a Product')"><div class="ecomm-ico">⭐</div><div class="ecomm-name">Reviews</div><div class="ecomm-desc">Rate products</div></div>
+    </div>
+    <div class="sec-hdr"><span class="sec-ttl">🏪 Enter Merchant</span></div>
+    <div class="fg"><label class="fl">SmartUSSD Code / Business Name</label><input class="fi" id="shop-code" placeholder="*5050*882# or Chidi's Fashion"></div>
+    <div class="fg"><label class="fl">Merchant WhatsApp (optional)</label><input class="fi" id="shop-wa" placeholder="+234 800 000 0000"></div>
+    <button class="fs" onclick="submitShop()">🛒 Open Store on WhatsApp</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     AIRTIME VIEW
+════════════════════════════════ -->
+<div class="view" id="view-airtime">
+  <div class="airtime-wrap">
+    <div class="adv-wrap" id="adv-airtime"><div class="adv-track" id="adv-airtime-track"></div><div class="adv-dots" id="adv-airtime-dots"></div><button class="adv-arr l" onclick="advSlide('airtime',-1)">‹</button><button class="adv-arr r" onclick="advSlide('airtime',1)">›</button></div>
+    <div class="ticker-wrap"><div class="ticker-lbl">🔴 Live</div><div class="ticker-track" id="ticker-airtime"></div></div>
+    <div class="sec-hdr"><span class="sec-ttl">📱 Airtime & Data</span></div>
+    <div class="network-tabs">
+      <div class="net-tab on" onclick="selNet(this,'MTN')">🟡 MTN</div>
+      <div class="net-tab" onclick="selNet(this,'Airtel')">🔴 Airtel</div>
+      <div class="net-tab" onclick="selNet(this,'Glo')">🟢 Glo</div>
+      <div class="net-tab" onclick="selNet(this,'9mobile')">🟣 9mobile</div>
+    </div>
+    <!-- SWAP -->
+    <div style="margin-bottom:10px">
+      <div style="font-size:.7rem;font-weight:700;margin-bottom:6px">Type</div>
+      <div class="swap-row">
+        <select class="fi" id="air-type-a" style="font-size:.74rem">
+          <option>Airtime</option>
+          <option>Data Bundle</option>
+          <option>SMS Bundle</option>
+          <option>Roaming</option>
+        </select>
+        <div class="swap-mid" onclick="swapAirtime()" title="Swap">⇄</div>
+        <select class="fi" id="air-type-b" style="font-size:.74rem">
+          <option>Data Bundle</option>
+          <option>Airtime</option>
+          <option>SMS Bundle</option>
+          <option>Roaming</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Phone Number</label><input class="fi" id="air-phone" placeholder="+234 800 000 0000"></div>
+    <div style="font-size:.62rem;font-weight:700;color:var(--sub);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px">Quick Amounts</div>
+    <div class="amt-chips">
+      <div class="amt-chip" onclick="setAmt(100,this)">₦100</div>
+      <div class="amt-chip" onclick="setAmt(200,this)">₦200</div>
+      <div class="amt-chip" onclick="setAmt(500,this)">₦500</div>
+      <div class="amt-chip" onclick="setAmt(1000,this)">₦1,000</div>
+      <div class="amt-chip" onclick="setAmt(2000,this)">₦2,000</div>
+      <div class="amt-chip" onclick="setAmt(5000,this)">₦5,000</div>
+    </div>
+    <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="air-amt" type="number" placeholder="1,000"></div>
+    <div id="captcha-air"><!-- captcha --></div>
+    <button class="fs" onclick="submitAirtime()">📱 Buy via WhatsApp</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     BILLS VIEW
+════════════════════════════════ -->
+<div class="view" id="view-bills">
+  <div class="bills-wrap">
+    <div class="adv-wrap" id="adv-bills"><div class="adv-track" id="adv-bills-track"></div><div class="adv-dots" id="adv-bills-dots"></div><button class="adv-arr l" onclick="advSlide('bills',-1)">‹</button><button class="adv-arr r" onclick="advSlide('bills',1)">›</button></div>
+    <div class="ticker-wrap"><div class="ticker-lbl">🔴 Live</div><div class="ticker-track" id="ticker-bills"></div></div>
+    <div class="sec-hdr"><span class="sec-ttl">💡 Pay Bills</span></div>
+    <div style="font-size:.62rem;font-weight:700;color:var(--sub);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px">⚡ Select DISCO</div>
+    <div class="disco-grid" id="disco-grid">
+      <button class="disco-btn" onclick="selDisco(this,'EKEDC (Eko)')"><div class="disco-ico">⚡</div>EKEDC (Eko)</button>
+      <button class="disco-btn" onclick="selDisco(this,'IKEDC (Ikeja)')"><div class="disco-ico">⚡</div>IKEDC (Ikeja)</button>
+      <button class="disco-btn" onclick="selDisco(this,'AEDC (Abuja)')"><div class="disco-ico">⚡</div>AEDC (Abuja)</button>
+      <button class="disco-btn" onclick="selDisco(this,'PHEDC (Port Harcourt)')"><div class="disco-ico">⚡</div>PHEDC (PH)</button>
+      <button class="disco-btn" onclick="selDisco(this,'EEDC (Enugu)')"><div class="disco-ico">⚡</div>EEDC (Enugu)</button>
+      <button class="disco-btn" onclick="selDisco(this,'KEDCO (Kano)')"><div class="disco-ico">⚡</div>KEDCO (Kano)</button>
+      <button class="disco-btn" onclick="selDisco(this,'BEDC (Benin)')"><div class="disco-ico">⚡</div>BEDC (Benin)</button>
+      <button class="disco-btn" onclick="selDisco(this,'JED (Jos)')"><div class="disco-ico">⚡</div>JED (Jos)</button>
+      <button class="disco-btn" onclick="selDisco(this,'IBEDC (Ibadan)')"><div class="disco-ico">⚡</div>IBEDC (Ibadan)</button>
+      <button class="disco-btn" onclick="selDisco(this,'KAEDCO (Kaduna)')"><div class="disco-ico">⚡</div>KAEDCO (Kaduna)</button>
+      <button class="disco-btn" onclick="selDisco(this,'YEDC (Yola)')"><div class="disco-ico">⚡</div>YEDC (Yola)</button>
+      <button class="disco-btn" onclick="selDisco(this,'CPED (Cross River)')"><div class="disco-ico">⚡</div>CPED (Cross River)</button>
+    </div>
+    <div class="fg" style="margin-top:10px"><label class="fl">Or Select Service</label><select class="fi" id="bill-svc" onchange="syncBillSvc(this)"><option value="">-- Select Service --</option><optgroup label="⚡ Electricity DISCOs"><option>⚡ EKEDC – Eko Electricity</option><option>⚡ IKEDC – Ikeja Electric</option><option>⚡ AEDC – Abuja Electricity</option><option>⚡ PHEDC – Port Harcourt Electric</option><option>⚡ EEDC – Enugu Electricity</option><option>⚡ KEDCO – Kano Electricity</option><option>⚡ BEDC – Benin Electricity</option><option>⚡ JED – Jos Electricity</option><option>⚡ IBEDC – Ibadan Electricity</option><option>⚡ KAEDCO – Kaduna Electricity</option><option>⚡ YEDC – Yola Electricity</option><option>⚡ CPED – Cross River Power</option></optgroup><optgroup label="📺 Cable TV"><option>📺 DSTV Premium</option><option>📺 GOtv</option><option>📺 Startimes</option><option>📺 Canal+</option></optgroup><optgroup label="🌐 Internet"><option>🌐 Smile Internet</option><option>🌐 Spectranet</option><option>🌐 ipNX Broadband</option><option>🌐 Swift Networks</option></optgroup><optgroup label="🏫 Education"><option>🏫 WAEC Result Checker</option><option>🏫 JAMB ePIN</option><option>🏫 NECO ePIN</option><option>🏫 School Fees Payment</option></optgroup><optgroup label="Other Services"><option>💧 Water Board</option><option>🏠 Rent Payment</option><option>🛂 NIMC / NIN</option><option>🏥 NHIS Premium</option></optgroup></select></div>
+    <div class="fg"><label class="fl">Account / Meter Number</label><input class="fi" id="bill-acct" placeholder="Meter or Account Number"></div>
+    <div class="amt-chips">
+      <div class="amt-chip" onclick="setBillAmt(1000,this)">₦1,000</div>
+      <div class="amt-chip" onclick="setBillAmt(2000,this)">₦2,000</div>
+      <div class="amt-chip" onclick="setBillAmt(5000,this)">₦5,000</div>
+      <div class="amt-chip" onclick="setBillAmt(10000,this)">₦10,000</div>
+      <div class="amt-chip" onclick="setBillAmt(20000,this)">₦20,000</div>
+    </div>
+    <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="bill-amt" type="number" placeholder="5,000"></div>
+    <div id="captcha-bills"><!-- captcha --></div>
+    <button class="fs" onclick="submitBills()">💡 Pay via WhatsApp</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     BUSINESS VIEW
+════════════════════════════════ -->
+<div class="view" id="view-business">
+  <div class="biz-wrap">
+    <div class="adv-wrap" id="adv-biz"><div class="adv-track" id="adv-biz-track"></div><div class="adv-dots" id="adv-biz-dots"></div><button class="adv-arr l" onclick="advSlide('biz',-1)">‹</button><button class="adv-arr r" onclick="advSlide('biz',1)">›</button></div>
+    <div class="ticker-wrap"><div class="ticker-lbl">🔴 Live</div><div class="ticker-track" id="ticker-biz"></div></div>
+    <div class="biz-hdr">
+      <div style="font-size:.6rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Business Portal</div>
+      <div style="font-size:1.1rem;font-weight:800">Grow with *5050#</div>
+    </div>
+    <div class="biz-tabs">
+      <button class="biz-tab active" onclick="showBizPanel('dashboard',this)">Dashboard</button>
+      <button class="biz-tab" onclick="showBizPanel('ussd-codes',this)">Get USSD Code</button>
+      <button class="biz-tab" onclick="showBizPanel('merchants',this)">Featured Merchants</button>
+      <button class="biz-tab" onclick="showBizPanel('transactions',this)">Transactions</button>
+      <button class="biz-tab" onclick="showBizPanel('settings',this)">Bot Settings</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="biz-panel active" id="panel-dashboard">
+      <div class="dash-grid">
+        <div class="dc"><div class="dc-lbl">Today's Revenue</div><div class="dc-val" style="color:var(--green)">₦284,500</div><div class="dc-chg up">↑ 12.4%</div></div>
+        <div class="dc"><div class="dc-lbl">Total Orders</div><div class="dc-val">147</div><div class="dc-chg up">↑ 8 new</div></div>
+        <div class="dc"><div class="dc-lbl">Active Chats</div><div class="dc-val" style="color:#60a5fa">23</div><div class="dc-chg" style="color:var(--sub)">live</div></div>
+        <div class="dc"><div class="dc-lbl">Pending Payout</div><div class="dc-val" style="color:var(--amber)">₦1.2M</div><div class="dc-chg down">Tomorrow</div></div>
+      </div>
+      <div class="dash-2col">
+        <div class="tbl-card">
+          <div class="tbl-hdr"><span class="tbl-ttl">Recent Orders</span><button class="disco-btn" style="padding:4px 10px;font-size:.6rem" onclick="goWA('Show all orders')">View All</button></div>
+          <table><thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead><tbody>
+            <tr><td>#ORD-8821</td><td>Aisha M.</td><td style="font-family:'JetBrains Mono',monospace">₦12,400</td><td><span class="sbadge sb-ok">Paid</span></td></tr>
+            <tr><td>#ORD-8820</td><td>Emeka O.</td><td style="font-family:'JetBrains Mono',monospace">₦8,750</td><td><span class="sbadge sb-pend">Pending</span></td></tr>
+            <tr><td>#ORD-8819</td><td>Fatima A.</td><td style="font-family:'JetBrains Mono',monospace">₦34,000</td><td><span class="sbadge sb-ok">Paid</span></td></tr>
+            <tr><td>#ORD-8818</td><td>Chidi N.</td><td style="font-family:'JetBrains Mono',monospace">₦5,200</td><td><span class="sbadge sb-fail">Failed</span></td></tr>
+          </tbody></table>
+        </div>
+        <div class="tbl-card">
+          <div class="tbl-hdr"><span class="tbl-ttl">My USSD Code</span></div>
+          <div style="padding:12px;text-align:center">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:800;color:var(--green);margin-bottom:5px">*5050*882#</div>
+            <div style="font-size:.6rem;color:var(--sub);margin-bottom:10px">Share with your customers</div>
+            <div style="background:var(--card2);border-radius:9px;padding:10px;text-align:left;font-size:.6rem;line-height:1.8;color:var(--sub)">
+              <div>Plan: <span style="color:var(--text)">Business Pro</span></div>
+              <div>Chats: <span style="color:var(--green)">2,481/5,000</span></div>
+              <div>Status: <span style="color:var(--green)">● Active</span></div>
+            </div>
+            <button class="fs" style="margin-top:8px;font-size:.7rem" onclick="openModal('activate-ussd')">Renew / Upgrade</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- USSD CODES -->
+    <div class="biz-panel" id="panel-ussd-codes">
+      <div style="margin-bottom:12px"><div style="font-size:.6rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Plans</div><div style="font-size:1rem;font-weight:800">Choose Your Plan</div></div>
+      <div class="code-grid">
+        <div class="code-card" onclick="openActivateWithPlan('Starter','₦15,000')"><div class="code-plan">Starter</div><div class="code-price">₦15,000 <span>/yr</span></div><ul class="code-feats"><li>1 USSD code</li><li>500 chats/mo</li><li>50-item catalog</li><li>Basic payments</li></ul><button class="code-btn">Get Starter</button></div>
+        <div class="code-card feat" onclick="openActivateWithPlan('Business Pro','₦45,000')"><div class="code-plan">Business Pro</div><div class="code-price">₦45,000 <span>/yr</span></div><ul class="code-feats"><li>Premium USSD code</li><li>5,000 chats/mo</li><li>Unlimited catalog</li><li>Multi-gateway pay</li><li>Analytics</li><li>Priority support</li></ul><button class="code-btn">Get Pro</button></div>
+        <div class="code-card" onclick="openActivateWithPlan('Enterprise','₦120,000')"><div class="code-plan">Enterprise</div><div class="code-price">₦120,000 <span>/yr</span></div><ul class="code-feats"><li>3 USSD codes</li><li>Unlimited chats</li><li>White-label bot</li><li>API & webhooks</li><li>Multi-branch</li></ul><button class="code-btn">Contact Sales</button></div>
+      </div>
+    </div>
+
+    <!-- FEATURED MERCHANTS -->
+    <div class="biz-panel" id="panel-merchants">
+      <div class="sec-hdr"><span class="sec-ttl">🏪 Featured Merchants</span><button class="disco-btn" style="font-size:.6rem;padding:4px 10px" onclick="openModal('add-product')">+ Add Listing</button></div>
+      <div class="merchants-slider" id="merch-slider"></div>
+      <div class="sec-hdr" style="margin-top:8px"><span class="sec-ttl">📦 All Products</span></div>
+      <div class="prod-grid">
+        <div class="prod-card"><div class="prod-img" style="background:rgba(0,210,141,.05)">👟</div><div class="prod-info"><div class="prod-name">Nike Air Max</div><div class="prod-cat">Footwear</div><div class="prod-price">₦45,000</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
+        <div class="prod-card"><div class="prod-img" style="background:rgba(75,68,224,.05)">👔</div><div class="prod-info"><div class="prod-name">Oxford Shirt</div><div class="prod-cat">Clothing</div><div class="prod-price">₦12,500</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
+        <div class="prod-card"><div class="prod-img" style="background:rgba(245,158,11,.05)">📱</div><div class="prod-info"><div class="prod-name">iPhone Case</div><div class="prod-cat">Accessories</div><div class="prod-price">₦3,800</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
+        <div class="prod-card"><div class="prod-img" style="background:rgba(59,130,246,.05)">🎧</div><div class="prod-info"><div class="prod-name">Earbuds Pro</div><div class="prod-cat">Electronics</div><div class="prod-price">₦28,000</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
+        <div class="prod-card"><div class="prod-img" style="background:rgba(16,185,129,.05)">🌿</div><div class="prod-info"><div class="prod-name">Shea Butter</div><div class="prod-cat">Beauty</div><div class="prod-price">₦4,200</div><button class="prod-btn" onclick="window.open('https://google.com','_blank')">🔗 Connect</button></div></div>
+        <div class="prod-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:130px;cursor:pointer" onclick="openModal('add-product')"><div style="text-align:center;color:var(--sub)"><div style="font-size:1.4rem">＋</div><div style="font-size:.6rem;margin-top:3px">Add Product</div></div></div>
+      </div>
+    </div>
+
+    <!-- TRANSACTIONS -->
+    <div class="biz-panel" id="panel-transactions">
+      <div class="wallet-hero">
+        <div class="wh-lbl">Total Balance</div>
+        <div class="wh-bal">₦1,284,500.00</div>
+        <div class="wh-acts">
+          <button class="wh-btn wh-btn-p" onclick="goWA('I want to withdraw from my *5050# business wallet')">Withdraw</button>
+          <button class="wh-btn wh-btn-s" onclick="goWA('Send my transaction statement')">Statement</button>
+        </div>
+      </div>
+      <div class="tbl-card">
+        <div class="tbl-hdr"><span class="tbl-ttl">Transaction History</span></div>
+        <table><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead><tbody>
+          <tr><td style="color:var(--sub)">Mar 19</td><td>Product Sale</td><td style="font-family:'JetBrains Mono',monospace;color:var(--green)">+₦12,400</td><td><span class="sbadge sb-ok">Done</span></td></tr>
+          <tr><td style="color:var(--sub)">Mar 18</td><td>Payout</td><td style="font-family:'JetBrains Mono',monospace;color:var(--danger)">-₦200,000</td><td><span class="sbadge sb-ok">Done</span></td></tr>
+          <tr><td style="color:var(--sub)">Mar 17</td><td>Product Sale</td><td style="font-family:'JetBrains Mono',monospace;color:var(--green)">+₦34,000</td><td><span class="sbadge sb-ok">Done</span></td></tr>
+          <tr><td style="color:var(--sub)">Mar 16</td><td>Subscription</td><td style="font-family:'JetBrains Mono',monospace;color:var(--danger)">-₦3,750</td><td><span class="sbadge sb-ok">Done</span></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="biz-panel" id="panel-settings">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px">
+        <div style="font-weight:800;font-size:.8rem;margin-bottom:8px">Greeting Message</div>
+        <textarea class="fi" rows="3" style="resize:vertical;margin-bottom:7px">👋 Welcome to our SmartUSSD Store! Browse and order via *5050*882#. Type MENU to start.</textarea>
+        <button class="fs" style="font-size:.7rem" onclick="showToast('✅ Greeting saved')">Save Greeting</button>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px">
+        <div style="font-weight:800;font-size:.8rem;margin-bottom:8px">Payment Options</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:.72rem">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--green)"> SmartUSSD Wallet</label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--green)"> Bank Transfer</label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--green)"> Card (Paystack)</label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" style="accent-color:var(--green)"> Crypto (USDT)</label>
+        </div>
+        <button class="fs" style="font-size:.7rem;margin-top:10px" onclick="showToast('✅ Settings saved')">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BOTTOM NAV ══ -->
+<div class="bnav">
+  <div class="bn active" id="bn-home" onclick="showMainView('home');setBN(this)"><div class="bn-ico">🏠</div><div class="bn-lbl">Home</div></div>
+  <div class="bn" id="bn-send" onclick="showMainView('send');setBN(this)"><div class="bn-ico">💸</div><div class="bn-lbl">Send</div></div>
+  <div class="bn" id="bn-shop" onclick="showMainView('shop');setBN(this)"><div class="bn-ico">🛒</div><div class="bn-lbl">Shop</div></div>
+  <div class="bn" id="bn-airtime" onclick="showMainView('airtime');setBN(this)"><div class="bn-ico">📱</div><div class="bn-lbl">Airtime</div></div>
+  <div class="bn" id="bn-business" onclick="showMainView('business');setBN(this)"><div class="bn-ico">🏪</div><div class="bn-lbl">Business</div></div>
+</div>
+<script>
+const WA='https://wa.me/2348157505037?text=';
+function goWA(m){window.open(WA+encodeURIComponent(m),'_blank')}
+function showToast(m){const t=document.getElementById('toast-el');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+
+/* ══ INIT ══ */
+(function () {
+  function bootApp() {
+    /* ensure home view is visible */
+    document.querySelectorAll('.view').forEach(function (v) { v.classList.remove('active'); });
+    var home = document.getElementById('view-home');
+    if (home) home.classList.add('active');
+
+    /* trigger H1 entry animation */
+    var h1 = document.querySelector('.hero-h1');
+    if (h1) h1.classList.add('animate');
+
+    /* sync bottom-nav */
+    document.querySelectorAll('.bn').forEach(function (b) { b.classList.remove('active'); });
+    var bnHome = document.getElementById('bn-home');
+    if (bnHome) bnHome.classList.add('active');
+
+    /* sync top-tab */
+    document.querySelectorAll('.ntab').forEach(function (t) { t.classList.remove('active'); });
+    var firstTab = document.querySelector('.ntab');
+    if (firstTab) firstTab.classList.add('active');
+
+    /* initialise the rest of the app */
+    animateCounters();
+    initPhoneSlider();
+    initAdvBanners();
+    initTickers();
+    initMerchants();
+    injectCaptchas();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootApp);
+  } else {
+    bootApp();
+  }
+})();
+
+/* ══ DRAWER ══ */
+function toggleDrw(){document.getElementById('drw').classList.toggle('open');document.getElementById('drw-ov').classList.toggle('open');document.getElementById('ham').classList.toggle('open')}
+function closeDrw(){document.getElementById('drw').classList.remove('open');document.getElementById('drw-ov').classList.remove('open');document.getElementById('ham').classList.remove('open')}
+
+/* ══ VIEWS ══ */
+function showMainView(v,tabEl){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  document.querySelectorAll('.ntab').forEach(el=>el.classList.remove('active'));
+  if(tabEl) tabEl.classList.add('active');
+  else{const map={home:0,send:1,shop:2,airtime:3,bills:4,business:5};document.querySelectorAll('.ntab')[map[v]]?.classList.add('active');}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function setBN(el){document.querySelectorAll('.bn').forEach(b=>b.classList.remove('active'));el.classList.add('active')}
+function showBizPanel(id,btn){
+  document.querySelectorAll('.biz-panel').forEach(el=>el.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelectorAll('.biz-tab').forEach(el=>el.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+
+/* ══ COUNTER ANIMATION ══ */
+function animateCounters(){
+  animCount('cnt1','₦2.4B+',1600);
+  animCount('cnt2','340K',1400);
+  animCount('cnt3','5,200',1200);
+  animCount('cnt4','99.8%',1000);
+}
+function animCount(id,final,dur){
+  const el=document.getElementById(id);if(!el)return;
+  const num=parseFloat(final.replace(/[^0-9.]/g,''));
+  const suffix=final.replace(/[0-9.,]/g,'');
+  let start=0;const steps=60;const inc=num/steps;
+  let i=0;
+  const t=setInterval(()=>{
+    i++;start=Math.min(start+inc,num);
+    if(num>=1000000000) el.textContent='₦'++(start/1000000000).toFixed(1)+'B'+suffix.replace('₦','').replace('B+','');
+    else if(num>=1000) el.textContent=Math.round(start).toLocaleString()+suffix.replace(/[0-9,]/g,'');
+    else el.textContent=start.toFixed(1)+suffix.replace(/[0-9.]/g,'');
+    if(i>=steps){el.textContent=final;clearInterval(t);}
+  },dur/steps);
+}
+
+/* ══ ADVERT BANNERS ══ */
+const ADV_DATA=[
+  {bg:'linear-gradient(135deg,#00d28d,#047857)',lbl:'💳 SmartUSSD Wallet',title:'Send Money Instantly',sub:'Transfer to any bank or wallet via WhatsApp in seconds',cta:'Get Started'},
+  {bg:'linear-gradient(135deg,#4b44e0,#7c3aed)',lbl:'🏪 Business',title:'Get Your Business USSD Code',sub:'Activate *5050*XXX# for your business today',cta:'Activate Now'},
+  {bg:'linear-gradient(135deg,#f59e0b,#d97706)',lbl:'🎁 goREWARDS',title:'Earn Points on Every Transaction',sub:'Accumulate rewards and redeem for cashback',cta:'Learn More'},
+  {bg:'linear-gradient(135deg,#ef4444,#b91c1c)',lbl:'🔥 Flash Sale',title:'Up to 60% Off Today',sub:'Shop featured merchants via *5050# now',cta:'Shop Now'},
+];
+const advStates={};
+function initAdvBanners(){['home','send','shop','airtime','bills','biz'].forEach(key=>initAdv(key))}
+function initAdv(key){
+  const track=document.getElementById(`adv-${key}-track`);
+  const dots=document.getElementById(`adv-${key}-dots`);
+  if(!track||!dots) return;
+  advStates[key]={cur:0,total:ADV_DATA.length};
+  track.innerHTML='';dots.innerHTML='';
+  ADV_DATA.forEach((a,i)=>{
+    const sl=document.createElement('div');sl.className='adv-slide';
+    sl.style.background=a.bg;
+    sl.innerHTML=`<div class="adv-lbl">${a.lbl}</div><div class="adv-title">${a.title}</div><div class="adv-sub">${a.sub}</div><div class="adv-cta">${a.cta} →</div>`;
+    track.appendChild(sl);
+    const d=document.createElement('div');d.className='adv-dot'+(i===0?' on':'');d.onclick=()=>advGoTo(key,i);
+    dots.appendChild(d);
+  });
+  setInterval(()=>advSlide(key,1),4000+key.length*300);
+}
+function advSlide(key,dir){
+  const s=advStates[key];if(!s) return;
+  s.cur=(s.cur+dir+s.total)%s.total;
+  advGoTo(key,s.cur);
+}
+function advGoTo(key,i){
+  const s=advStates[key];if(!s) return;
+  s.cur=i;
+  const track=document.getElementById(`adv-${key}-track`);
+  if(track) track.style.transform=`translateX(-${i*100}%)`;
+  document.querySelectorAll(`#adv-${key} .adv-dot`).forEach((d,idx)=>d.classList.toggle('on',idx===i));
+}
+
+/* ══ TICKER ══ */
+const TICKER_ITEMS=[
+  {code:'*5050*822#',biz:'Amina\'s Boutique',city:'Lagos'},
+  {code:'*5050*903#',biz:'TechHub NG',city:'Abuja'},
+  {code:'*5050*771#',biz:'FoodieExpress',city:'PH'},
+  {code:'*5050*651#',biz:'GoPharm',city:'Kano'},
+  {code:'*5050*490#',biz:'ClothingMart',city:'Ibadan'},
+  {code:'*5050*338#',biz:'AutoParts NG',city:'Enugu'},
+  {code:'*5050*512#',biz:'Beauty Hub',city:'Benin'},
+  {code:'*5050*267#',biz:'QuickFix IT',city:'Kaduna'},
+];
+function initTickers(){
+  ['home','send','shop','airtime','bills','biz'].forEach(key=>{
+    const el=document.getElementById('ticker-'+key);
+    if(!el) return;
+    const items=[...TICKER_ITEMS,...TICKER_ITEMS];
+    el.innerHTML=items.map(t=>`<span class="ticker-item">🟢 <strong>${t.code}</strong> activated — ${t.biz}, ${t.city}</span>`).join('');
+  });
+}
+
+/* ══ PHONE SLIDER ══ */
+const PH_SLIDES=[
+  {msgs:[{t:'b',txt:'👋 Welcome to <strong>*5050# SmartUSSD</strong>!<br>Your all-in-one financial assistant.',opts:['💸 Send Money','🛒 Shop','📱 Airtime']}]},
+  {msgs:[{t:'u',txt:'1 — Send Money'},{t:'b',txt:'💸 Choose transfer type:<br><span class="cm">1. 🏦 To Bank</span><span class="cm">2. 📟 SmartUSSD</span><span class="cm">3. 🔄 To Self</span><span class="cm">4. 📷 Scan QR</span>'}]},
+  {msgs:[{t:'u',txt:'2 — Shop'},{t:'b',txt:'🛒 Enter merchant code or name:<br><span class="cm">*5050*882# — Chidi\'s Fashion</span><br><span style="font-size:.6rem;color:var(--sub)">Browse, order & pay in one chat</span>'}]},
+  {msgs:[{t:'u',txt:'3 — Buy Airtime'},{t:'b',txt:'📱 Select network & amount:<br><span class="cm">MTN · Airtel · Glo · 9mobile</span><br><span style="font-size:.6rem;color:var(--sub)">₦100 – ₦50,000 instantly</span>'}]},
+  {msgs:[{t:'u',txt:'4 — Pay Bills'},{t:'b',txt:'💡 Select DISCO or service:<br><span class="cm">EKEDC · IKEDC · AEDC · PHEDC</span><span class="cm">DSTV · GOtv · School Fees</span>'}]},
+  {msgs:[{t:'u',txt:'5 — My Balance'},{t:'b',txt:'💳 Your SmartUSSD Wallet<br><span style="font-family:\'JetBrains Mono\',monospace;color:var(--green)">₦ ••••••••</span><br><span style="font-size:.6rem;color:var(--sub)">Tap to reveal via WhatsApp</span>',opts:['🔍 View Balance','↗ Top Up']}]},
+];
+let phCur=0,phTimer=null;
+function initPhoneSlider(){
+  const body=document.getElementById('ph-body');
+  const dotsEl=document.getElementById('ph-dots');
+  if(!body||!dotsEl) return;
+  body.innerHTML='';dotsEl.innerHTML='';
+  PH_SLIDES.forEach((sl,i)=>{
+    const div=document.createElement('div');div.className='ph-slide'+(i===0?' active':'');div.id='phs-'+i;
+    let html='';
+    sl.msgs.forEach(m=>{
+      html+=`<div class="cb ${m.t==='b'?'cb-b':'cb-u'}">${m.txt}</div>`;
+      if(m.opts) html+=`<div style="display:flex;flex-wrap:wrap;gap:4px;margin:4px 0">${m.opts.map(o=>`<div style="background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:.58rem;color:var(--green);cursor:pointer;font-weight:700">${o}</div>`).join('')}</div>`;
+    });
+    div.innerHTML=html;body.appendChild(div);
+    const d=document.createElement('div');d.className='ph-dot'+(i===0?' on':'');d.onclick=()=>phGoTo(i);dotsEl.appendChild(d);
+  });
+  phTimer=setInterval(()=>phNext(),3000);
+}
+function phNext(){phGoTo((phCur+1)%PH_SLIDES.length)}
+function phGoTo(i){
+  const prev=document.getElementById('phs-'+phCur);const next=document.getElementById('phs-'+i);
+  if(!prev||!next||prev===next) return;
+  prev.classList.remove('active');prev.classList.add('out');
+  setTimeout(()=>prev.classList.remove('out'),600);
+  next.classList.add('active');phCur=i;
+  document.querySelectorAll('.ph-dot').forEach((d,idx)=>d.classList.toggle('on',idx===i));
+}
+function phSend(){
+  const inp=document.getElementById('ph-inp');const v=inp.value.trim();
+  if(!v) return;inp.value='';phNext();
+}
+
+/* ══ FEATURED MERCHANTS ══ */
+const MERCHANTS=[
+  {ico:'👗',name:"Chidi's Fashion",code:'*5050*882#',cat:'Fashion'},
+  {ico:'🍔',name:'QuickBites NG',code:'*5050*910#',cat:'Food'},
+  {ico:'💊',name:'PharmaCare',code:'*5050*743#',cat:'Health'},
+  {ico:'📱',name:'TechMart',code:'*5050*561#',cat:'Electronics'},
+  {ico:'🌿',name:'NaturalBeauty',code:'*5050*329#',cat:'Beauty'},
+  {ico:'🚗',name:'AutoParts NG',code:'*5050*448#',cat:'Auto'},
+];
+function initMerchants(){
+  const sl=document.getElementById('merch-slider');if(!sl) return;
+  MERCHANTS.forEach(m=>{
+    sl.innerHTML+=`<div class="merch-card"><div class="merch-img" style="background:rgba(0,210,141,.05)">${m.ico}</div><div class="merch-info"><div class="merch-name">${m.name}</div><div class="merch-code">${m.code}</div><button class="merch-btn" onclick="goWA('Connect me to ${m.name} at ${m.code}')">Connect</button></div></div>`;
+  });
+}
+
+/* ══ MODAL ENGINE ══ */
+function openModal(id){
+  const b=document.getElementById('modal-body');
+  b.innerHTML=MODALS[id]||'<p>Not found</p>';
+  document.getElementById('modal-ov').classList.add('open');
+  // inject captcha for send-money modal
+  const mcw=document.getElementById('captcha-modal-wrap');
+  if(mcw) mcw.innerHTML=captchaHtml('modal');
+}
+function closeModal(){document.getElementById('modal-ov').classList.remove('open')}
+function openActivateWithPlan(plan,price){
+  openModal('activate-ussd');
+  setTimeout(()=>{
+    document.querySelectorAll('.plan-opt').forEach(el=>{if(el.dataset.plan===plan)el.classList.add('sel')});
+  },100);
+}
+
+/* ══ CAPTCHA ══ */
+let captchaAnswers={};
+function genCaptcha(id){
+  const a=Math.floor(Math.random()*9)+1,b=Math.floor(Math.random()*9)+1;
+  captchaAnswers[id]=a+b;return`${a} + ${b} = ?`;
+}
+function injectCaptchas(){
+  ['send','air','bills'].forEach(id=>{
+    const el=document.getElementById('captcha-'+id);if(!el)return;
+    el.innerHTML=captchaHtml(id);
+  });
+}
+function captchaHtml(id){
+  const q=genCaptcha(id);
+  return`<div class="captcha-box"><div class="cap-q" id="cq-${id}">${q}</div><input class="cap-inp" id="ci-${id}" type="number" placeholder="?"><span class="cap-ref" onclick="refreshCap('${id}')">🔄</span></div>`;
+}
+function refreshCap(id){const q=genCaptcha(id);document.getElementById('cq-'+id).textContent=q;document.getElementById('ci-'+id).value=''}
+function checkCap(id){
+  const v=parseInt(document.getElementById('ci-'+id)?.value,10);
+  if(isNaN(v)||v!==captchaAnswers[id]){showToast('❌ Wrong answer. Try again.');return false;}return true;
+}
+
+/* ══ MODALS CONTENT ══ */
+const MODALS={
+  'find-ussd':`<div class="modal-head"><div class="modal-title">🔍 Find a SmartUSSD</div><button class="modal-x" onclick="closeModal()">✕</button></div>
+    <p style="font-size:.72rem;color:var(--sub);margin-bottom:12px;line-height:1.5">Enter the *5050# code of the business you want to connect to.</p>
+    <div class="fg"><label class="fl">SmartUSSD Code</label><input class="fi" id="find-code" placeholder="*5050*882#"></div>
+    <div class="fg"><label class="fl">Or Business Name</label><input class="fi" id="find-name" placeholder="e.g. Chidi's Fashion Store"></div>
+    <button class="fs" onclick="submitFind()">🔍 Connect via WhatsApp</button>`,
+
+  'activate-ussd':`<div class="modal-head"><div class="modal-title">⚡ Activate SmartUSSD</div><button class="modal-x" onclick="closeModal()">✕</button></div>
+    <p style="font-size:.7rem;color:var(--sub);margin-bottom:12px;line-height:1.5">Choose a plan to get your business's unique *5050# code.</p>
+    <div class="plan-opts">
+      <div class="plan-opt" data-plan="Starter" onclick="selPlan(this)"><div><div class="plan-opt-name">🌱 Starter</div><div class="plan-opt-desc">500 chats/mo · 50 products</div></div><div class="plan-opt-price">₦15,000/yr</div></div>
+      <div class="plan-opt" data-plan="Business Pro" onclick="selPlan(this)"><div><div class="plan-opt-name">🚀 Business Pro</div><div class="plan-opt-desc">5,000 chats/mo · Unlimited</div></div><div class="plan-opt-price">₦45,000/yr</div></div>
+      <div class="plan-opt" data-plan="Enterprise" onclick="selPlan(this)"><div><div class="plan-opt-name">🏢 Enterprise</div><div class="plan-opt-desc">Unlimited · 3 codes · White-label</div></div><div class="plan-opt-price">₦120,000/yr</div></div>
+    </div>
+    <div class="fg"><label class="fl">Business Name</label><input class="fi" id="act-biz" placeholder="Your Business Name"></div>
+    <div class="fg"><label class="fl">Phone Number</label><input class="fi" id="act-ph" placeholder="+234 800 000 0000"></div>
+    <button class="fs" onclick="submitActivate()">⚡ Activate via WhatsApp</button>`,
+
+  'register':`<div class="modal-head"><div class="modal-title">👤 Create Account</div><button class="modal-x" onclick="closeModal()">✕</button></div>
+    <div class="fg"><label class="fl">Full Name</label><input class="fi" id="rn" placeholder="Aisha Mohammed"></div>
+    <div class="fg"><label class="fl">Phone Number</label><input class="fi" id="rp" placeholder="+234 800 000 0000"></div>
+    <div class="fg"><label class="fl">Email</label><input class="fi" id="re" placeholder="you@example.com"></div>
+    <div class="fg"><label class="fl">4-Digit PIN</label><input class="fi" id="rpin" type="password" maxlength="4" placeholder="••••"></div>
+    <button class="fs" onclick="goWA('Create *5050# account. Name: '+document.getElementById('rn').value);closeModal()">Create Account via WhatsApp</button>`,
+
+  'wa-verify':`<div class="modal-head"><div class="modal-title"></div><button class="modal-x" onclick="closeModal()">✕</button></div>
+    <div class="verif-ico">🔐</div>
+    <div class="verif-ttl">WhatsApp Verification</div>
+    <div class="verif-sub">This action requires identity verification via WhatsApp. Tap the button below to continue securely.</div>
+    <button class="wa-btn" onclick="goWA('Verify my *5050# account identity');closeModal()">📲 Verify on WhatsApp</button>`,
+
+  'wallet-view':`<div class="modal-head"><div class="modal-title">💳 Your Wallet</div><button class="modal-x" onclick="closeModal()">✕</button></div>
+    <div style="background:var(--grad);border-radius:13px;padding:14px;margin-bottom:12px;position:relative;overflow:hidden">
+      <div style="font-size:.58rem;opacity:.8;text-transform:uppercase;letter-spacing:.5px;color:#fff;margin-bottom:5px">Balance</div>
+      <div style="font-size:1.8rem;font-weight:800;font-family:'JetBrains Mono',monospace;color:#fff">₦ ••••••••</div>
+      <button onclick="openModal('wa-verify')" style="margin-top:8px;background:rgba(255,255,255,.2);border:none;color:#fff;padding:5px 13px;border-radius:8px;font-size:.64rem;font-weight:700;cursor:pointer">👁 Reveal via WhatsApp</button>
+    </div>
+    <div class="fg"><label class="fl">Fund Amount (₦)</label><input class="fi" id="fund-amt" placeholder="5,000"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
+      <button class="fs" onclick="goWA('Fund *5050# wallet ₦'+document.getElementById('fund-amt').value+' via card');closeModal()">Fund via Card</button>
+      <button class="fs" style="background:var(--card2);color:var(--text);border:1px solid var(--border)" onclick="goWA('Fund *5050# wallet via bank transfer');closeModal()">Bank Transfer</button>
+    </div>`,
+
+  'send-money':`<div class="modal-head"><div class="modal-title">💸 Send Money</div><button class="modal-x" onclick="closeModal()">✕</button></div>
+    <div class="type-tabs">
+      <div class="type-tab on" onclick="switchType('bank',this)">🏦 Bank</div>
+      <div class="type-tab" onclick="switchType('smartussd',this)">📟 USSD</div>
+      <div class="type-tab" onclick="switchType('self',this)">🔄 Self</div>
+      <div class="type-tab" onclick="switchType('scan',this)">📷 Scan</div>
+    </div>
+    <div class="type-pane on" id="tp-bank">
+      <div class="fg"><label class="fl">Account Number</label><input class="fi" id="ma" placeholder="0123456789"></div>
+      <div class="fg"><label class="fl">Bank</label><select class="fi" id="mb"><option>Access Bank</option><option>GTBank</option><option>Zenith Bank</option><option>First Bank</option><option>UBA</option><option>Kuda</option><option>OPay</option><option>Moniepoint</option></select></div>
+      <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="mamt" type="number" placeholder="5,000"></div>
+    </div>
+    <div class="type-pane" id="tp-smartussd">
+      <div class="fg"><label class="fl">SmartUSSD ID / Phone</label><input class="fi" id="muid" placeholder="@user or 0802XXXXXXX"></div>
+      <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="muamt" type="number" placeholder="5,000"></div>
+    </div>
+    <div class="type-pane" id="tp-self">
+      <div class="fg"><label class="fl">My Account</label><input class="fi" value="Aisha Kabiru — *5050*882#" readonly style="color:var(--sub)"></div>
+      <div class="fg"><label class="fl">Amount (₦)</label><input class="fi" id="mselt" type="number" placeholder="5,000"></div>
+    </div>
+    <div class="type-pane" id="tp-scan">
+      <button class="scan-btn" onclick="openCameraModal()">📷 Scan to Pay</button>
+      <div class="scan-area" id="scan-modal-area">
+        <video id="cam-modal-video" autoplay playsinline muted></video>
+        <button onclick="stopCameraModal()" style="width:100%;margin-top:5px;background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.3);color:var(--danger);border-radius:8px;padding:6px;font-size:.68rem;font-weight:700;cursor:pointer">✕ Stop</button>
+      </div>
+      <canvas id="qr-modal-canvas" style="display:none"></canvas>
+      <div style="margin-top:6px;text-align:center;font-size:.62rem;color:var(--sub)">— or —</div>
+      <div class="upload-zone" style="margin-top:6px" onclick="document.getElementById('qr-modal-file').click()">
+        <input type="file" id="qr-modal-file" accept="image/*" onchange="handleModalQR(event)" style="display:none">
+        <div style="font-size:.68rem;color:var(--sub)">📁 Upload QR Image</div>
+      </div>
+      <canvas id="qr-modal-canvas2" style="display:none"></canvas>
+    </div>
+    <div id="captcha-modal-wrap"></div>
+    <button class="fs" onclick="submitModalSend()">📤 Send via WhatsApp</button>`,
+
+  'add-product':`<div class="modal-head"><div class="modal-title">➕ Add to Marketplace</div><button class="modal-x" onclick="closeModal()">✕</button></div>
+    <div class="verif-ico">🔐</div>
+    <div class="verif-ttl">SmartUSSD Verification Required</div>
+    <div class="verif-sub">To list products, verify your SmartUSSD business code or get a new one.</div>
+    <div class="fg" style="margin-top:4px"><label class="fl">Your SmartUSSD Code</label><input class="fi" id="ap-code" placeholder="*5050*882# or leave blank"></div>
+    <button class="wa-btn" style="margin-bottom:8px" onclick="goWA('Verify business SmartUSSD code: '+document.getElementById('ap-code').value+' to add products');closeModal()">📲 Verify via WhatsApp</button>
+    <button class="fs" style="background:var(--card2);color:var(--green);border:1px solid rgba(0,210,141,.3)" onclick="openModal('activate-ussd')">⚡ Get New USSD Code</button>`,
+
+  'eula':`<div class="modal-head"><div class="modal-title">📋 Terms of Service & EULA</div><button class="modal-x" onclick="closeModal()">✕</button></div>
+    <div style="font-size:.6rem;color:var(--sub);margin-bottom:10px;display:flex;align-items:center;gap:8px"><span style="background:rgba(0,210,141,.1);border:1px solid rgba(0,210,141,.25);color:var(--green);padding:2px 8px;border-radius:5px;font-weight:800">v2.1</span> Last updated: March 2025 · GoSmartUSSD Technologies Ltd</div>
+    <div style="background:rgba(0,210,141,.06);border:1px solid rgba(0,210,141,.2);border-radius:11px;padding:13px;margin-bottom:14px">
+      <div style="font-size:.74rem;font-weight:800;color:var(--green);margin-bottom:6px">📌 Plain-Language Summary</div>
+      <div style="font-size:.64rem;color:var(--sub);line-height:1.75">Use *5050# responsibly. Don't misuse the service, harm others, or engage in fraud. We protect your data under NDPR. You own your content. We may suspend accounts that violate these terms.</div>
+    </div>
+    <div style="max-height:52vh;overflow-y:auto;padding-right:4px;display:flex;flex-direction:column;gap:14px">
+      <div><div style="font-size:.8rem;font-weight:800;margin-bottom:5px;color:var(--text)">1. Acceptance of Terms</div><div style="font-size:.64rem;color:var(--sub);line-height:1.8">By accessing or using the *5050# SmartUSSD platform ("Service"), you agree to be bound by this Terms of Service and End User License Agreement ("EULA"). If you do not agree, you may not access or use the Service. This constitutes a legally binding agreement between you and GoSmartUSSD Technologies Ltd ("Company", "we", "us").</div></div>
+      <div><div style="font-size:.8rem;font-weight:800;margin-bottom:5px;color:var(--text)">2. Eligibility &amp; Account Registration</div><div style="font-size:.64rem;color:var(--sub);line-height:1.8">You must be at least 18 years old to use this Service or have parental consent. Business accounts must be duly registered entities in Nigeria. You agree to provide accurate, current, and complete information during registration. You are solely responsible for maintaining the confidentiality of your *5050# USSD code, wallet PIN, and account credentials. You must not share verification credentials or permit unauthorised access to your account.</div></div>
+      <div><div style="font-size:.8rem;font-weight:800;margin-bottom:5px;color:var(--text)">3. Permitted Use</div><div style="font-size:.64rem;color:var(--sub);line-height:1.8">The *5050# platform is licensed — not sold — to you for lawful personal or commercial use. Permitted uses include: sending and receiving money transfers; purchasing airtime and data subscriptions; paying utility bills and levies; operating a WhatsApp-based business chatbot; and accessing goAPPs ecosystem services. All use must comply with Nigerian law, CBN regulations, EFCC guidelines, and NFIU directives.</div></div>
+      <div><div style="font-size:.8rem;font-weight:800;margin-bottom:5px;color:var(--text)">4. Prohibited Conduct</div><div style="font-size:.64rem;color:var(--sub);line-height:1.8">You may NOT use the Service to: engage in fraud, money laundering, terrorist financing, or other financial crimes; impersonate any individual, entity, or government agency; send spam, phishing content, or unsolicited commercial messages; reverse-engineer, decompile, disassemble, or attempt to extract source code; circumvent security controls, verification flows, or access restrictions; list counterfeit, illegal, prohibited, or age-restricted goods on the marketplace; or conduct any transaction that violates CBN, EFCC, NFIU, or NDPR regulations.</div></div>
+      <div><div style="font-size:.8rem;font-weight:800;margin-bottom:5px;color:var(--text)">5. Financial Services &amp; Payment Transactions</div><div style="font-size:.64rem;color:var(--sub);line-height:1.8">*5050# is a CBN-licensed payment facilitation platform. All financial transactions are processed through licensed payment processors in accordance with CBN tier-based KYC requirements. Daily and per-transaction limits apply. We are not liable for failed transactions caused by third-party bank network failures, telco downtime, or force majeure events. All disputes must be reported within 48 hours of the transaction via WhatsApp support.</div></div>
+      <div><div style="font-size:.8rem;font-weight:800;margin-bottom:5px;color:var(--text)">6. Business Merchants &amp; USSD Codes</div><div style="font-size:.64rem;color:var(--sub);line-height:1.8">SmartUSSD codes are annual licences and remain the intellectual property of GoSmartUSSD Technologies. We reserve the right to suspend or permanently revoke a code for violations of these Terms. Merchants must maintain accurate product listings, honour all orders placed through their chatbot, and adhere to the Merchant Code of Conduct. All marketplace listings are subject to moderation and may be removed at our sole discretion without notice.</div></div>
+      <div><div style="font-size:.8rem;font-weight:800;margin-bottom:5px;color:var(--text)">7. Privacy &amp; Data Protection</div><div style="font-size:.64rem;color:var(--sub);line-height:1.8">We collect, process, and store data strictly as necessary to deliver the Service, in full compliance with the Nigeria Data Protection Regulation (NDPR) 2019 and the Data Protection Act 2023. We do not sell your personal data to any third party. WhatsApp-based interactions are additionally subject to Meta Platforms' Privacy Policy. You may request access to, correction of, or deletion of your data by contacting our support channel at any time via *5050#.</div></div>
+      <div><div style="font-size:.8rem;font-weight:800;margin-bottom:5px;color:var(--text)">8. Intellectual Property &amp; User Content</div><div style="font-size:.64rem;color:var(--sub);line-height:1.8">You retain full ownership of content you upload to your business store. By listing content on the platform, you grant GoSmartUSSD Technologies a non-exclusive, worldwide, royalty-free licence to display, distribute, and promote your content within the Service. The *5050# brand, service marks, logos, and underlying platform technology are proprietary to GoSmartUSSD Technologies and may not be copied, reproduced, or used in any form without prior written permission.</div></div>
+      <div><div style="font-size:.8rem;font-weight:800;margin-bottom:5px;color:var(--text)">9. Service Availability &amp; Disclaimers</div><div style="font-size:.64rem;color:var(--sub);line-height:1.8">We target 99.9% platform uptime but provide no guarantee of uninterrupted service. The platform is provided on an "as is" and "as available" basis without warranties of merchantability, fitness for a particular purpose, or non-infringement. We are not liable for direct, indirect, incidental, or consequential losses arising from platform downtime, third-party system failures, network outages, or force majeure events beyond our reasonable control.</div></div>
+      <div><div style="font-size:.8rem;font-weight:800;margin-bottom:5px;color:var(--text)">10. Account Suspension &amp; Termination</div><div style="font-size:.64rem;color:var(--sub);line-height:1.8">We may immediately suspend or permanently terminate accounts that: violate these Terms; engage in fraudulent or illegal activity; generate excessive disputes or chargebacks; or remain completely inactive for 12 consecutive months. Upon termination you will receive prior notice where legally required. Your SmartUSSD code will be deactivated and any remaining verified wallet balance will be processed per our Refund &amp; Payout Policy within 14 working days.</div></div>
+      <div><div style="font-size:.8rem;font-weight:800;margin-bottom:5px;color:var(--text)">11. Limitation of Liability</div><div style="font-size:.64rem;color:var(--sub);line-height:1.8">To the fullest extent permitted by Nigerian law, GoSmartUSSD Technologies' total aggregate liability to you for any claim arising out of or related to the Service shall not exceed the total fees you paid to us in the 3 months immediately preceding the event giving rise to the claim. We shall not be liable for any loss of profit, revenue, data, goodwill, or any indirect or consequential loss of any kind.</div></div>
+      <div><div style="font-size:.8rem;font-weight:800;margin-bottom:5px;color:var(--text)">12. Governing Law &amp; Dispute Resolution</div><div style="font-size:.64rem;color:var(--sub);line-height:1.8">These Terms are governed exclusively by the laws of the Federal Republic of Nigeria. Disputes shall be resolved first through good-faith negotiation (30 days), then mediation under Lagos Multi-Door Courthouse rules (30 days), and finally through binding arbitration under the Arbitration and Mediation Act 2023. Class or representative actions are waived to the fullest extent permitted by applicable law.</div></div>
+      <div style="margin-bottom:4px"><div style="font-size:.8rem;font-weight:800;margin-bottom:5px;color:var(--text)">13. Updates to These Terms</div><div style="font-size:.64rem;color:var(--sub);line-height:1.8">We reserve the right to modify these Terms at any time. Material changes will be communicated to your registered WhatsApp number at least 14 days before taking effect. Continued use of the Service after the effective date of any update constitutes your binding acceptance of the revised Terms.</div></div>
+    </div>
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
+      <button class="wa-btn" onclick="goWA('I have read and accept the *5050# SmartUSSD Terms of Service and EULA v2.1');closeModal()">✅ I Accept — Continue on WhatsApp</button>
+      <button class="fs" style="background:var(--card2);color:var(--sub);border:1px solid var(--border);font-size:.72rem;margin-top:0" onclick="closeModal()">Close</button>
+    </div>`,
+};
+
+/* ══ TYPE TABS ══ */
+function switchType(id,el){
+  document.querySelectorAll('.type-tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.type-pane').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('tp-'+id)?.classList.add('on');
+  // show captcha only for non-scan
+  const cap=document.getElementById('captcha-send');
+  if(cap) cap.innerHTML=id!=='scan'?captchaHtml('send'):'';
+}
+
+/* ══ SUBMIT HANDLERS ══ */
+function submitFind(){
+  const code=document.getElementById('find-code')?.value.trim();
+  const name=document.getElementById('find-name')?.value.trim();
+  if(!code&&!name){showToast('⚠️ Enter a code or business name');return;}
+  goWA(code?`I want to connect to SmartUSSD code ${code}`:`Find SmartUSSD for "${name}"`);
+  closeModal();
+}
+function selPlan(el){document.querySelectorAll('.plan-opt').forEach(e=>e.classList.remove('sel'));el.classList.add('sel')}
+function submitActivate(){
+  const sel=document.querySelector('.plan-opt.sel');
+  const biz=document.getElementById('act-biz')?.value.trim();
+  const ph=document.getElementById('act-ph')?.value.trim();
+  if(!biz){showToast('⚠️ Enter your business name');return;}
+  goWA(`Activate SmartUSSD code. Plan: ${sel?sel.dataset.plan:'Business Pro'}. Business: ${biz}. Phone: ${ph}`);
+  closeModal();
+}
+function submitSend(){
+  const activePaneId=document.querySelector('#view-send .type-pane.on')?.id;
+  if(activePaneId!=='tp-scan'){if(!checkCap('send')) return;}
+  let msg='';
+  if(activePaneId==='tp-bank') msg=`Send ₦${document.getElementById('sm-amt')?.value||''} to bank account ${document.getElementById('sm-acct')?.value||''} at ${document.getElementById('sm-bank')?.value||''} via *5050#`;
+  else if(activePaneId==='tp-smartussd') msg=`Send ₦${document.getElementById('sm-uamt')?.value||''} to SmartUSSD ID ${document.getElementById('sm-uid')?.value||''} via *5050#`;
+  else if(activePaneId==='tp-self') msg=`Self-transfer ₦${document.getElementById('sm-selt')?.value||''} on *5050#`;
+  else{showToast('📷 Scan a QR code first');return;}
+  goWA(msg);
+}
+function submitModalSend(){
+  if(!checkCap('modal')) return;
+  const activePaneId=document.querySelector('.modal .type-pane.on')?.id;
+  let msg='Send money via *5050# SmartUSSD';
+  if(activePaneId==='tp-bank') msg=`Send ₦${document.getElementById('mamt')?.value||''} to ${document.getElementById('ma')?.value||''} (${document.getElementById('mb')?.value||''}) via *5050#`;
+  else if(activePaneId==='tp-smartussd') msg=`Send ₦${document.getElementById('muamt')?.value||''} to ${document.getElementById('muid')?.value||''} via *5050#`;
+  goWA(msg);closeModal();
+}
+function submitShop(){
+  const code=document.getElementById('shop-code')?.value.trim();
+  const wa=document.getElementById('shop-wa')?.value.trim();
+  if(!code){showToast('⚠️ Enter merchant code or name');return;}
+  openModal('wa-verify');
+  setTimeout(()=>{
+    document.querySelector('.wa-btn')?.addEventListener('click',()=>{goWA(`Shop at ${code}${wa?' (WA: '+wa+')':''} via *5050#`);},{ once:true });
+  },100);
+}
+function shopAction(action){
+  openModal('wa-verify');
+  setTimeout(()=>{
+    const btn=document.querySelector('.wa-btn');if(!btn)return;
+    btn.onclick=()=>{goWA(`I want to: ${action} via *5050#`);closeModal();};
+  },100);
+}
+function submitAirtime(){
+  if(!checkCap('air')) return;
+  const ph=document.getElementById('air-phone')?.value.trim();
+  const amt=document.getElementById('air-amt')?.value;
+  const net=curNet||document.querySelector('.net-tab.on')?.textContent?.trim();
+  const type=document.getElementById('air-type-a')?.value;
+  if(!ph||!amt){showToast('⚠️ Fill phone and amount');return;}
+  goWA(`Buy ${type} ₦${amt} on ${net||'MTN'} for ${ph} via *5050#`);
+}
+function submitBills(){
+  if(!checkCap('bills')) return;
+  const svc=document.getElementById('bill-svc')?.value||selectedDisco||'';
+  const acct=document.getElementById('bill-acct')?.value.trim();
+  const amt=document.getElementById('bill-amt')?.value;
+  if(!svc){showToast('⚠️ Select a DISCO or service');return;}
+  if(!acct||!amt){showToast('⚠️ Fill account and amount');return;}
+  goWA(`Pay ${svc} bill. Account: ${acct}. Amount: ₦${amt} via *5050#`);
+}
+
+/* DISCO */
+let selectedDisco='';
+function selDisco(el,name){
+  document.querySelectorAll('.disco-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');selectedDisco=name;
+  document.getElementById('bill-svc').value='';
+}
+function syncBillSvc(sel){if(sel.value){selectedDisco='';document.querySelectorAll('.disco-btn').forEach(b=>b.classList.remove('on'));}}
+
+/* AIRTIME UTILS */
+let curNet='MTN';
+function selNet(el,name){document.querySelectorAll('.net-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');curNet=name;}
+function setAmt(v,el){document.getElementById('air-amt').value=v;document.querySelectorAll('.amt-chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');}
+function setBillAmt(v,el){document.getElementById('bill-amt').value=v;el.parentElement.querySelectorAll('.amt-chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');}
+function swapAirtime(){const a=document.getElementById('air-type-a');const b=document.getElementById('air-type-b');const tmp=a.value;a.value=b.value;b.value=tmp;}
+
+/* ══ CAMERA / QR ══ */
+let camStream=null,qrActive=false,camAnimFrame=null;
+function openCamera(){
+  document.getElementById('scan-area').classList.add('show');
+  startCamera('cam-video','scan-area');
+}
+function stopCamera(){
+  stopCam();document.getElementById('scan-area').classList.remove('show');
+}
+function openCameraModal(){
+  document.getElementById('scan-modal-area').classList.add('show');
+  startCamera('cam-modal-video','scan-modal-area');
+}
+function stopCameraModal(){
+  stopCam();document.getElementById('scan-modal-area').classList.remove('show');
+}
+async function startCamera(vidId,areaId){
+  if(camStream) stopCam();
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
+    const v=document.getElementById(vidId);v.srcObject=camStream;v.play();
+    qrActive=true;scanFrame(vidId);
+  }catch(e){showToast('📷 Camera denied — please upload a QR image');}
+}
+function stopCam(){qrActive=false;if(camAnimFrame){cancelAnimationFrame(camAnimFrame);camAnimFrame=null;}if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}}
+function scanFrame(vidId){
+  if(!qrActive) return;
+  const v=document.getElementById(vidId);if(!v) return;
+  if(v.readyState===v.HAVE_ENOUGH_DATA){
+    const c=document.getElementById('qr-canvas')||document.getElementById('qr-modal-canvas');
+    c.width=v.videoWidth;c.height=v.videoHeight;
+    const ctx=c.getContext('2d');ctx.drawImage(v,0,0,c.width,c.height);
+    if(typeof jsQR!=='undefined'){
+      const d=jsQR(ctx.getImageData(0,0,c.width,c.height).data,c.width,c.height,{inversionAttempts:'dontInvert'});
+      if(d){qrActive=false;stopCam();handleQRFound(d.data);return;}
+    }
+  }
+  camAnimFrame=requestAnimationFrame(()=>scanFrame(vidId));
+}
+function handleQRFound(data){
+  showToast('✅ QR Detected — redirecting to WhatsApp');
+  setTimeout(()=>goWA(`Pay via QR scan on *5050#. QR Data: ${data}`),800);
+}
+function handleQRUpload(e){decodeQRFromImage(e,'qr-canvas');}
+function handleModalQR(e){decodeQRFromImage(e,'qr-modal-canvas2');}
+function decodeQRFromImage(e,canvasId){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const c=document.getElementById(canvasId);
+      c.width=img.width;c.height=img.height;
+      const ctx=c.getContext('2d');ctx.drawImage(img,0,0);
+      if(typeof jsQR!=='undefined'){
+        const d=jsQR(ctx.getImageData(0,0,c.width,c.height).data,c.width,c.height,{inversionAttempts:'attemptBoth'});
+        if(d) handleQRFound(d.data);
+        else showToast('❌ No QR code found in image');
+      }
+    };img.src=ev.target.result;
+  };r.readAsDataURL(file);
+}
+
+/* ══ LIVE PILL GLOW ══ */
+(()=>{
+  const p=document.getElementById('live-pill');
+  if(!p)return;
+  let g=true;
+  setInterval(()=>{
+    p.style.boxShadow=g?'0 0 12px rgba(0,210,141,.6),0 0 24px rgba(0,210,141,.3)':'';
+    g=!g;
+  },800);
+})();
+
+/* ══ INITIAL CAPTCHA INJECT ══ */
+setTimeout(injectCaptchas,1500);
+
+/* ══ INTERSECTION OBSERVER ANIMATIONS ══ */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.style.animation='fadeInUp .5s ease both';}});
+},{threshold:.1});
+setTimeout(()=>{
+  document.querySelectorAll('.svc-card,.stat-c,.feat-cell,.dc,.goapp-card,.merch-card,.prod-card,.code-card').forEach(el=>io.observe(el));
+},1600);
+</script>
+</body>
+</html>
