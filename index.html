@@ -1426,8 +1426,8 @@ function openActivateWithPlan(plan,price){
 
 /* ─── MODAL CONTENT ─── */
 const MODALS={
-  'find-ussd':`<div class="modal-head"><div class="modal-title">🔍 Find a SmartUSSD</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
-    <p style="font-size:.72rem;color:var(--sub);margin-bottom:14px;line-height:1.5">Enter the *5050# SmartUSSD code of the business you want to connect to.</p>
+  'find-ussd':`<div class="modal-head"><div class="modal-title">🔍 Find an active *5050# Agent</div><button class="modal-x" onclick="closeModal()">✕ Close</button></div>
+    <p style="font-size:.72rem;color:var(--sub);margin-bottom:14px;line-height:1.5">Enter the *5050*BUSINESS_CODE# you want to connect to.</p>
     <div class="fg"><label class="fl">SmartUSSD Code</label><input class="fi" id="find-code" placeholder="e.g. *5050*882#"></div>
     <div class="fg"><label class="fl">and Business Registered Name</label><input class="fi" id="find-name" placeholder="e.g. Chidi's Fashion Store"></div>
     <button class="fs" onclick="submitFindUSSD()">🔍 Connect via WhatsApp</button>`,
