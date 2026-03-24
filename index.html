@@ -652,7 +652,7 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
 <div id="page-loader">
   <div class="loader-badge">*5050#</div>
   <div class="loader-ring"></div>
-  <div class="loader-txt">Initialising SmartUSSD</div>
+  <div class="loader-txt">Loading all AI Agents & Digital assistants...</div>
 </div>
 
 <div id="toast-el" class="toast"></div>
@@ -685,7 +685,7 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
       <div class="side-nav-item active-nav" onclick="showView('home',null);setBN(document.querySelector('.bn'));closeSideMenu()"><div class="side-nav-ico">🏠</div> Home <span class="side-nav-badge" style="margin-left:auto">New</span></div>
       <div class="side-nav-item" onclick="showView('user',null);loadChat('main');closeSideMenu()"><div class="side-nav-ico">💬</div> My Wallet</div>
       <div class="side-nav-item" onclick="showView('business',null);closeSideMenu()"><div class="side-nav-ico">🏪</div> Business Portal</div>
-      <div class="side-nav-item" onclick="openModal('find-ussd');closeSideMenu()"><div class="side-nav-ico">🔍</div> Find SmartUSSD</div>
+      <div class="side-nav-item" onclick="openModal('find-ussd');closeSideMenu()"><div class="side-nav-ico">🔍</div> Find an Agent</div>
       <div class="side-nav-item" onclick="openModal('activate-ussd');closeSideMenu()"><div class="side-nav-ico">⚡</div> Activate My USSD</div>
       <div class="side-divider"></div>
       <div class="side-nav-item" onclick="showView('terms',null);closeSideMenu()"><div class="side-nav-ico">📋</div> Terms & Policy</div>
@@ -804,7 +804,7 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
     </h1>
     <p class="hero-desc">*5050# is an <strong style="color:var(--green);font-family:'JetBrains Mono',monospace">AI Digital Assistant</strong> programmed to handle your business/organisation's communications, transactions, management, access, verification and more across all official Instant Messaging platforms including WhatsApp, Instagram, Telegram, X and more.</p>
     <div class="hero-btns">
-      <button class="btn-g" onclick="openModal('find-ussd')">🔍 Find an Agent</button>
+      <button class="btn-g" onclick="openModal('find-ussd')">🔍 Link to an Agent</button>
       <a href="https://5050smartussd.github.io/BUYsmartUSSD/"><button class="btn-o">⚡Hire an Agent</button></a>
     </div>
   </div>
@@ -829,10 +829,10 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
           <div class="phone-body" id="demo-chat">
             <div class="cb cb-bot">
               👋 Welcome to <strong>AI Agent Store</strong>!<br>
-              <span class="cm" onclick="demoType('1')">1. 💸 Send Token</span>
-              <span class="cm" onclick="demoType('2')">2. 🛒 Shop Now</span>
-              <span class="cm" onclick="demoType('3')">3. 📱 Respond to Questions</span>
-              <span class="cm" onclick="demoType('4')">4. 💡 Prepare Bills</span>
+              <span class="cm" onclick="demoType('1')">1. 💸 Manage Transactions</span>
+              <span class="cm" onclick="demoType('2')">2. 🛒 Handle eCommerce</span>
+              <span class="cm" onclick="demoType('3')">3. 📱 24/7 Front Desk</span>
+              <span class="cm" onclick="demoType('4')">4. 💡 Invoice manager</span>
               <span class="cm" onclick="demoType('5')">5. 🏪 Find Organisation</span>
             </div>
           </div>
@@ -869,8 +869,8 @@ td{padding:9px 14px;font-size:.72rem;border-top:1px solid var(--border)}
   </div>
 
   <div class="feat-strip reveal">
-    <div class="feat-cell"><div class="feat-ico">💳</div><div class="feat-t">Manage Enquiries</div><div class="feat-d">Helps you respond to customers and clients </div></div>
-    <div class="feat-cell"><div class="feat-ico">🏪</div><div class="feat-t">Respond to Customers</div><div class="feat-d">1,000+ vendors with instant checkout</div></div>
+    <div class="feat-cell"><div class="feat-ico">💳</div><div class="feat-t">Conversational Intelligence</div><div class="feat-d"> Natural Language Processing (NLP) to understand customer queries. Context awareness to maintain multi-turn conversations. Multilingual support for global businesses. </div></div>
+    <div class="feat-cell"><div class="feat-ico">🏪</div><div class="feat-t">Customer Support Functions </div><div class="feat-d">Automated FAQs and knowledge base integration. Ticket creation and escalation to human agents. 24/7 availability with instant responses.</div></div>
     <div class="feat-cell"><div class="feat-ico">⚡</div><div class="feat-t">Guide Transactions</div><div class="feat-d">Send to any bank or wallet in seconds</div></div>
     <div class="feat-cell"><div class="feat-ico">🤖</div><div class="feat-t">AI-Powered Bot</div><div class="feat-d">Natural language, no menus to memorise or session timeouts.</div></div>
   </div>
